@@ -1,0 +1,13 @@
+group 'org.binu.battlefield'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.mockito', name: 'mockito-core', version: '1.9.5'
+}
