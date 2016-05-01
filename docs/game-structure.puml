@@ -1,0 +1,41 @@
+@startuml
+
+hide empty fields
+hide empty methods
+
+class GameManager {
+    Board board
+    GameAI gameAI
+}
+
+class Board {
+    WIDTH = 6
+    HEIGHT = 12
+    Cell [][]
+    Board currentState()
+}
+
+class Cell {
+    CellStatus cellStatus
+}
+
+enum CellStatus {
+    EMPTY
+    BLOCKED
+    COLOUR
+}
+
+class GameAI {
+
+}
+
+Cell ..> CellStatus
+Board ..> Cell
+GameManager --l> Board
+GameManager --> GameAI
+
+note bottom of GameAI: Gets current board state from \
+\nGame manager and returns \
+\nnext move
+
+@enduml
