@@ -23,4 +23,12 @@ class Cell {
     CellColour getCellColour() {
         return cellColour;
     }
+
+    public void setCellColour(CellColour cellColour) {
+        this.cellColour = cellColour;
+    }
+
+    public void setCellStatus(CellStatus cellStatus) {
+        this.cellStatus = cellStatus;
+    }
 }

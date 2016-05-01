@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -31,18 +30,27 @@ public class BoardTest {
         iterateBoard(currentBoard);
     }
 
+    @Test
+    public void should_create_a_grid_with_first_cell_being_red() throws Exception {
+        Cell cell = board.getCell(0, 0);
+        cell.setCellColour(CellColour.RED);
+        cell.setCellStatus(CellStatus.OCCUPIED);
+
+        assertCellStatus(cell, CellStatus.OCCUPIED, CellColour.RED);
+    }
+
     private void iterateBoard(Cell[][] currentBoard) {
-        for (int i = 0; i < Board.HEIGHT; i++) {
-            for (int j = 0; j < Board.WIDTH; j++) {
-                assertEachBoardCellStatus(currentBoard[i][j], CellStatus.EMPTY);
+        for (int i = 0; i < Board.ROW_LENGTH; i++) {
+            for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
+                assertCellStatus(currentBoard[i][j], CellStatus.EMPTY, null);
             }
         }
     }
 
-    private void assertEachBoardCellStatus(Cell cell, CellStatus currentCellStatus) {
+    private void assertCellStatus(Cell cell, CellStatus currentCellStatus, CellColour currentCellColour) {
         CellColour cellColour = cell.getCellColour();
         CellStatus cellStatus = cell.getCellStatus();
-        assertNull(cellColour);
-        assertThat("Cell status is empty.", cellStatus, is(currentCellStatus));
+        assertThat("Cell colour is " + currentCellColour, cellColour,  is(currentCellColour));
+        assertThat("Cell status is " + currentCellStatus, cellStatus, is(currentCellStatus));
     }
 }
