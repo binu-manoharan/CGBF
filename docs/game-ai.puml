@@ -13,7 +13,7 @@ interface IGameAI {
     + calculateNextMove()
 }
 abstract class GameAI extends IGameAI {
-    - Aggression agression
+    - Aggression aggression
 }
 
 class A-GameAI extends GameAI {
