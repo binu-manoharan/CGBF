@@ -1,0 +1,34 @@
+@startuml
+
+hide empty fields
+hide empty method
+
+class GameManager {
+    - Board board
+    - GameAI gameAI
+}
+
+abstract class GameAI {
+    - Aggression agression
+    - scorePossibleMoves()
+    + calculateNextMove()
+}
+
+class A-GameAI extends GameAI {
+
+}
+
+class B-GameAI extends GameAI {
+
+}
+
+enum Aggression {
+    PASSIVE
+    BLOCKED
+    NEUTRAL
+    GREEDY
+}
+
+GameAI ..r> Aggression
+GameManager --r> GameAI
+@enduml

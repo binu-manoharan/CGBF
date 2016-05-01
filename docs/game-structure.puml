@@ -4,19 +4,19 @@ hide empty fields
 hide empty methods
 
 class GameManager {
-    Board board
-    GameAI gameAI
+    - Board board
+    - GameAI gameAI
 }
 
 class Board {
-    WIDTH = 6
-    HEIGHT = 12
-    Cell [][]
-    Board currentState()
+    - WIDTH = 6
+    - HEIGHT = 12
+    - Cell [][]
+    + Board currentState()
 }
 
 class Cell {
-    CellStatus cellStatus
+    - CellStatus cellStatus
 }
 
 enum CellStatus {
