@@ -6,7 +6,7 @@ import org.binu.data.CellStatus;
 /**
  * Represents cell on the board.
  */
-class Cell {
+public class Cell {
 
     private CellColour cellColour;
     private CellStatus cellStatus;

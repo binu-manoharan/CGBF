@@ -32,11 +32,22 @@ public class BoardTest {
 
     @Test
     public void should_create_a_grid_with_first_cell_being_red() throws Exception {
+        board.setCell(0,0, CellStatus.OCCUPIED, CellColour.RED);
         Cell cell = board.getCell(0, 0);
-        cell.setCellColour(CellColour.RED);
-        cell.setCellStatus(CellStatus.OCCUPIED);
 
         assertCellStatus(cell, CellStatus.OCCUPIED, CellColour.RED);
+    }
+
+    @Test
+    public void should_return_columns() throws Exception {
+        Cell[] columns = board.getColumn(0);
+        assertThat("Has 12 elements", columns.length, is(12));
+    }
+
+    @Test
+    public void should_return_rows() throws Exception {
+        Cell[] rows = board.getRow(0);
+        assertThat("Has 6 elements", rows.length, is(6));
     }
 
     private void iterateBoard(Cell[][] currentBoard) {

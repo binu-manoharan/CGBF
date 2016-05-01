@@ -1,17 +1,18 @@
 package org.binu.board;
 
+import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 
 /**
  * Contains board and corresponding data.
  */
-class Board {
+public class Board {
 
-    static final int ROW_LENGTH = 12;
-    static final int COLUMN_LENGTH = 6;
+    public static final int ROW_LENGTH = 12;
+    public static final int COLUMN_LENGTH = 6;
     private Cell[][] cells;
 
-    Board() {
+    public Board() {
         cells = new Cell[ROW_LENGTH][COLUMN_LENGTH];
         initEmptyBoard();
     }
@@ -24,11 +25,55 @@ class Board {
         }
     }
 
-    Cell[][] getBoard() {
+    /**
+     * returns the current board as a 2d array
+     * @return
+     */
+    public Cell[][] getBoard() {
         return cells;
     }
 
+    /**
+     * Get cell data from the board
+     * @param row row index
+     * @param column column index
+     * @return Cell corresponding to the indexes on the board
+     */
     public Cell getCell(int row, int column) {
         return cells[row][column];
+    }
+
+    /**
+     * Set colour and status
+     * @param row row index
+     * @param column column index
+     * @param cellStatus new cell status
+     * @param cellColour new cell colour
+     */
+    public void setCell(int row, int column, CellStatus cellStatus, CellColour cellColour) {
+        cells[row][column].setCellColour(cellColour);
+        cells[row][column].setCellStatus(cellStatus);
+    }
+
+    /**
+     * Get the column for the given column index
+     * @param column column index
+     * @return cell array for the column
+     */
+    public Cell[] getColumn(int column) {
+        Cell[] columns = new Cell[ROW_LENGTH];
+        for (int i = 0; i < ROW_LENGTH; i++) {
+            columns[i] = cells[i][column];
+        }
+        return columns;
+    }
+
+    /**
+     * Get the row for the given row index
+     * @param row row index
+     * @return cell array for the row
+     */
+    public Cell[] getRow(int row) {
+        return cells[row];
     }
 }

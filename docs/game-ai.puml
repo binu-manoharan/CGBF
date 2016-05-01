@@ -8,10 +8,12 @@ class GameManager {
     - GameAI gameAI
 }
 
-abstract class GameAI {
-    - Aggression agression
-    - scorePossibleMoves()
+interface IGameAI {
+    + scorePossibleMoves()
     + calculateNextMove()
+}
+abstract class GameAI extends IGameAI {
+    - Aggression agression
 }
 
 class A-GameAI extends GameAI {
