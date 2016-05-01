@@ -17,6 +17,7 @@ class Board {
 
 class Cell {
     - CellStatus cellStatus
+    - CellColour cellColour
 }
 
 enum CellStatus {
@@ -25,10 +26,19 @@ enum CellStatus {
     COLOUR
 }
 
+enum CellColour {
+    RED = 1
+    BLUE
+    GREEN
+    PURPLE
+    YELLOW
+}
+
 class GameAI {
 
 }
 
+Cell ..> CellColour
 Cell ..> CellStatus
 Board ..> Cell
 GameManager --l> Board
