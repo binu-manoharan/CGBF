@@ -10,7 +10,7 @@ public class Board {
 
     public static final int ROW_LENGTH = 12;
     public static final int COLUMN_LENGTH = 6;
-    private Cell[][] cells;
+    private final Cell[][] cells;
 
     public Board() {
         cells = new Cell[ROW_LENGTH][COLUMN_LENGTH];
@@ -27,7 +27,7 @@ public class Board {
 
     /**
      * returns the current board as a 2d array
-     * @return
+     * @return entire board data
      */
     public Cell[][] getBoard() {
         return cells;
@@ -61,7 +61,7 @@ public class Board {
      * @return cell array for the column
      */
     public Cell[] getColumn(int column) {
-        Cell[] columns = new Cell[ROW_LENGTH];
+        final Cell[] columns = new Cell[ROW_LENGTH];
         for (int i = 0; i < ROW_LENGTH; i++) {
             columns[i] = cells[i][column];
         }
@@ -73,7 +73,15 @@ public class Board {
      * @param row row index
      * @return cell array for the row
      */
-    public Cell[] getRow(int row) {
+    Cell[] getRow(int row) {
         return cells[row];
+    }
+
+    /**
+     * Set the row for the given row index
+     * @param row row index
+     */
+    public void setRow(int row, Cell[] rowCells) {
+        cells[row] = rowCells;
     }
 }
