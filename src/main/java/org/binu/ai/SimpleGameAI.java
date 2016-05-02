@@ -2,6 +2,7 @@ package org.binu.ai;
 
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
+import org.binu.board.Cell;
 
 /**
  * Simple AI
@@ -13,9 +14,17 @@ class SimpleGameAI extends GameAI {
 
     /** {@inheritDoc} */
     public int calculateNextMove() {
+        int highestEmptyPosition = 0;
+        int highestEmptyIndex = 0;
         for (int i = 0; i < Board.COLUMN_LENGTH; i++) {
-            board.getColumn(i);
+            Cell[] column = board.getColumn(i);
+            int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(column);
+
+            if (firstEmptyPosition > highestEmptyPosition) {
+                highestEmptyPosition = firstEmptyPosition;
+                highestEmptyIndex = i;
+            }
         }
-        return 0;
+        return highestEmptyIndex;
     }
 }

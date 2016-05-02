@@ -11,12 +11,12 @@ public class Cell {
     private CellColour cellColour;
     private CellStatus cellStatus;
 
-    Cell(CellColour cellColour, CellStatus cellStatus) {
+    public Cell(CellColour cellColour, CellStatus cellStatus) {
         this.cellColour = cellColour;
         this.cellStatus = cellStatus;
     }
 
-    CellStatus getCellStatus() {
+    public CellStatus getCellStatus() {
         return cellStatus;
     }
 
