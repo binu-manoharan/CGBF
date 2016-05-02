@@ -6,8 +6,16 @@ hide empty method
 class GameManager {
     - Board board
     - GameAI gameAI
+    - BlockQueue[] BlockQueue;
 }
 
+class BlockQueue {
+    - Blocks[] block
+}
+
+class Block {
+    - Cells[] cells
+}
 interface IGameAI {
     + scorePossibleMoves()
     + calculateNextMove()
@@ -33,4 +41,6 @@ enum Aggression {
 
 GameAI ..r> Aggression
 GameManager --r> GameAI
+GameManager --> BlockQueue
+BlockQueue --> Block
 @enduml
