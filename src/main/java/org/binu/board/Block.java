@@ -7,7 +7,7 @@ public class Block {
 
     private Cell[] cells = new Cell[2];
 
-    Block(Cell[] cells) {
+    public Block(Cell[] cells) {
         this.cells = cells;
     }
 

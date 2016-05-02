@@ -14,17 +14,23 @@ class SimpleGameAI extends GameAI {
 
     /** {@inheritDoc} */
     public int calculateNextMove() {
-        int highestEmptyPosition = 0;
-        int highestEmptyIndex = 0;
+        int columnMatch = bestColumnMatch();
+        return columnMatch;
+    }
+
+    private int bestColumnMatch() {
+        int highestColoumnScore = -1;
+        int highestScoreIndex = -1;
+
         for (int i = 0; i < Board.COLUMN_LENGTH; i++) {
             Cell[] column = board.getColumn(i);
-            int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(column);
+            int columnScore = cellArrayParser.getCellArrayScore(column, blockQueue.getNext());
 
-            if (firstEmptyPosition > highestEmptyPosition) {
-                highestEmptyPosition = firstEmptyPosition;
-                highestEmptyIndex = i;
+            if (columnScore > highestColoumnScore) {
+                highestColoumnScore = columnScore;
+                highestScoreIndex = i;
             }
         }
-        return highestEmptyIndex;
+        return highestScoreIndex;
     }
 }

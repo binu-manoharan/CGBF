@@ -20,7 +20,7 @@ public class Cell {
         return cellStatus;
     }
 
-    CellColour getCellColour() {
+    public CellColour getCellColour() {
         return cellColour;
     }
 
