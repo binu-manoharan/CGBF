@@ -20,7 +20,8 @@ public class BlockQueue {
         blocks.add(block);
     }
 
-    @Nullable Block getNext() {
+    @Nullable
+    public Block getNext() {
         return blocks.size() > 0 ? blocks.get(0) : null;
     }
 

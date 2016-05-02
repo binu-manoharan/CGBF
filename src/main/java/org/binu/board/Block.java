@@ -11,7 +11,7 @@ public class Block {
         this.cells = cells;
     }
 
-    Cell[] getCells() {
+    public Cell[] getCells() {
         return cells;
     }
 }
