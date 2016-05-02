@@ -1,5 +1,6 @@
 package org.binu.ai;
 
+import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 
 /**
@@ -7,8 +8,10 @@ import org.binu.board.Board;
  */
 abstract class GameAI implements IGameAI {
     Board board;
+    BlockQueue blockQueue;
 
-    public GameAI(Board board) {
+    public GameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
+        this.blockQueue = blockQueue;
     }
 }

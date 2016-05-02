@@ -1,6 +1,6 @@
 package org.binu.board;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class BlockQueue {
     private List<Block> blocks;
 
     public BlockQueue() {
-        this.blocks = new ArrayList<Block>(8);
+        this.blocks = new ArrayList<>(8);
     }
 
     public void add(Block block) {
@@ -20,12 +20,11 @@ public class BlockQueue {
         blocks.add(block);
     }
 
-    @Nullable
-    public Block getNext() {
+    @Nullable Block getNext() {
         return blocks.size() > 0 ? blocks.get(0) : null;
     }
 
-    public Block getNextAndPop() {
+    Block getNextAndPop() {
         Block next = getNext();
         if (next != null) {
             blocks.remove(0);

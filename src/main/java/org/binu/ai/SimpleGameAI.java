@@ -1,24 +1,21 @@
 package org.binu.ai;
 
+import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 
 /**
  * Simple AI
  */
 class SimpleGameAI extends GameAI {
-    SimpleGameAI(Board board) {
-        super(board);
+    SimpleGameAI(Board board, BlockQueue blockQueue) {
+        super(board, blockQueue);
     }
 
     /** {@inheritDoc} */
     public int calculateNextMove() {
-        canConnectFour();
-        return 0;
-    }
-
-    private void canConnectFour() {
         for (int i = 0; i < Board.COLUMN_LENGTH; i++) {
-
+            board.getColumn(i);
         }
+        return 0;
     }
 }
