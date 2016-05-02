@@ -1,6 +1,7 @@
 package org.binu.integration;
 
 import org.binu.board.Block;
+import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
@@ -27,6 +28,15 @@ public class DataParser {
         cells[0] = bottomCell;
         cells[1] = topCell;
         return new Block(cells);
+    }
+
+    public BlockQueue createBlockQueue(int[][] blockQueueData) {
+        final BlockQueue blockQueue = new BlockQueue();
+        for (int[] aBlockQueueData : blockQueueData) {
+            final Block colourBlock = createColourBlock(aBlockQueueData[0], aBlockQueueData[1]);
+            blockQueue.add(colourBlock);
+        }
+        return blockQueue;
     }
 
     public Cell[] createBoardRow(String rowString) {

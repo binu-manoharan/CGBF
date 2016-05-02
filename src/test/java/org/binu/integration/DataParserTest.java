@@ -1,6 +1,7 @@
 package org.binu.integration;
 
 import org.binu.board.Block;
+import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
@@ -8,7 +9,7 @@ import org.binu.data.CellStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -33,6 +34,16 @@ public class DataParserTest {
 
         final Block blueGreenBlock = dataParser.createColourBlock(1, 2);
         assertBlockData(blueGreenBlock, CellColour.BLUE, CellColour.GREEN);
+    }
+
+    @Test
+    public void should_provide_a_block_queue() throws Exception {
+        final int[][] blockQueueData = {{1, 2}, {2, 3}, {4, 5}};
+        final BlockQueue blockQueue = dataParser.createBlockQueue(blockQueueData);
+        assertThat("The block queue is not null. ", blockQueue, is(not(nullValue())));
+        assertBlockData(blockQueue.getBlock(0), CellColour.BLUE, CellColour.GREEN);
+        assertBlockData(blockQueue.getBlock(1), CellColour.GREEN, CellColour.PURPLE);
+        assertBlockData(blockQueue.getBlock(2), CellColour.RED, CellColour.YELLOW);
     }
 
     @Test (expected = AssertionError.class)
