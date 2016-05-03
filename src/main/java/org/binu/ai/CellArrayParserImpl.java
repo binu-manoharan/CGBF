@@ -12,9 +12,10 @@ import org.jetbrains.annotations.Nullable;
 class CellArrayParserImpl implements CellArrayParser {
     @Override
     public int getFirstEmptyPosition(Cell[] cells) {
-        int length = cells.length;
+        final int length = cells.length;
         for (int i = 0; i < length; i++) {
-            if (cells[i].getCellStatus() != CellStatus.OCCUPIED) {
+            final CellStatus cellStatus = cells[i].getCellStatus();
+            if (cellStatus != CellStatus.OCCUPIED && cellStatus != CellStatus.BLOCKED) {
                 return i;
             }
         }
@@ -23,16 +24,16 @@ class CellArrayParserImpl implements CellArrayParser {
 
     @Override
     public int getCellArrayScore(Cell[] cells, @Nullable Block block) {
-        Cell[] blockCells = block.getCells();
+        final Cell[] blockCells = block.getCells();
 
-        Cell bottomCell = blockCells[0];
+        final Cell bottomCell = blockCells[0];
 
-        int firstEmptyPosition = getFirstEmptyPosition(cells);
+        final int firstEmptyPosition = getFirstEmptyPosition(cells);
 
-        int topElementPosition = firstEmptyPosition - 1;
+        final int topElementPosition = firstEmptyPosition - 1;
 
         if (topElementPosition >= 0) {
-            CellColour topElementColour = cells[topElementPosition].getCellColour();
+            final CellColour topElementColour = cells[topElementPosition].getCellColour();
             int numberOfElementsWithSameColourAsTopElement = 1;
 
             numberOfElementsWithSameColourAsTopElement = getNumberOfElementsWithSameColourAsTopElement(cells, topElementPosition, topElementColour, numberOfElementsWithSameColourAsTopElement);

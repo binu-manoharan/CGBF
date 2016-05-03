@@ -91,4 +91,28 @@ public class GameAITest {
         assertThat("The AI should make 2 as there are no matches on the first two columns",
                 nextMove, is(2));
     }
+
+    @Test
+    public void should_check() throws Exception {
+        board.setCell(0, 0, CellStatus.BLOCKED, null);
+        board.setCell(1, 0, CellStatus.OCCUPIED, CellColour.RED);
+        board.setCell(2, 0, CellStatus.OCCUPIED, CellColour.RED);
+
+        board.setCell(0, 1, CellStatus.OCCUPIED, CellColour.GREEN);
+        board.setCell(1, 1, CellStatus.OCCUPIED, CellColour.GREEN);
+        board.setCell(2, 1, CellStatus.BLOCKED, null);
+
+        board.setCell(0, 2, CellStatus.BLOCKED, null);
+        board.setCell(0, 3, CellStatus.BLOCKED, null);
+        board.setCell(0, 4, CellStatus.BLOCKED, null);
+        board.setCell(0, 5, CellStatus.BLOCKED, null);
+
+
+        Block block = BlockFactory.create2x1SameColourBlock(CellColour.PURPLE);
+        blockQueue.add(block);
+
+        int nextMove = gameAI.calculateNextMove();
+        assertThat("The AI should make 2 as there are no matches on the first two columns",
+                nextMove, is(1));
+    }
 }
