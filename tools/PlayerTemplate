@@ -9,6 +9,9 @@ class Player {
 
         // game loop
         while (true) {
+
+            long startTime = System.currentTimeMillis();
+
             DataParser dataParser = new DataParser();
             BlockQueue blockQueue = new BlockQueue();
             for (int i = 0; i < 8; i++) {
@@ -36,6 +39,10 @@ class Player {
             // To debug: System.err.println("Debug messages...");
 
             System.out.println(nextMove); // "x": the column in which to drop your blocks
+
+            long endTime = System.currentTimeMillis();
+            System.err.print("Exec time: " + ((startTime - endTime)));
+
         }
     }
 }
