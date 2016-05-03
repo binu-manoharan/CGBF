@@ -10,7 +10,7 @@ class Player {
         // game loop
         while (true) {
            DataParser dataParser = new DataParser();
-           BlockQueue blockQueue = new BlockQueue();
+           aBlockQueue blockQueue = new BlockQueue();
            for (int i = 0; i < 8; i++) {
                int colorA = in.nextInt(); // color of the first block
                int colorB = in.nextInt(); // color of the attached block
