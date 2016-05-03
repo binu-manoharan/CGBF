@@ -5,7 +5,7 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 
 /**
- * Simple AI
+ * Simple AI with column scoring
  */
 class SimpleGameAI extends GameAI {
     SimpleGameAI(Board board, BlockQueue blockQueue) {
