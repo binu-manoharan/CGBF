@@ -9,32 +9,33 @@ class Player {
 
         // game loop
         while (true) {
-           DataParser dataParser = new DataParser();
-           BlockQueue blockQueue = new BlockQueue();
-           for (int i = 0; i < 8; i++) {
-               int colorA = in.nextInt(); // color of the first block
-               int colorB = in.nextInt(); // color of the attached block
-               Block colourBlock = dataParser.createColourBlock(colorA, colorB);
-               blockQueue.add(colourBlock);
-           }
+            DataParser dataParser = new DataParser();
+            BlockQueue blockQueue = new BlockQueue();
+            for (int i = 0; i < 8; i++) {
+                int colorA = in.nextInt(); // color of the first block
+                int colorB = in.nextInt(); // color of the attached block
+                Block colourBlock = dataParser.createColourBlock(colorA, colorB);
+                blockQueue.add(colourBlock);
+            }
 
-           for (int i = 0; i < 12; i++) {
-               String row = in.next();
-           }
+            Board myBoard = new Board();
+            for (int i = 0; i < 12; i++) {
+                String row = in.next();
+                Cell[] boardRow = dataParser.createBoardRow(row);
+                myBoard.setRow(Board.ROW_LENGTH - i - 1, boardRow);
+            }
 
-           Board myBoard = new Board();
-           for (int i = 0; i < 12; i++) {
-               String row = in.next(); // One line of the map ('.' = empty, '0' = skull block, '1' to '5' = colored block)
-               Cell[] boardRow = dataParser.createBoardRow(row);
-               myBoard.setRow(Board.ROW_LENGTH - i - 1, boardRow);
-           }
+            for (int i = 0; i < 12; i++) {
+                String row = in.next(); // One line of the map ('.' = empty, '0' = skull block, '1' to '5' = colored block)
+            }
 
-           GameAI gameAI = new SimpleGameAI(myBoard, blockQueue);
-           int nextMove = gameAI.calculateNextMove();
-           // Write an action using System.out.println()
-           // To debug: System.err.println("Debug messages...");
 
-           System.out.println(nextMove); // "x": the column in which to drop your blocks
+            GameAI gameAI = new SimpleGameAI(myBoard, blockQueue);
+            int nextMove = gameAI.calculateNextMove();
+            // Write an action using System.out.println()
+            // To debug: System.err.println("Debug messages...");
+
+            System.out.println(nextMove); // "x": the column in which to drop your blocks
         }
     }
 }
