@@ -1,9 +1,9 @@
 #/bin/bash
 
-PROJ_HOME='/home/binu/playground/CGBF/'
+PROJ_HOME='/home/binu/IdeaProjects/battlefield/'
 #echo $PROJ_HOME
 
-OUT_FILE='tools/MergedPlayer.out'
+OUT_FILE='tools/Player2.java'
 #echo $OUT_FILE
 
 PLAYER_FILE='tools/Player.java'
@@ -22,10 +22,10 @@ fi
 
 cat $playerFilePath >> $outFilePath
 
-for i in `find $srcMainPath -type f | grep java$`
+for i in `find $srcMainPath -type f | grep -v Main| grep java$`
 do
     echo "File names "$i
-    cat $i >> $outFilePath
+    cat $i | grep -v import | grep -v package | sed -e 's/public class/class/g' -e 's/public enum/enum/g' -e 's/class Player/class Player2/g' -e 's/@Nullable//g'>> $outFilePath
 done
 
 
