@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Test for {@link IGameAI}.
  */
-public class GameAITest {
+public class SimpleGameAITest {
 
     private Board board;
     private IGameAI gameAI;
@@ -33,10 +33,10 @@ public class GameAITest {
         board.setCell(0,0, CellStatus.OCCUPIED, CellColour.RED);
         board.setCell(1,0, CellStatus.OCCUPIED, CellColour.RED);
 
-        Block block = BlockFactory.create2x1SameColourBlock(CellColour.RED);
+        final Block block = BlockFactory.create2x1SameColourBlock(CellColour.RED);
         blockQueue.add(block);
 
-        int nextMove = gameAI.calculateNextMove();
+        final int nextMove = gameAI.calculateNextMove();
         assertThat("The AI should make a 4 by calculating the next move to be first column",
                 nextMove, is(0));
     }
@@ -50,10 +50,10 @@ public class GameAITest {
         board.setCell(1, 1, CellStatus.OCCUPIED, CellColour.RED);
         board.setCell(2, 1, CellStatus.OCCUPIED, CellColour.RED);
 
-        Block block = BlockFactory.create2x1SameColourBlock(CellColour.RED);
+        final Block block = BlockFactory.create2x1SameColourBlock(CellColour.RED);
         blockQueue.add(block);
 
-        int nextMove = gameAI.calculateNextMove();
+        final int nextMove = gameAI.calculateNextMove();
         assertThat("The AI should make a 5 by calculating the next move to be second column",
                 nextMove, is(1));
     }
@@ -67,10 +67,10 @@ public class GameAITest {
         board.setCell(1, 1, CellStatus.OCCUPIED, CellColour.GREEN);
         board.setCell(2, 1, CellStatus.OCCUPIED, CellColour.BLUE);
 
-        Block block = BlockFactory.create2x1SameColourBlock(CellColour.RED);
+        final Block block = BlockFactory.create2x1SameColourBlock(CellColour.RED);
         blockQueue.add(block);
 
-        int nextMove = gameAI.calculateNextMove();
+        final int nextMove = gameAI.calculateNextMove();
         assertThat("The AI should make 4 by calculating the next move to be first column",
                 nextMove, is(0));
     }
@@ -84,10 +84,10 @@ public class GameAITest {
         board.setCell(1, 1, CellStatus.OCCUPIED, CellColour.GREEN);
         board.setCell(2, 1, CellStatus.OCCUPIED, CellColour.GREEN);
 
-        Block block = BlockFactory.create2x1SameColourBlock(CellColour.BLUE);
+        final Block block = BlockFactory.create2x1SameColourBlock(CellColour.BLUE);
         blockQueue.add(block);
 
-        int nextMove = gameAI.calculateNextMove();
+        final int nextMove = gameAI.calculateNextMove();
         assertThat("The AI should make 2 as there are no matches on the first two columns",
                 nextMove, is(2));
     }
@@ -108,10 +108,10 @@ public class GameAITest {
         board.setCell(0, 5, CellStatus.BLOCKED, null);
 
 
-        Block block = BlockFactory.create2x1SameColourBlock(CellColour.PURPLE);
+        final Block block = BlockFactory.create2x1SameColourBlock(CellColour.PURPLE);
         blockQueue.add(block);
 
-        int nextMove = gameAI.calculateNextMove();
+        final int nextMove = gameAI.calculateNextMove();
         assertThat("The AI should make 2 as there are no matches on the first two columns",
                 nextMove, is(1));
     }
