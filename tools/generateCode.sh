@@ -3,10 +3,10 @@
 PROJ_HOME='/home/binu/IdeaProjects/battlefield/'
 #echo $PROJ_HOME
 
-OUT_FILE='tools/Player2.java'
+OUT_FILE='tools/Player.java'
 #echo $OUT_FILE
 
-PLAYER_FILE='tools/Player.java'
+PLAYER_FILE='tools/PlayerTemplate'
 
 SRC_MAIN='src/main/java/'
 
@@ -25,7 +25,7 @@ cat $playerFilePath >> $outFilePath
 for i in `find $srcMainPath -type f | grep -v Main| grep java$`
 do
     echo "File names "$i
-    cat $i | grep -v import | grep -v package | sed -e 's/public class/class/g' -e 's/public enum/enum/g' -e 's/class Player/class Player2/g' -e 's/@Nullable//g'>> $outFilePath
+    cat $i | grep -v import | grep -v package | sed -e 's/public class/class/g' -e 's/public enum/enum/g' -e 's/@Nullable//g'>> $outFilePath
 done
 
 
