@@ -9,21 +9,32 @@ class Player {
 
         // game loop
         while (true) {
+            DataParser dataParser = new DataParser();
+            BlockQueue blockQueue = new BlockQueue();
             for (int i = 0; i < 8; i++) {
                 int colorA = in.nextInt(); // color of the first block
                 int colorB = in.nextInt(); // color of the attached block
+                Block colourBlock = dataParser.createColourBlock(colorA, colorB);
+                blockQueue.add(colourBlock);
             }
+
             for (int i = 0; i < 12; i++) {
                 String row = in.next();
             }
+
+            Board myBoard = new Board();
             for (int i = 0; i < 12; i++) {
                 String row = in.next(); // One line of the map ('.' = empty, '0' = skull block, '1' to '5' = colored block)
+                Cell[] boardRow = dataParser.createBoardRow(row);
+                myBoard.setRow(Board.ROW_LENGTH - i - 1, boardRow);
             }
 
+            GameAI gameAI = new SimpleGameAI(myBoard, blockQueue);
+            int nextMove = gameAI.calculateNextMove();
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");
 
-            System.out.println("0"); // "x": the column in which to drop your blocks
+            System.out.println(nextMove); // "x": the column in which to drop your blocks
         }
     }
 }
@@ -74,7 +85,9 @@ class SimpleGameAI extends GameAI {
         super(board, blockQueue);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int calculateNextMove() {
         int columnMatch = bestColumnMatch();
         return columnMatch;
@@ -104,7 +117,7 @@ class SimpleGameAI extends GameAI {
 interface CellArrayParser {
     int getFirstEmptyPosition(Cell[] cells);
 
-    int getCellArrayScore(Cell[] column,  Block block);
+    int getCellArrayScore(Cell[] column, Block block);
 }
 
 
@@ -124,7 +137,7 @@ class CellArrayParserImpl implements CellArrayParser {
     }
 
     @Override
-    public int getCellArrayScore(Cell[] cells,  Block block) {
+    public int getCellArrayScore(Cell[] cells, Block block) {
         Cell[] blockCells = block.getCells();
 
         Cell bottomCell = blockCells[0];
@@ -171,6 +184,7 @@ interface IGameAI {
 
     /**
      * Calculate the next move to make
+     *
      * @return index of the column to play in
      */
     int calculateNextMove();
@@ -183,8 +197,9 @@ interface IGameAI {
 class DataParser {
     /**
      * Creates a block with two cells from the given 1-indexed values
+     *
      * @param bottomCellIndex 1-indexed enum value for bottom cell
-     * @param topCellIndex 1-indexed enum value for top cell
+     * @param topCellIndex    1-indexed enum value for top cell
      * @return block with both cells
      */
     public Block createColourBlock(int bottomCellIndex, int topCellIndex) {
@@ -214,7 +229,7 @@ class DataParser {
         final char[] chars = rowString.toCharArray();
         final Cell[] cells = new Cell[6];
 
-        for(int i = 0; i < chars.length; i++) {
+        for (int i = 0; i < chars.length; i++) {
             final char aChar = chars[i];
             switch (aChar) {
                 case '.':
@@ -252,7 +267,7 @@ class DataParser {
         assert boardString.length == 12;
 
         final int lengthIndex = boardString.length - 1;
-        for (int i = lengthIndex; i >= 0 ; i--) {
+        for (int i = lengthIndex; i >= 0; i--) {
             final String rowString = boardString[i];
             final Cell[] boardRow = createBoardRow(rowString);
 
@@ -272,6 +287,7 @@ class BlockFactory {
 
     /**
      * Creates a falling 2x1 block (assumed to be vertical with first block at the bottom)
+     *
      * @param cellColour cellColour of the block
      * @return 2x1 block
      */
@@ -324,6 +340,7 @@ class Board {
 
     /**
      * returns the current board as a 2d array
+     *
      * @return entire board data
      */
     public Cell[][] getBoard() {
@@ -332,7 +349,8 @@ class Board {
 
     /**
      * Get cell data from the board
-     * @param row row index
+     *
+     * @param row    row index
      * @param column column index
      * @return Cell corresponding to the indexes on the board
      */
@@ -342,8 +360,9 @@ class Board {
 
     /**
      * Set colour and status
-     * @param row row index
-     * @param column column index
+     *
+     * @param row        row index
+     * @param column     column index
      * @param cellStatus new cell status
      * @param cellColour new cell colour
      */
@@ -354,6 +373,7 @@ class Board {
 
     /**
      * Get the column for the given column index
+     *
      * @param column column index
      * @return cell array for the column
      */
@@ -367,6 +387,7 @@ class Board {
 
     /**
      * Get the row for the given row index
+     *
      * @param row row index
      * @return cell array for the row
      */
@@ -376,13 +397,13 @@ class Board {
 
     /**
      * Set the row for the given row index
+     *
      * @param row row index
      */
     public void setRow(int row, Cell[] rowCells) {
         cells[row] = rowCells;
     }
 }
-
 
 
 /**
@@ -397,6 +418,7 @@ class BlockQueue {
 
     /**
      * Add element to the block queue
+     *
      * @param block element to add
      */
     public void add(Block block) {
@@ -406,15 +428,17 @@ class BlockQueue {
 
     /**
      * Get the next element in the block.
+     *
      * @return the next block
      */
-    
+
     public Block getNext() {
         return blocks.size() > 0 ? blocks.get(0) : null;
     }
 
     /**
      * Pops the block and retuns the popped block.
+     *
      * @return the popped block
      */
     Block getNextAndPop() {
@@ -427,6 +451,7 @@ class BlockQueue {
 
     /**
      * Get block at an index
+     *
      * @param blockIndex index to get the block at
      * @return Block on that index
      */
