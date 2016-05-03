@@ -41,7 +41,7 @@ class Player {
             System.out.println(nextMove); // "x": the column in which to drop your blocks
 
             long endTime = System.currentTimeMillis();
-            System.err.print("Exec time: " + ((startTime - endTime)));
+            System.err.print("Exec time: " + ((endTime - startTime)));
 
         }
     }
