@@ -1,0 +1,38 @@
+@startuml
+
+hide empty fields
+hide empty method
+
+interface IGameAI {
+    + calculateNextMove()
+}
+abstract class GameAI extends IGameAI {
+    ~ Board board
+    ~ BlockQueue blockQueue
+
+}
+
+class SimpleGameAI extends GameAI {
+
+}
+
+class BoardScoringGameAI extends GameAI {
+}
+
+class MoveAnalyser {
+    + checkPossibleMoves()
+    + suggestNextMove()
+}
+
+class BoardCollapser {
+    + collapseBoard()
+}
+
+class BoardScoreCalculator {
+    + int calculateBoardScore()
+}
+
+BoardScoringGameAI --> MoveAnalyser
+MoveAnalyser --r> BoardScoreCalculator
+BoardScoreCalculator --> BoardCollapser
+@enduml
