@@ -73,7 +73,7 @@ public class Board {
      * @param row row index
      * @return cell array for the row
      */
-    Cell[] getRow(int row) {
+    public Cell[] getRow(int row) {
         return cells[row];
     }
 

@@ -80,6 +80,45 @@ public class CellArrayParserTest {
         assertThat("Score should be 1 for a match of 4", score, is(1));
     }
 
+    @Test
+    public void should_provide_the_index_of_first_repeated_4th_element() {
+        cells[0] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+        cells[1] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+        cells[2] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+        cells[3] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+        cells[4] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[5] = getCell(CellColour.BLUE, CellStatus.OCCUPIED);
+
+        final int firstIndexOfRepeatOf4Group = cellArrayParser.getFirstIndexOfRepeatOf4Group(cells);
+        assertThat("First index of repeated group is 3", firstIndexOfRepeatOf4Group, is(3));
+    }
+
+    @Test
+    public void should_provide_the_index_of_minus_one_as_there_are_no_repeated_groups_of_4() {
+        cells[0] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[2] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[3] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+        cells[4] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+        cells[5] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
+
+        final int firstIndexOfRepeatOf4Group = cellArrayParser.getFirstIndexOfRepeatOf4Group(cells);
+        assertThat("First index of repeated group is 3", firstIndexOfRepeatOf4Group, is(-1));
+    }
+
+    @Test
+    public void should_provide_the_index_of_minus_one_as_there_is_an_empty_cell_in_between() {
+        cells[0] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[2] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[3] = getCell(null, CellStatus.EMPTY);
+        cells[4] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+        cells[5] = getCell(CellColour.RED, CellStatus.OCCUPIED);
+
+        final int firstIndexOfRepeatOf4Group = cellArrayParser.getFirstIndexOfRepeatOf4Group(cells);
+        assertThat("First index of repeated group is 3", firstIndexOfRepeatOf4Group, is(-1));
+    }
+
     private Block getBlock() {
         final Cell[] cells = new Cell[2];
         cells[0] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);

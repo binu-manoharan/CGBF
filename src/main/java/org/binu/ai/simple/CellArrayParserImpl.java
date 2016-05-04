@@ -46,9 +46,34 @@ public class CellArrayParserImpl implements CellArrayParser {
                 return numberOfElementsWithSameColourAsTopElement * -1;
             }
 
-
         }
         return 0;
+    }
+
+    @Override
+    public int getFirstIndexOfRepeatOf4Group(Cell[] cells) {
+        int numberOfSameAdjacentCells = 1;
+        CellColour lastColour = null;
+        for (int elementIndex = 0; elementIndex < cells.length; elementIndex++) {
+            if (cells[elementIndex].getCellStatus() == CellStatus.OCCUPIED) {
+                final CellColour currentCellColour = cells[elementIndex].getCellColour();
+
+                if (lastColour == currentCellColour) {
+                    numberOfSameAdjacentCells++;
+
+                    if (numberOfSameAdjacentCells == 4) {
+                        return elementIndex;
+                    }
+                } else {
+                    numberOfSameAdjacentCells = 1;
+                }
+
+                lastColour = currentCellColour;
+            } else {
+                numberOfSameAdjacentCells = 1;
+            }
+        }
+        return -1;
     }
 
     private int getNumberOfElementsWithSameColourAsTopElement(Cell[] cells, int topElementPosition, CellColour topElementColour, int numberOfElementsWithSameColourAsTopElement) {

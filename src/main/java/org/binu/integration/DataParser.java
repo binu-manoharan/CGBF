@@ -76,7 +76,7 @@ public class DataParser {
         return cells;
     }
 
-    Board createBoard(String[] boardString) {
+    public Board createBoard(String[] boardString) {
         final Board board = new Board();
 
         assert boardString.length == 12;
