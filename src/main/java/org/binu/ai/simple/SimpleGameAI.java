@@ -1,5 +1,6 @@
-package org.binu.ai;
+package org.binu.ai.simple;
 
+import org.binu.ai.GameAI;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;
@@ -7,9 +8,11 @@ import org.binu.board.Cell;
 /**
  * Simple AI with column scoring
  */
-class SimpleGameAI extends GameAI {
-    SimpleGameAI(Board board, BlockQueue blockQueue) {
+public class SimpleGameAI extends GameAI {
+    private final CellArrayParser cellArrayParser;
+    public SimpleGameAI(Board board, BlockQueue blockQueue) {
         super(board, blockQueue);
+        cellArrayParser = new CellArrayParserImpl();
     }
 
     /** {@inheritDoc} */

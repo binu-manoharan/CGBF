@@ -6,15 +6,15 @@ import org.binu.board.Board;
 /**
  * Common AI features.
  */
-abstract class GameAI implements IGameAI {
-    Board board;
-    BlockQueue blockQueue;
-    CellArrayParser cellArrayParser;
+public abstract class GameAI implements IGameAI {
+    protected Board board;
+    protected BlockQueue blockQueue;
+
 
     public GameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
 
-        cellArrayParser = new CellArrayParserImpl();
+
     }
 }

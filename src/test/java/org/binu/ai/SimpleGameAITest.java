@@ -1,5 +1,6 @@
 package org.binu.ai;
 
+import org.binu.ai.simple.SimpleGameAI;
 import org.binu.board.Block;
 import org.binu.board.BlockFactory;
 import org.binu.board.BlockQueue;

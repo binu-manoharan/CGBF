@@ -1,5 +1,7 @@
 package org.binu.ai;
 
+import org.binu.ai.simple.CellArrayParser;
+import org.binu.ai.simple.CellArrayParserImpl;
 import org.binu.board.Block;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
@@ -33,7 +35,7 @@ public class CellArrayParserTest {
         cells[0] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
         cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
 
-        int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(cells);
+        final int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(cells);
 
         assertThat("First empty position is 2 (zero indexed)", firstEmptyPosition, is(2));
     }
@@ -44,7 +46,7 @@ public class CellArrayParserTest {
         cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
         cells[2] = getCell(CellColour.BLUE, CellStatus.OCCUPIED);
 
-        int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(cells);
+        final int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(cells);
 
         assertThat("First empty position is 3 (zero indexed)", firstEmptyPosition, is(3));
     }
@@ -52,7 +54,7 @@ public class CellArrayParserTest {
     @Test
     public void should_provide_score_of_0_if_the_column_is_empty() throws Exception {
         block = getBlock();
-        int score = cellArrayParser.getCellArrayScore(cells, block);
+        final int score = cellArrayParser.getCellArrayScore(cells, block);
         assertThat("Score should be 0 for an empty column", score, is(0));
     }
 
@@ -62,7 +64,7 @@ public class CellArrayParserTest {
 
         block = getBlock();
 
-        int score = cellArrayParser.getCellArrayScore(cells, block);
+        final int score = cellArrayParser.getCellArrayScore(cells, block);
         assertThat("Score should be -1 for a column with an existing cell with different colour", score, is(-1));
     }
 
@@ -73,17 +75,17 @@ public class CellArrayParserTest {
 
         block = getBlock();
 
-        int score = cellArrayParser.getCellArrayScore(cells, block);
+        final int score = cellArrayParser.getCellArrayScore(cells, block);
 
         assertThat("Score should be 1 for a match of 4", score, is(1));
     }
 
     private Block getBlock() {
-        Cell[] cells = new Cell[2];
+        final Cell[] cells = new Cell[2];
         cells[0] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);
         cells[1] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);
 
-        Block block = new Block(cells);
+        final Block block = new Block(cells);
         return block;
     }
 

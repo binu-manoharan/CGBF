@@ -1,4 +1,4 @@
-package org.binu.ai;
+package org.binu.ai.simple;
 
 import org.binu.board.Block;
 import org.binu.board.Cell;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Logic for parsing a cell array.
  */
-interface CellArrayParser {
+public interface CellArrayParser {
     int getFirstEmptyPosition(Cell[] cells);
 
     int getCellArrayScore(Cell[] column, @Nullable Block block);

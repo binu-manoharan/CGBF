@@ -1,4 +1,4 @@
-package org.binu.ai;
+package org.binu.ai.simple;
 
 import org.binu.board.Block;
 import org.binu.board.Cell;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Implementation of CellArrayParser
  */
-class CellArrayParserImpl implements CellArrayParser {
+public class CellArrayParserImpl implements CellArrayParser {
     @Override
     public int getFirstEmptyPosition(Cell[] cells) {
         final int length = cells.length;

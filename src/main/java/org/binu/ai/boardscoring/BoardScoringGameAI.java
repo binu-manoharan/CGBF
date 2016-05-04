@@ -1,5 +1,6 @@
-package org.binu.ai;
+package org.binu.ai.boardscoring;
 
+import org.binu.ai.GameAI;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 
