@@ -19,20 +19,31 @@ class SimpleGameAI extends GameAI {
 class BoardScoringGameAI extends GameAI {
 }
 
-class MoveAnalyser {
+class IMoveAnalyser {
     + checkPossibleMoves()
     + suggestNextMove()
 }
 
-class BoardCollapser {
+class MoveAnalyserImpl implements IMoveAnalyser{
+}
+
+interface IBoardScoreCalculator {
+   + int calculateBoardScore()
+}
+
+class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
+
+}
+
+interface IBoardCollapser {
     + collapseBoard()
 }
 
-class BoardScoreCalculator {
-    + int calculateBoardScore()
+class BoardCollapserImpl implements IBoardCollapser{
+    + collapseBoard()
 }
 
-BoardScoringGameAI --> MoveAnalyser
-MoveAnalyser --r> BoardScoreCalculator
-BoardScoreCalculator --> BoardCollapser
+BoardScoringGameAI --> IMoveAnalyser
+IMoveAnalyser --> IBoardScoreCalculator
+IBoardScoreCalculator --> IBoardCollapser
 @enduml
