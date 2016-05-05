@@ -57,6 +57,39 @@ public class IBoardClearerTest {
     }
 
     @Test
+    public void should_clear_a_2x2_square_across_the_board() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                ".44...",
+                ".44.33",
+                "021233",
+                "011113",
+                "011000"
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board clearedBoard = boardClearer.clearBoardBySquare(board);
+        final Cell[] firstRow = clearedBoard.getRow(0);
+        final Cell[] secondRow = clearedBoard.getRow(1);
+        final Cell[] thirdRow = clearedBoard.getRow(2);
+        final Cell[] fourthRow = clearedBoard.getRow(3);
+        final Cell[] fifthRow = clearedBoard.getRow(4);
+
+        assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Second Row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Third Row", thirdRow, CellStatus.BLOCKED, CellStatus.OCCUPIED, CellStatus.EMPTY, CellStatus.OCCUPIED, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Fourth Row", fourthRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("FIFTH Row", fifthRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+    }
+
+    @Test
     public void should_clear_a_4_horizontal_row() throws Exception {
         final String[] boardString = {
                 "......",

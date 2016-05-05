@@ -6,6 +6,8 @@ import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 
+import java.util.List;
+
 /**
  * Simple board clearer implementation.
  */
@@ -50,7 +52,12 @@ public class BoardClearerImpl implements IBoardClearer {
 
     @Override
     public Board clearBoardBySquare(Board board) {
-        return null;
+        final List<int[]> cellList = cellArrayParser.getIndexOf4BlockGroup(board.getBoard());
+        Board clearedSqareBoard = board;
+        for (int[] cell : cellList) {
+            clearedSqareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+        }
+        return clearedSqareBoard;
     }
 
     private Board clearFromCellAndSurroundingCells(int rowId, int columnId, Board board) {
