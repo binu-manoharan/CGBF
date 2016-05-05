@@ -93,7 +93,7 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 final CellColour cellTopRight = cellArray[row + 1][col + 1].getCellColour();
                 final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
 
-                if(cellBotLeft != null && cellBotLeft == cellBotRight && cellTopLeft == cellTopRight && cellBotLeft == cellTopRight) {
+                if (cellBotLeft != null && cellBotLeft == cellBotRight && cellTopLeft == cellTopRight && cellBotLeft == cellTopRight) {
                     final int[] matchingResult = new int[2];
                     matchingResult[0] = row;
                     matchingResult[1] = col;
@@ -103,6 +103,26 @@ public class CellArrayHelperImpl implements CellArrayHelper {
             }
         }
         return resultList;
+    }
+
+    @Override
+    public Cell[] collapseEmptyCells(Cell[] cells) {
+        final int firstEmptyPosition = getFirstEmptyPosition(cells);
+        final int cellLength = cells.length;
+        final Cell[] collapsedCells = new Cell[cellLength];
+        int collapsedCellIndex = 0;
+        for (int cellIndex = 0; cellIndex < cellLength; cellIndex++) {
+            if (cellIndex < firstEmptyPosition) {
+                if (cells[cellIndex].getCellStatus() != CellStatus.EMPTY) {
+                    collapsedCells[collapsedCellIndex++] = cells[cellIndex];
+                }
+            }
+        }
+
+        for (int cellIndex = collapsedCellIndex; cellIndex < cellLength; cellIndex++) {
+            collapsedCells[cellIndex] = new Cell(null, CellStatus.EMPTY);
+        }
+        return collapsedCells;
     }
 
     private int getNumberOfElementsWithSameColourAsTopElement(Cell[] cells, int topElementPosition, CellColour topElementColour, int numberOfElementsWithSameColourAsTopElement) {

@@ -25,12 +25,14 @@ public class CellArrayHelperTest {
     private Cell[] cells;
     private CellArrayHelper cellArrayHelper;
     private Block block;
+    private DataParser dataParser;
+    private Board board;
 
     @Before
     public void setUp() throws Exception {
         cells = new Cell[12];
         cellArrayHelper = new CellArrayHelperImpl();
-
+        dataParser = new DataParser();
         initEmptyCells();
     }
 
@@ -164,9 +166,7 @@ public class CellArrayHelperTest {
                 "111000",
                 "111000"
         };
-        final DataParser dataParser = new DataParser();
-        final CellArrayHelper cellArrayHelper = new CellArrayHelperImpl();
-        final Board board = dataParser.createBoard(boardString);
+        board = dataParser.createBoard(boardString);
 
         final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOf4BlockGroup(board.getBoard());
 
@@ -194,9 +194,7 @@ public class CellArrayHelperTest {
                 "111000",
                 "111000"
         };
-        final DataParser dataParser = new DataParser();
-        final CellArrayHelper cellArrayHelper = new CellArrayHelperImpl();
-        final Board board = dataParser.createBoard(boardString);
+        board = dataParser.createBoard(boardString);
 
         final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOf4BlockGroup(board.getBoard());
 
@@ -209,6 +207,48 @@ public class CellArrayHelperTest {
         assertBlockItems(indexOf4BlockGroup.get(3)[0], 4, indexOf4BlockGroup.get(3)[1], 1);
         assertBlockItems(indexOf4BlockGroup.get(4)[0], 6, indexOf4BlockGroup.get(4)[1], 2);
         assertBlockItems(indexOf4BlockGroup.get(5)[0], 10, indexOf4BlockGroup.get(5)[1], 4);
+    }
+
+    @Test
+    public void should_move_cells_to_empty_positions() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "23....",
+                ".0....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+
+        firstColumnChecks();
+        secondColumnChecks();
+    }
+
+    private void firstColumnChecks() {
+        final Cell[] cells = getCollapsedCells(0);
+        assertThat("First column [0] is BLUE", cells[0].getCellColour(), is(CellColour.BLUE));
+        assertThat("First column [1] is BLUE", cells[1].getCellColour(), is(CellColour.GREEN));
+        assertThat("First column [11] is EMPTY", cells[11].getCellStatus(), is(CellStatus.EMPTY));
+    }
+
+    private void secondColumnChecks() {
+        final Cell[] cells = getCollapsedCells(1);
+
+        assertThat("Second column [0] is BLOCKED", cells[0].getCellStatus(), is(CellStatus.BLOCKED));
+        assertThat("Second column [1] is BLUE", cells[1].getCellColour(), is(CellColour.PURPLE));
+        assertThat("Second column [2] is EMPTY", cells[2].getCellStatus(), is(CellStatus.EMPTY));
+    }
+
+    private Cell[] getCollapsedCells(int column) {
+        final Cell[] cells = board.getColumn(column);
+        return cellArrayHelper.collapseEmptyCells(cells);
     }
 
     private void assertBlockItems(int actual, int row, int actual2, int col) {

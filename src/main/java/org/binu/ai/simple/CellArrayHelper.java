@@ -46,4 +46,10 @@ public interface CellArrayHelper {
      */
     List<int[]> getIndexOf4BlockGroup(Cell[][] cellArray);
 
+    /**
+     * Collapses any empty cells that exists between other types of cells
+     * @param cells cell array to parse
+     * @return collapsed cell array
+     */
+    Cell[] collapseEmptyCells(Cell[] cells);
 }
