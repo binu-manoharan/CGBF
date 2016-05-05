@@ -1,6 +1,7 @@
 package org.binu.ai.simple;
 
 import org.binu.board.Block;
+import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
@@ -123,6 +124,16 @@ public class CellArrayHelperImpl implements CellArrayHelper {
             collapsedCells[cellIndex] = new Cell(null, CellStatus.EMPTY);
         }
         return collapsedCells;
+    }
+
+    @Override
+    public Board collapseEmptyCells(Board board) {
+        Board collapsedBoard = new Board();
+        for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
+            final Cell[] cells = collapseEmptyCells(board.getColumn(col));
+            collapsedBoard.setColumn(col, cells);
+        }
+        return collapsedBoard;
     }
 
     private int getNumberOfElementsWithSameColourAsTopElement(Cell[] cells, int topElementPosition, CellColour topElementColour, int numberOfElementsWithSameColourAsTopElement) {

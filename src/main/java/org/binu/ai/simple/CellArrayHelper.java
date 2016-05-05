@@ -1,6 +1,7 @@
 package org.binu.ai.simple;
 
 import org.binu.board.Block;
+import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,4 +53,11 @@ public interface CellArrayHelper {
      * @return collapsed cell array
      */
     Cell[] collapseEmptyCells(Cell[] cells);
+
+    /**
+     * Collapse empty cells on a board
+     * @param board 2d cell array
+     * @return collapsed board
+     */
+    Board collapseEmptyCells(Board board);
 }

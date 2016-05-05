@@ -27,6 +27,7 @@ public class Board {
 
     /**
      * returns the current board as a 2d array
+     *
      * @return entire board data
      */
     public Cell[][] getBoard() {
@@ -35,7 +36,8 @@ public class Board {
 
     /**
      * Get cell data from the board
-     * @param row row index
+     *
+     * @param row    row index
      * @param column column index
      * @return Cell corresponding to the indexes on the board
      */
@@ -45,8 +47,9 @@ public class Board {
 
     /**
      * Set colour and status
-     * @param row row index
-     * @param column column index
+     *
+     * @param row        row index
+     * @param column     column index
      * @param cellStatus new cell status
      * @param cellColour new cell colour
      */
@@ -57,6 +60,7 @@ public class Board {
 
     /**
      * Get the column for the given column index
+     *
      * @param column column index
      * @return cell array for the column
      */
@@ -69,7 +73,20 @@ public class Board {
     }
 
     /**
+     * Set the column for the given column index
+     *
+     * @param column column index
+     * @param cells column data
+     */
+    public void setColumn(int column, Cell[] cells) {
+        for (int row = 0; row < ROW_LENGTH; row++) {
+            setCell(row, column, cells[row].getCellStatus(), cells[row].getCellColour());
+        }
+    }
+
+    /**
      * Get the row for the given row index
+     *
      * @param row row index
      * @return cell array for the row
      */
@@ -79,6 +96,7 @@ public class Board {
 
     /**
      * Set the row for the given row index
+     *
      * @param row row index
      */
     public void setRow(int row, Cell[] rowCells) {

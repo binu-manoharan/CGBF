@@ -22,15 +22,10 @@ class BoardCollapserImpl implements IBoardCollapser {
         final long startTime = System.nanoTime();
 
         final Board clearedBoard = boardClearer.clearBoard(board);
-
-        for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
-            for (int row = 0; row < Board.ROW_LENGTH; row++) {
-
-            }
-        }
+        final Board clearedAndCollapsed = cellArrayHelper.collapseEmptyCells(clearedBoard);
 
         final long endTime = System.nanoTime();
         System.out.println(endTime - startTime);
-        return clearedBoard;
+        return clearedAndCollapsed;
     }
 }
