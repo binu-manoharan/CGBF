@@ -17,6 +17,17 @@ public class Board {
         initEmptyBoard();
     }
 
+    public Board(Board board) {
+        this.cells = new Cell[ROW_LENGTH][COLUMN_LENGTH];
+
+        for (int row = 0; row < ROW_LENGTH; row++) {
+            for (int col = 0; col < COLUMN_LENGTH; col++) {
+                final Cell cell = board.getCell(row, col);
+                cells[row][col] = new Cell(cell.getCellColour(), cell.getCellStatus());
+            }
+        }
+    }
+
     private void initEmptyBoard() {
         for (int i = 0; i < Board.ROW_LENGTH; i++) {
             for (int j = 0; j < Board.COLUMN_LENGTH; j++) {

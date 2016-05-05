@@ -60,4 +60,12 @@ public interface CellArrayHelper {
      * @return collapsed board
      */
     Board collapseEmptyCells(Board board);
+
+    /**
+     * Drop block into cell[]
+     * @param cells cells to drop into
+     * @param block blocks to drop into the cell
+     * @return dropped cell array
+     */
+    Cell[] dropBlockIntoColumn(Cell[] cells, Block block);
 }

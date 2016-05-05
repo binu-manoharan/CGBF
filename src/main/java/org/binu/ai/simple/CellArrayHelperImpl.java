@@ -136,6 +136,25 @@ public class CellArrayHelperImpl implements CellArrayHelper {
         return collapsedBoard;
     }
 
+    @Override
+    public Cell[] dropBlockIntoColumn(Cell[] cells, Block block) {
+        final int firstEmptyPosition = getFirstEmptyPosition(cells);
+        final int length = cells.length;
+        final Cell[] droppedCells = new Cell[length];
+
+        System.arraycopy(cells, 0, droppedCells, 0, cells.length);
+
+        if (firstEmptyPosition != length) {
+            final Cell[] blockCells = block.getCells();
+            droppedCells[firstEmptyPosition] = blockCells[0];
+            droppedCells[firstEmptyPosition + 1] = blockCells[1];
+        } else {
+            assert true: "Cell is too full!";
+        }
+
+        return droppedCells;
+    }
+
     private int getNumberOfElementsWithSameColourAsTopElement(Cell[] cells, int topElementPosition, CellColour topElementColour, int numberOfElementsWithSameColourAsTopElement) {
         for (int i = topElementPosition - 1; i >= 0; i--) {
             if (topElementColour == cells[i].getCellColour()) {

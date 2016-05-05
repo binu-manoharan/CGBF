@@ -16,7 +16,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Test for {@link IBoardCollapser}
  */
-public class BoardCollapserTest {
+public class IBoardCollapserTest {
 
     private DataParser dataParser;
     private Board board;

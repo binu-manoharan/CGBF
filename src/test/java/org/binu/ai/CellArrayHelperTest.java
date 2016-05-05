@@ -3,6 +3,7 @@ package org.binu.ai;
 import org.binu.ai.simple.CellArrayHelper;
 import org.binu.ai.simple.CellArrayHelperImpl;
 import org.binu.board.Block;
+import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -27,6 +29,7 @@ public class CellArrayHelperTest {
     private Block block;
     private DataParser dataParser;
     private Board board;
+    private BlockQueue blockQueue;
 
     @Before
     public void setUp() throws Exception {
@@ -229,6 +232,49 @@ public class CellArrayHelperTest {
 
         firstColumnChecks();
         secondColumnChecks();
+    }
+
+    @Test
+    public void should_drop_cells_on_the_column() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Cell[] column = board.getColumn(0);
+        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(column, block);
+
+        assertThat("The 1st cell should be BLUE", cells[0].getCellColour(), is(CellColour.BLUE));
+        assertThat("The 2nd cell should be BLUE", cells[1].getCellColour(), is(CellColour.BLUE));
+        assertThat("The 3rd cell should be BLUE", cells[2].getCellColour(), is(CellColour.BLUE));
+        assertThat("The 3rd cell should be BLUE", column[2].getCellColour(), is(nullValue()));
+        assertThat("The 4th cell should be BLUE", cells[3].getCellColour(), is(CellColour.BLUE));
+        assertThat("The 4th cell should be BLUE", column[3].getCellColour(), is(nullValue()));
+    }
+
+    private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
+        final Cell[] blockCells = getCells(cell1Colour, cell1Status, cell2Colour, cell2Status);
+        return new Block(blockCells);
+    }
+
+    private Cell[] getCells(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
+        final Cell[] cells = new Cell[2];
+        cells[0] = new Cell(cell1Colour, cell1Status);
+        cells[1] = new Cell(cell2Colour, cell2Status);
+        return cells;
     }
 
     private void firstColumnChecks() {
