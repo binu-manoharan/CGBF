@@ -4,6 +4,8 @@ import org.binu.board.Block;
 import org.binu.board.Cell;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Logic for parsing a cell array.
  */
@@ -12,8 +14,9 @@ public interface CellArrayParser {
 
     /**
      * Get Array score. This probably doesn't belong to this method.
+     *
      * @param column cell array
-     * @param block block that is being checked against the column
+     * @param block  block that is being checked against the column
      * @return score for the block landing on the column
      */
     int getCellArrayScore(Cell[] column, @Nullable Block block);
@@ -21,8 +24,19 @@ public interface CellArrayParser {
 
     /**
      * Returns index of an element which forms four of the same colour
+     *
      * @param cells cell array to check for repeated group
      * @return max index of an element within the group
      */
     int getFirstIndexOfRepeatOf4Group(Cell[] cells);
+
+    /**
+     * Returns int [] containing two values which is the x and y within the 2d array for an element with the first
+     * repeated group block
+     *
+     * @param cellArray 2d array
+     * @return x and y containing the repeated groups
+     */
+    List<int[]> getIndexOf4BlockGroup(Cell[][] cellArray);
+
 }

@@ -28,6 +28,35 @@ public class IBoardClearerTest {
     }
 
     @Test
+    public void should_clear_a_2x2_square() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "0212..",
+                "01111.",
+                "011000"
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board clearedBoard = boardClearer.clearBoardBySquare(board);
+        final Cell[] firstRow = clearedBoard.getRow(0);
+        final Cell[] secondRow = clearedBoard.getRow(1);
+        final Cell[] thirdRow = clearedBoard.getRow(2);
+
+        assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
+        assertRowStatus("Second Row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Third Row", thirdRow, CellStatus.BLOCKED, CellStatus.OCCUPIED, CellStatus.EMPTY, CellStatus.OCCUPIED, CellStatus.EMPTY, CellStatus.EMPTY);
+    }
+
+    @Test
     public void should_clear_a_4_horizontal_row() throws Exception {
         final String[] boardString = {
                 "......",

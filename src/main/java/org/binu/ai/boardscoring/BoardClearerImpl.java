@@ -48,6 +48,11 @@ public class BoardClearerImpl implements IBoardClearer {
         return board;
     }
 
+    @Override
+    public Board clearBoardBySquare(Board board) {
+        return null;
+    }
+
     private Board clearFromCellAndSurroundingCells(int rowId, int columnId, Board board) {
         final Cell collapsingCell = board.getCell(rowId, columnId);
         final CellColour cellColour = collapsingCell.getCellColour();

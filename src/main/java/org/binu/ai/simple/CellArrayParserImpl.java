@@ -6,6 +6,9 @@ import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implementation of CellArrayParser
  */
@@ -74,6 +77,32 @@ public class CellArrayParserImpl implements CellArrayParser {
             }
         }
         return -1;
+    }
+
+    @Override
+    public List<int[]> getIndexOf4BlockGroup(Cell[][] cellArray) {
+        final int rowLength = cellArray.length;
+        final int colLength = cellArray[0].length;
+
+        final List<int[]> resultList = new ArrayList<>();
+
+        for (int row = 0; row < rowLength - 1; row++) {
+            for (int col = 0; col < colLength - 1; col++) {
+                final CellColour cellBotLeft = cellArray[row][col].getCellColour();
+                final CellColour cellTopLeft = cellArray[row + 1][col].getCellColour();
+                final CellColour cellTopRight = cellArray[row + 1][col + 1].getCellColour();
+                final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
+
+                if(cellBotLeft != null && cellBotLeft == cellBotRight && cellTopLeft == cellTopRight && cellBotLeft == cellTopRight) {
+                    final int[] matchingResult = new int[2];
+                    matchingResult[0] = row;
+                    matchingResult[1] = col;
+                    resultList.add(matchingResult);
+                    col++;
+                }
+            }
+        }
+        return resultList;
     }
 
     private int getNumberOfElementsWithSameColourAsTopElement(Cell[] cells, int topElementPosition, CellColour topElementColour, int numberOfElementsWithSameColourAsTopElement) {

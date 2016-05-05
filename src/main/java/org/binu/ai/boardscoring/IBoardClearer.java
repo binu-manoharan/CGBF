@@ -26,4 +26,11 @@ public interface IBoardClearer {
      * @return Board
      */
     Board clearBoardByRow(Board board);
+
+    /**
+     * Empty out cells of a board checking for 4 square match
+     * @param board board to parse
+     * @return Board
+     */
+    Board clearBoardBySquare(Board board);
 }
