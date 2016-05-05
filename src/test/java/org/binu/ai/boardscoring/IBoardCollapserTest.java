@@ -52,7 +52,7 @@ public class IBoardCollapserTest {
 
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.OCCUPIED, CellStatus.OCCUPIED, CellStatus.OCCUPIED,
                 CellStatus.OCCUPIED, CellStatus.EMPTY);
-        assertRowColour("Second row", firstRow, null, CellColour.GREEN, CellColour.PURPLE, CellColour.RED, CellColour.YELLOW, null);
+        assertRowColour("First row", firstRow, null, CellColour.GREEN, CellColour.PURPLE, CellColour.RED, CellColour.YELLOW, null);
     }
 
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,
