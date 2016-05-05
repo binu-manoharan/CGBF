@@ -23,7 +23,8 @@ public class BoardClearerImpl implements IBoardClearer {
     public Board clearBoard(Board board) {
         final Board columnClearedBoard = clearBoardByColumn(board);
         final Board rowClearedBoard = clearBoardByRow(columnClearedBoard);
-        return rowClearedBoard;
+        final Board squareClearedBoard = clearBoardBySquare(rowClearedBoard);
+        return squareClearedBoard;
     }
 
     @Override

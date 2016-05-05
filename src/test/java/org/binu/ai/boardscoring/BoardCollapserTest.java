@@ -7,6 +7,7 @@ import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Test for {@link IBoardCollapser}
  */
-public class IBoardCollapserTest {
+public class BoardCollapserTest {
 
     private DataParser dataParser;
     private Board board;
@@ -54,6 +55,71 @@ public class IBoardCollapserTest {
                 CellStatus.OCCUPIED, CellStatus.EMPTY);
         assertRowColour("First row", firstRow, null, CellColour.GREEN, CellColour.PURPLE, CellColour.RED, CellColour.YELLOW, null);
     }
+
+    @Test
+    public void should_collapse_all_shapes() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "3.22..",
+                "3.22..",
+                "3.....",
+                "31111."
+        };
+
+        board = dataParser.createBoard(boardString);
+        final Board collapsedBoard = boardCollapser.collapseBoard(boardCollapser.collapseBoard(board));
+        final Cell[] firstRow = collapsedBoard.getRow(0);
+        final Cell[] secondRow = collapsedBoard.getRow(1);
+
+        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
+                CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowColour("First row", firstRow, null, null, null, null, null, null);
+        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
+                CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowColour("Second row", secondRow, null, null, null, null, null, null);
+    }
+
+    @Ignore
+    @Test
+    public void should_collapse_all_shapes_recursively() throws Exception {
+        //TODO recursively collapse test
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "3.22..",
+                "3.22..",
+                "3.....",
+                "31111."
+        };
+
+        board = dataParser.createBoard(boardString);
+        final Board collapsedBoard = boardCollapser.collapseBoard(boardCollapser.collapseBoard(board));
+        final Cell[] firstRow = collapsedBoard.getRow(0);
+        final Cell[] secondRow = collapsedBoard.getRow(1);
+
+        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
+                CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowColour("First row", firstRow, null, null, null, null, null, null);
+        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
+                CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowColour("Second row", secondRow, null, null, null, null, null, null);
+    }
+
+
+
 
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,
                                  CellStatus thirdCellStatus, CellStatus fourthCellStatus, CellStatus fifthCellStatus,

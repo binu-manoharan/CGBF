@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 /**
  * Test for {@link IBoardClearer}
  */
-public class IBoardClearerTest {
+public class BoardClearerTest {
     private DataParser dataParser;
     private Board board;
     private IBoardClearer boardClearer;
