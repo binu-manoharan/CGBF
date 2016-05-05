@@ -1,9 +1,9 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.simple.CellArrayParser;
 import org.binu.ai.simple.CellArrayParserImpl;
 import org.binu.board.Board;
 import org.binu.board.Cell;
+import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
 import org.junit.Before;
@@ -19,12 +19,13 @@ public class IBoardCollapserTest {
 
     private DataParser dataParser;
     private Board board;
-    private IBoardCollapser boardCollapser;
+    private CellArrayParserImpl cellArrayParser;
+    private BoardCollapserImpl boardCollapser;
 
     @Before
     public void setUp() throws Exception {
         dataParser = new DataParser();
-        CellArrayParser cellArrayParser = new CellArrayParserImpl();
+        cellArrayParser = new CellArrayParserImpl();
         boardCollapser = new BoardCollapserImpl(cellArrayParser);
     }
 
@@ -41,103 +42,17 @@ public class IBoardCollapserTest {
                 "......",
                 "......",
                 "......",
-                "......",
+                ".2345.",
                 ".1111."
         };
 
         board = dataParser.createBoard(boardString);
-
-        final Board collapsedBoard = boardCollapser.clearBoardByRow(board);
+        final Board collapsedBoard = boardCollapser.collapseBoard(boardCollapser.collapseBoard(board));
         final Cell[] firstRow = collapsedBoard.getRow(0);
 
-        assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
-    }
-
-    @Test
-    public void should_collapse_a_4_vertically_row() throws Exception {
-        final String[] boardString = {
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "0000..",
-                "2010..",
-                "2010..",
-                "2010..",
-                "2010.."
-        };
-
-        board = dataParser.createBoard(boardString);
-
-        final Board collapsedBoard = boardCollapser.clearBoardByColumn(board);
-        final Cell[] firstColumn = collapsedBoard.getColumn(0);
-        final Cell[] secondColumn = collapsedBoard.getColumn(1);
-        final Cell[] thirdColumn = collapsedBoard.getColumn(2);
-        final Cell[] fourthColumn = collapsedBoard.getColumn(3);
-
-        assertRowStatus("First Column", firstColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
-        assertRowStatus("Second Column", secondColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
-        assertRowStatus("Third Column", thirdColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
-        assertRowStatus("Fourth Column", fourthColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
-    }
-
-    @Test
-    public void should_collapse_a_4_horizontal_row_and_remove_blocks() throws Exception {
-        final String[] boardString = {
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "000...",
-                "011110"
-        };
-
-        board = dataParser.createBoard(boardString);
-
-        final Board collapsedBoard = boardCollapser.clearBoardByRow(board);
-        final Cell[] firstRow = collapsedBoard.getRow(0);
-        final Cell[] secondRow = collapsedBoard.getRow(1);
-
-        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
-        assertRowStatus("Second row", secondRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
-    }
-
-    @Test
-    public void should_collapse_a_4_horizontal_row_and_remove_blocks_from_below() throws Exception {
-        final String[] boardString = {
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "000000",
-                "011110",
-                "000000"
-        };
-
-        board = dataParser.createBoard(boardString);
-
-        final Board collapsedBoard = boardCollapser.clearBoardByRow(board);
-        final Cell[] firstRow = collapsedBoard.getRow(0);
-        final Cell[] secondRow = collapsedBoard.getRow(1);
-        final Cell[] thirdRow = collapsedBoard.getRow(2);
-
-        assertRowStatus("First row", firstRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
-        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
-        assertRowStatus("Third row", thirdRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
+        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.OCCUPIED, CellStatus.OCCUPIED, CellStatus.OCCUPIED,
+                CellStatus.OCCUPIED, CellStatus.EMPTY);
+        assertRowColour("Second row", firstRow, null, CellColour.GREEN, CellColour.PURPLE, CellColour.RED, CellColour.YELLOW, null);
     }
 
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,
@@ -151,5 +66,14 @@ public class IBoardCollapserTest {
         assertThat(messagePrefix + " [5] should be " + sixthCellStatus, firstRow[5].getCellStatus(), is(sixthCellStatus));
     }
 
-
+    private void assertRowColour(String messagePrefix, Cell[] firstRow, CellColour firstCellColour, CellColour secondCellColour,
+                                 CellColour thirdCellColour, CellColour fourthCellColour, CellColour fifthCellColour,
+                                 CellColour sixthCellColour) {
+        assertThat(messagePrefix + " [0] should be " + firstCellColour, firstRow[0].getCellColour(), is(firstCellColour));
+        assertThat(messagePrefix + " [1] should be " + secondCellColour, firstRow[1].getCellColour(), is(secondCellColour));
+        assertThat(messagePrefix + " [2] should be " + thirdCellColour, firstRow[2].getCellColour(), is(thirdCellColour));
+        assertThat(messagePrefix + " [3] should be " + fourthCellColour, firstRow[3].getCellColour(), is(fourthCellColour));
+        assertThat(messagePrefix + " [4] should be " + fifthCellColour, firstRow[4].getCellColour(), is(fifthCellColour));
+        assertThat(messagePrefix + " [5] should be " + sixthCellColour, firstRow[5].getCellColour(), is(sixthCellColour));
+    }
 }

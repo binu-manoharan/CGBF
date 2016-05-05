@@ -13,18 +13,4 @@ interface IBoardCollapser {
      * @return parsedBoard
      */
     Board collapseBoard(Board board);
-
-    /**
-     * Empty out cells of the board checking for 4 match in column vertically
-     * @param board board to parse
-     * @return Board
-     */
-    Board clearBoardByColumn(Board board);
-
-    /**
-     * Empty out cells of the board checking for 4 match in row horizontally
-     * @param board board to parse
-     * @return Board
-     */
-    Board clearBoardByRow(Board board);
 }
