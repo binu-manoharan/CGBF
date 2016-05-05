@@ -16,13 +16,13 @@ public class CellArrayParserImpl implements CellArrayParser {
     @Override
     public int getFirstEmptyPosition(Cell[] cells) {
         final int length = cells.length;
-        for (int i = length - 1; i > 0; i--) {
+        for (int i = length - 1; i >= 0; i--) {
             final CellStatus cellStatus = cells[i].getCellStatus();
             if (cellStatus != CellStatus.EMPTY) {
                 return i + 1;
             }
         }
-        return length;
+        return 0;
     }
 
     @Override
