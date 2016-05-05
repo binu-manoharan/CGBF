@@ -10,6 +10,13 @@ import java.util.List;
  * Logic for parsing a cell array.
  */
 public interface CellArrayParser {
+
+    /**
+     * Returns index of the first non empty position in the cell array where new block can sit
+     *
+     * @param cells cell array to check empty position for
+     * @return index position
+     */
     int getFirstEmptyPosition(Cell[] cells);
 
     /**
