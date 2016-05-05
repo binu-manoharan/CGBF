@@ -1,7 +1,7 @@
 package org.binu.ai;
 
-import org.binu.ai.simple.CellArrayParser;
-import org.binu.ai.simple.CellArrayParserImpl;
+import org.binu.ai.simple.CellArrayHelper;
+import org.binu.ai.simple.CellArrayHelperImpl;
 import org.binu.board.Block;
 import org.binu.board.Board;
 import org.binu.board.Cell;
@@ -18,18 +18,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link CellArrayParser}.
+ * Test for {@link CellArrayHelper}.
  */
-public class CellArrayParserTest {
+public class CellArrayHelperTest {
 
     private Cell[] cells;
-    private CellArrayParser cellArrayParser;
+    private CellArrayHelper cellArrayHelper;
     private Block block;
 
     @Before
     public void setUp() throws Exception {
         cells = new Cell[12];
-        cellArrayParser = new CellArrayParserImpl();
+        cellArrayHelper = new CellArrayHelperImpl();
 
         initEmptyCells();
     }
@@ -39,7 +39,7 @@ public class CellArrayParserTest {
         cells[0] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
         cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
 
-        final int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(cells);
+        final int firstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(cells);
 
         assertThat("First empty position is 2 (zero indexed)", firstEmptyPosition, is(2));
     }
@@ -50,7 +50,7 @@ public class CellArrayParserTest {
         cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
         cells[2] = getCell(CellColour.BLUE, CellStatus.OCCUPIED);
 
-        final int firstEmptyPosition = cellArrayParser.getFirstEmptyPosition(cells);
+        final int firstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(cells);
 
         assertThat("First empty position is 3 (zero indexed)", firstEmptyPosition, is(3));
     }
@@ -58,7 +58,7 @@ public class CellArrayParserTest {
     @Test
     public void should_provide_score_of_0_if_the_column_is_empty() throws Exception {
         block = getBlock();
-        final int score = cellArrayParser.getCellArrayScore(cells, block);
+        final int score = cellArrayHelper.getCellArrayScore(cells, block);
         assertThat("Score should be 0 for an empty column", score, is(0));
     }
 
@@ -68,7 +68,7 @@ public class CellArrayParserTest {
 
         block = getBlock();
 
-        final int score = cellArrayParser.getCellArrayScore(cells, block);
+        final int score = cellArrayHelper.getCellArrayScore(cells, block);
         assertThat("Score should be -1 for a column with an existing cell with different colour", score, is(-1));
     }
 
@@ -79,7 +79,7 @@ public class CellArrayParserTest {
 
         block = getBlock();
 
-        final int score = cellArrayParser.getCellArrayScore(cells, block);
+        final int score = cellArrayHelper.getCellArrayScore(cells, block);
 
         assertThat("Score should be 1 for a match of 4", score, is(1));
     }
@@ -93,7 +93,7 @@ public class CellArrayParserTest {
         cells[4] = getCell(CellColour.RED, CellStatus.OCCUPIED);
         cells[5] = getCell(CellColour.BLUE, CellStatus.OCCUPIED);
 
-        final int firstIndexOfRepeatOf4Group = cellArrayParser.getFirstIndexOfRepeatOf4Group(cells);
+        final int firstIndexOfRepeatOf4Group = cellArrayHelper.getFirstIndexOfRepeatOf4Group(cells);
         assertThat("First index of repeated group is 3", firstIndexOfRepeatOf4Group, is(3));
     }
 
@@ -106,7 +106,7 @@ public class CellArrayParserTest {
         cells[4] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
         cells[5] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
 
-        final int firstIndexOfRepeatOf4Group = cellArrayParser.getFirstIndexOfRepeatOf4Group(cells);
+        final int firstIndexOfRepeatOf4Group = cellArrayHelper.getFirstIndexOfRepeatOf4Group(cells);
         assertThat("First index of repeated group is 3", firstIndexOfRepeatOf4Group, is(-1));
     }
 
@@ -119,7 +119,7 @@ public class CellArrayParserTest {
         cells[4] = getCell(CellColour.RED, CellStatus.OCCUPIED);
         cells[5] = getCell(CellColour.RED, CellStatus.OCCUPIED);
 
-        final int firstIndexOfRepeatOf4Group = cellArrayParser.getFirstIndexOfRepeatOf4Group(cells);
+        final int firstIndexOfRepeatOf4Group = cellArrayHelper.getFirstIndexOfRepeatOf4Group(cells);
         assertThat("First index of repeated group is 3", firstIndexOfRepeatOf4Group, is(-1));
     }
 
@@ -140,7 +140,7 @@ public class CellArrayParserTest {
         cellArray[1][4] = getCell(CellColour.RED, CellStatus.OCCUPIED);
         cellArray[1][5] = getCell(CellColour.RED, CellStatus.OCCUPIED);
 
-        final List<int[]> indexOf4BlockGroup = cellArrayParser.getIndexOf4BlockGroup(cellArray);
+        final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOf4BlockGroup(cellArray);
 
         assertThat("Index of block of 4 is", indexOf4BlockGroup.size(), is(2));
         assertBlockItems(indexOf4BlockGroup.get(0)[0], 0, indexOf4BlockGroup.get(0)[1], 0);
@@ -165,10 +165,10 @@ public class CellArrayParserTest {
                 "111000"
         };
         final DataParser dataParser = new DataParser();
-        final CellArrayParser cellArrayParser = new CellArrayParserImpl();
+        final CellArrayHelper cellArrayHelper = new CellArrayHelperImpl();
         final Board board = dataParser.createBoard(boardString);
 
-        final List<int[]> indexOf4BlockGroup = cellArrayParser.getIndexOf4BlockGroup(board.getBoard());
+        final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOf4BlockGroup(board.getBoard());
 
         assertThat("Index of block of 4 is", indexOf4BlockGroup.size(), is(4));
 
@@ -195,10 +195,10 @@ public class CellArrayParserTest {
                 "111000"
         };
         final DataParser dataParser = new DataParser();
-        final CellArrayParser cellArrayParser = new CellArrayParserImpl();
+        final CellArrayHelper cellArrayHelper = new CellArrayHelperImpl();
         final Board board = dataParser.createBoard(boardString);
 
-        final List<int[]> indexOf4BlockGroup = cellArrayParser.getIndexOf4BlockGroup(board.getBoard());
+        final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOf4BlockGroup(board.getBoard());
 
         //ideally it should be 5 but the extra point comes from the consecutive 2x2 blocks
         assertThat("Index of block of 4 is", indexOf4BlockGroup.size(), is(6));

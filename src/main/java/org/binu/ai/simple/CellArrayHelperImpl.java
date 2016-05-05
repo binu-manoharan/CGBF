@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of CellArrayParser
+ * Implementation of CellArrayHelper
  */
-public class CellArrayParserImpl implements CellArrayParser {
+public class CellArrayHelperImpl implements CellArrayHelper {
     @Override
     public int getFirstEmptyPosition(Cell[] cells) {
         final int length = cells.length;

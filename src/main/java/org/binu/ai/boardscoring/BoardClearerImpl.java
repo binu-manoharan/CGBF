@@ -1,6 +1,6 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.simple.CellArrayParser;
+import org.binu.ai.simple.CellArrayHelper;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class BoardClearerImpl implements IBoardClearer {
 
-    private CellArrayParser cellArrayParser;
+    private CellArrayHelper cellArrayHelper;
 
-    public BoardClearerImpl(CellArrayParser cellArrayParser) {
-        this.cellArrayParser = cellArrayParser;
+    public BoardClearerImpl(CellArrayHelper cellArrayHelper) {
+        this.cellArrayHelper = cellArrayHelper;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BoardClearerImpl implements IBoardClearer {
     public Board clearBoardByColumn(Board board) {
         for (int columnId = 0; columnId < Board.COLUMN_LENGTH; columnId++) {
             final Cell[] column = board.getColumn(columnId);
-            final int rowId = cellArrayParser.getFirstIndexOfRepeatOf4Group(column);
+            final int rowId = cellArrayHelper.getFirstIndexOfRepeatOf4Group(column);
             if (rowId != -1) {
                 clearFromCellAndSurroundingCells(rowId, columnId, board);
             }
@@ -42,7 +42,7 @@ public class BoardClearerImpl implements IBoardClearer {
     public Board clearBoardByRow(Board board) {
         for (int rowId = 0; rowId < Board.ROW_LENGTH; rowId++) {
             final Cell[] row = board.getRow(rowId);
-            final int columnId = cellArrayParser.getFirstIndexOfRepeatOf4Group(row);
+            final int columnId = cellArrayHelper.getFirstIndexOfRepeatOf4Group(row);
             if (columnId != -1) {
                 clearFromCellAndSurroundingCells(rowId, columnId, board);
             }
@@ -52,7 +52,7 @@ public class BoardClearerImpl implements IBoardClearer {
 
     @Override
     public Board clearBoardBySquare(Board board) {
-        final List<int[]> cellList = cellArrayParser.getIndexOf4BlockGroup(board.getBoard());
+        final List<int[]> cellList = cellArrayHelper.getIndexOf4BlockGroup(board.getBoard());
         Board clearedSqareBoard = board;
         for (int[] cell : cellList) {
             clearedSqareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);

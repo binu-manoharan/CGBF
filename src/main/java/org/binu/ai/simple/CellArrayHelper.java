@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Logic for parsing a cell array.
  */
-public interface CellArrayParser {
+public interface CellArrayHelper {
 
     /**
      * Returns index of the first non empty position in the cell array where new block can sit

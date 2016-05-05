@@ -1,6 +1,6 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.simple.CellArrayParserImpl;
+import org.binu.ai.simple.CellArrayHelperImpl;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
@@ -19,13 +19,13 @@ public class IBoardCollapserTest {
 
     private DataParser dataParser;
     private Board board;
-    private CellArrayParserImpl cellArrayParser;
+    private CellArrayHelperImpl cellArrayParser;
     private BoardCollapserImpl boardCollapser;
 
     @Before
     public void setUp() throws Exception {
         dataParser = new DataParser();
-        cellArrayParser = new CellArrayParserImpl();
+        cellArrayParser = new CellArrayHelperImpl();
         boardCollapser = new BoardCollapserImpl(cellArrayParser);
     }
 

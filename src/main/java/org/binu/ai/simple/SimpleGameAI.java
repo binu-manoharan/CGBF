@@ -9,10 +9,10 @@ import org.binu.board.Cell;
  * Simple AI with column scoring
  */
 public class SimpleGameAI extends GameAI {
-    private final CellArrayParser cellArrayParser;
+    private final CellArrayHelper cellArrayHelper;
     public SimpleGameAI(Board board, BlockQueue blockQueue) {
         super(board, blockQueue);
-        cellArrayParser = new CellArrayParserImpl();
+        cellArrayHelper = new CellArrayHelperImpl();
     }
 
     /** {@inheritDoc} */
@@ -27,7 +27,7 @@ public class SimpleGameAI extends GameAI {
 
         for (int i = 0; i < Board.COLUMN_LENGTH; i++) {
             final Cell[] column = board.getColumn(i);
-            final int columnScore = cellArrayParser.getCellArrayScore(column, blockQueue.getNext());
+            final int columnScore = cellArrayHelper.getCellArrayScore(column, blockQueue.getNext());
 
             if (columnScore > highestColoumnScore) {
                 highestColoumnScore = columnScore;

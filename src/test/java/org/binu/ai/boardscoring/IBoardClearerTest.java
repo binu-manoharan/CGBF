@@ -1,7 +1,7 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.simple.CellArrayParser;
-import org.binu.ai.simple.CellArrayParserImpl;
+import org.binu.ai.simple.CellArrayHelper;
+import org.binu.ai.simple.CellArrayHelperImpl;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellStatus;
@@ -23,8 +23,8 @@ public class IBoardClearerTest {
     @Before
     public void setUp() throws Exception {
         dataParser = new DataParser();
-        final CellArrayParser cellArrayParser = new CellArrayParserImpl();
-        boardClearer = new BoardClearerImpl(cellArrayParser);
+        final CellArrayHelper cellArrayHelper = new CellArrayHelperImpl();
+        boardClearer = new BoardClearerImpl(cellArrayHelper);
     }
 
     @Test
