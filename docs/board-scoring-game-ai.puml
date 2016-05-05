@@ -43,7 +43,15 @@ class BoardCollapserImpl implements IBoardCollapser{
     + collapseBoard()
 }
 
+interface IBoardClearer {
+    + clearBoard()
+}
+
+class BoardClearerImpl implements IBoardClearer {
+}
+
 BoardScoringGameAI --> IMoveAnalyser
 IMoveAnalyser --> IBoardScoreCalculator
 IBoardScoreCalculator --> IBoardCollapser
+IBoardCollapser --> IBoardClearer
 @enduml

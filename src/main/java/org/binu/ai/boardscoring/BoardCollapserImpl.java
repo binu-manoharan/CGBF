@@ -11,7 +11,7 @@ import org.binu.data.CellStatus;
  */
 class BoardCollapserImpl implements IBoardCollapser {
 
-    CellArrayParser cellArrayParser;
+    private CellArrayParser cellArrayParser;
 
     public BoardCollapserImpl(CellArrayParser cellArrayParser) {
         this.cellArrayParser = cellArrayParser;
@@ -20,14 +20,39 @@ class BoardCollapserImpl implements IBoardCollapser {
     /** {@inheritDoc} */
     @Override
     public Board collapseBoard(Board board) {
-        final int rowId = 0;
-        final Cell[] row = board.getRow(rowId);
-        final int columnId = cellArrayParser.getFirstIndexOfRepeatOf4Group(row);
-        final Board collapsedBoard = clearFromCell(rowId, columnId, board);
-        return collapsedBoard;
+        final long startTime = System.nanoTime();
+        final Board clearedByRow = clearBoardByRow(board);
+        final Board clearedBoard = clearBoardByColumn(clearedByRow);
+        final long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
+        return clearedBoard;
     }
 
-    private Board clearFromCell(int rowId, int columnId, Board board) {
+    @Override
+    public Board clearBoardByColumn(Board board) {
+        for (int columnId = 0; columnId < Board.COLUMN_LENGTH; columnId++) {
+            final Cell[] column = board.getColumn(columnId);
+            final int rowId = cellArrayParser.getFirstIndexOfRepeatOf4Group(column);
+            if (rowId != -1) {
+                clearFromCellAndSurroundingCells(rowId, columnId, board);
+            }
+        }
+        return board;
+    }
+
+    @Override
+    public Board clearBoardByRow(Board board) {
+        for (int rowId = 0; rowId < Board.ROW_LENGTH; rowId++) {
+            final Cell[] row = board.getRow(rowId);
+            final int columnId = cellArrayParser.getFirstIndexOfRepeatOf4Group(row);
+            if (columnId != -1) {
+                clearFromCellAndSurroundingCells(rowId, columnId, board);
+            }
+        }
+        return board;
+    }
+
+    private Board clearFromCellAndSurroundingCells(int rowId, int columnId, Board board) {
         final Cell collapsingCell = board.getCell(rowId, columnId);
         final CellColour cellColour = collapsingCell.getCellColour();
 
@@ -38,7 +63,7 @@ class BoardCollapserImpl implements IBoardCollapser {
 
     private Board clearSurroundingCell(int rowId, int columnId, Board board, CellColour cellColour) {
         clearCell(rowId, columnId, board, cellColour);
-//        clearCell(rowId - 1, columnId, board, cellColour);
+        clearCell(rowId - 1, columnId, board, cellColour);
         clearCell(rowId, columnId - 1, board, cellColour);
         clearCell(rowId, columnId + 1, board, cellColour);
         clearCell(rowId + 1, columnId, board, cellColour);
@@ -48,10 +73,11 @@ class BoardCollapserImpl implements IBoardCollapser {
     private Board clearCell(int rowId, int columnId, Board board, CellColour cellColour) {
         if (rowId >= 0 && rowId < Board.ROW_LENGTH && columnId >= 0 && columnId < Board.COLUMN_LENGTH) {
             final Cell cell = board.getCell(rowId, columnId);
-            final CellStatus cellStatus = cell.getCellStatus();
-            if (cellColour == cell.getCellColour() || cellStatus == CellStatus.BLOCKED) {
+            final CellStatus currentCellStatus = cell.getCellStatus();
+            final CellColour currentCellColour = cell.getCellColour();
+            if (cellColour == currentCellColour || currentCellStatus == CellStatus.BLOCKED) {
                 board.setCell(rowId, columnId, CellStatus.EMPTY, null);
-                if (cellStatus != CellStatus.BLOCKED) {
+                if (currentCellColour == cellColour) {
                     clearSurroundingCell(rowId, columnId, board, cellColour);
                 }
             }

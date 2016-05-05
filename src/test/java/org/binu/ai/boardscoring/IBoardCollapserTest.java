@@ -10,9 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link IBoardCollapser}
@@ -21,13 +19,12 @@ public class IBoardCollapserTest {
 
     private DataParser dataParser;
     private Board board;
-    private CellArrayParser cellArrayParser;
     private IBoardCollapser boardCollapser;
 
     @Before
     public void setUp() throws Exception {
         dataParser = new DataParser();
-        cellArrayParser = new CellArrayParserImpl();
+        CellArrayParser cellArrayParser = new CellArrayParserImpl();
         boardCollapser = new BoardCollapserImpl(cellArrayParser);
     }
 
@@ -50,12 +47,41 @@ public class IBoardCollapserTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board collapsedBoard = boardCollapser.collapseBoard(board);
+        final Board collapsedBoard = boardCollapser.clearBoardByRow(board);
         final Cell[] firstRow = collapsedBoard.getRow(0);
 
-        assertThat("The first/bottom row should exist.", firstRow, is(not(nullValue())));
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+    }
 
+    @Test
+    public void should_collapse_a_4_vertically_row() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "0000..",
+                "2010..",
+                "2010..",
+                "2010..",
+                "2010.."
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board collapsedBoard = boardCollapser.clearBoardByColumn(board);
+        final Cell[] firstColumn = collapsedBoard.getColumn(0);
+        final Cell[] secondColumn = collapsedBoard.getColumn(1);
+        final Cell[] thirdColumn = collapsedBoard.getColumn(2);
+        final Cell[] fourthColumn = collapsedBoard.getColumn(3);
+
+        assertRowStatus("First Column", firstColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Second Column", secondColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
+        assertRowStatus("Third Column", thirdColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Fourth Column", fourthColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
     }
 
     @Test
@@ -77,13 +103,41 @@ public class IBoardCollapserTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board collapsedBoard = boardCollapser.collapseBoard(board);
+        final Board collapsedBoard = boardCollapser.clearBoardByRow(board);
         final Cell[] firstRow = collapsedBoard.getRow(0);
         final Cell[] secondRow = collapsedBoard.getRow(1);
 
-        assertThat("The first/bottom row should exist.", firstRow, is(not(nullValue())));
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second row", secondRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+    }
+
+    @Test
+    public void should_collapse_a_4_horizontal_row_and_remove_blocks_from_below() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "000000",
+                "011110",
+                "000000"
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board collapsedBoard = boardCollapser.clearBoardByRow(board);
+        final Cell[] firstRow = collapsedBoard.getRow(0);
+        final Cell[] secondRow = collapsedBoard.getRow(1);
+        final Cell[] thirdRow = collapsedBoard.getRow(2);
+
+        assertRowStatus("First row", firstRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
+        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Third row", thirdRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
     }
 
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,
