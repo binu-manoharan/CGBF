@@ -7,6 +7,7 @@ import org.binu.board.Board;
  * This formation can be either vertical or horizontal or a square of 4.
  */
 interface IBoardCollapser {
+    //TODO add isCollapsable
     /**
      * Collapse the board based on the 4 together rule.
      * @param board board to parse

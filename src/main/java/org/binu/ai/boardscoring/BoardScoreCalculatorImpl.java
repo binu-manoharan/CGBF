@@ -30,6 +30,7 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
 
     private int getScore(int column) {
         final Board tempBoardBefore = new Board(board);
+        //TODO Extract into board comparator?
         final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(board.getColumn(column), blockQueue.getNext());
         tempBoardBefore.setColumn(column, cells);
         final Board tempBoardAfter = new Board(tempBoardBefore);
