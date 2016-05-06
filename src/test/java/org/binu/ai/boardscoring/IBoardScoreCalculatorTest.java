@@ -40,7 +40,7 @@ public class IBoardScoreCalculatorTest {
                 "......",
                 ".....1",
                 ".1..01",
-                ".1..01"
+                "21..01"
         };
 
         final Board board = dataParser.createBoard(boardString);

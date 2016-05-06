@@ -8,6 +8,7 @@ import org.binu.board.Board;
 public interface IBoardClearer {
     /**
      * Clear the board based on the 4 together rule.
+     *
      * @param board board to parse
      * @return parsedBoard
      */
@@ -15,6 +16,7 @@ public interface IBoardClearer {
 
     /**
      * Empty out cells of the board checking for 4 match in column vertically
+     *
      * @param board board to parse
      * @return Board
      */
@@ -22,6 +24,7 @@ public interface IBoardClearer {
 
     /**
      * Empty out cells of the board checking for 4 match in row horizontally
+     *
      * @param board board to parse
      * @return Board
      */
@@ -29,6 +32,7 @@ public interface IBoardClearer {
 
     /**
      * Empty out cells of a board checking for 4 square match
+     *
      * @param board board to parse
      * @return Board
      */
@@ -36,11 +40,19 @@ public interface IBoardClearer {
 
     /**
      * Empty out cells making a 4 with a T or L shape
+     *
      * @param board board to parse
      * @return Board
      */
     Board clearBoardByTAndL(Board board);
 
-    //TODO clear board Z
+    /**
+     * Empty out cells making a 4 with a Z shape
+     *
+     * @param board board to parse
+     * @return Board
+     */
+    Board clearBoardByZ(Board board);
+
 
 }

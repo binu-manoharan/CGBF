@@ -233,6 +233,39 @@ public class IBoardClearerTest {
         assertRowStatus("Fourth row", fourthRow, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
     }
 
+    @Test
+    public void should_clear_a_Z_block() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                ".3..44",
+                ".3344.",
+                "013000",
+                "110220",
+                "100022"
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board clearedBoard = boardClearer.clearBoardByZ(board);
+        final Cell[] firstRow = clearedBoard.getRow(0);
+        final Cell[] secondRow = clearedBoard.getRow(1);
+        final Cell[] thirdRow = clearedBoard.getRow(2);
+        final Cell[] fourthRow = clearedBoard.getRow(3);
+        final Cell[] fifthRow = clearedBoard.getRow(3);
+
+        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Third row", thirdRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
+        assertRowStatus("Fourth row", fourthRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Fifth row", fifthRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+    }
+
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,
                                  CellStatus thirdCellStatus, CellStatus fourthCellStatus, CellStatus fifthCellStatus,
                                  CellStatus sixthCellStatus) {

@@ -19,13 +19,15 @@ public class BoardClearerImpl implements IBoardClearer {
         this.cellArrayHelper = cellArrayHelper;
     }
 
+    //TODO add test for clearBoard()
     @Override
     public Board clearBoard(Board board) {
         final Board columnClearedBoard = clearBoardByColumn(board);
         final Board rowClearedBoard = clearBoardByRow(columnClearedBoard);
         final Board squareClearedBoard = clearBoardBySquare(rowClearedBoard);
         final Board lAndTClearedBoard = clearBoardByTAndL(squareClearedBoard);
-        return lAndTClearedBoard;
+        final Board zClearedBoard = clearBoardByZ(lAndTClearedBoard);
+        return zClearedBoard;
     }
 
     @Override
@@ -65,11 +67,21 @@ public class BoardClearerImpl implements IBoardClearer {
     @Override
     public Board clearBoardByTAndL(Board board) {
         final List<int[]> cellList = cellArrayHelper.getIndexOfLAndT(board.getBoard());
-        Board clearedSquareBoard = board;
+        Board clearedTLBoard = board;
         for (int[] cell : cellList) {
-            clearedSquareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+            clearedTLBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
         }
-        return clearedSquareBoard;
+        return clearedTLBoard;
+    }
+
+    @Override
+    public Board clearBoardByZ(Board board) {
+        final List<int[]> cellList = cellArrayHelper.getIndexOfZ(board.getBoard());
+        Board clearedZBoard = board;
+        for (int[] cell : cellList) {
+            clearedZBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+        }
+        return clearedZBoard;
     }
 
     private Board clearFromCellAndSurroundingCells(int rowId, int columnId, Board board) {

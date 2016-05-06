@@ -49,6 +49,7 @@ public interface CellArrayHelper {
 
     /**
      * Collapses any empty cells that exists between other types of cells
+     *
      * @param cells cell array to parse
      * @return collapsed cell array
      */
@@ -56,6 +57,7 @@ public interface CellArrayHelper {
 
     /**
      * Collapse empty cells on a board
+     *
      * @param board 2d cell array
      * @return collapsed board
      */
@@ -63,6 +65,7 @@ public interface CellArrayHelper {
 
     /**
      * Drop block into cell[]
+     *
      * @param cells cells to drop into
      * @param block blocks to drop into the cell
      * @return dropped cell array
@@ -71,8 +74,17 @@ public interface CellArrayHelper {
 
     /**
      * Get cell indexes of L and T formations
+     *
      * @param cellArray cellArray to parse
-     * @return list of x and y co-ordinates of atleast a cell within the shape
+     * @return list of x and y co-ordinates of at least a cell within the shape
      */
     List<int[]> getIndexOfLAndT(Cell[][] cellArray);
+
+    /**
+     * Get cell indexes of Z formations
+     *
+     * @param cellArray cellArray to parse
+     * @return list of x and y co-ordinates of at least a cell within the shape
+     */
+    List<int[]> getIndexOfZ(Cell[][] cellArray);
 }

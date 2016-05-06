@@ -170,21 +170,70 @@ public class CellArrayHelperImpl implements CellArrayHelper {
         return resultList;
     }
 
+    @Override
+    public List<int[]> getIndexOfZ(Cell[][] cellArray) {
+        final int rowLength = cellArray.length;
+        final int colLength = cellArray[0].length;
+
+        final List<int[]> resultList = new ArrayList<>();
+
+        matchingPointsWithZToTheRight(cellArray, rowLength, colLength, resultList);
+        matchingPointsWithZToTheLeft(cellArray, rowLength, colLength, resultList);
+        return resultList;
+    }
+
+    private void matchingPointsWithZToTheLeft(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 0; row < rowLength - 1; row++) {
+            for (int col = 1; col < colLength - 1; col++) {
+                final CellColour cellLeftBot = cellArray[row][col - 1].getCellColour();
+                final CellColour cellLeftMid = cellArray[row][col].getCellColour();
+                final CellColour cellLeftTop = cellArray[row][col + 1].getCellColour();
+                final CellColour cellRightBot = cellArray[row + 1][col -1].getCellColour();
+                final CellColour cellRightMid = cellArray[row + 1][col].getCellColour();
+                final CellColour cellRightTop = cellArray[row + 1][col + 1].getCellColour();
+
+                final boolean midCellsAreSame = cellLeftMid != null && cellLeftMid == cellRightMid;
+                final boolean makesZ = (cellLeftMid == cellLeftTop && cellLeftMid == cellRightBot) || (cellLeftMid == cellLeftBot && cellLeftMid == cellRightTop);
+
+                if (midCellsAreSame && makesZ) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
+    private void matchingPointsWithZToTheRight(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 1; row < rowLength - 1; row++) {
+            for (int col = 0; col < colLength - 1; col++) {
+                final CellColour cellLeftBot = cellArray[row - 1][col].getCellColour();
+                final CellColour cellLeftMid = cellArray[row][col].getCellColour();
+                final CellColour cellLeftTop = cellArray[row + 1][col].getCellColour();
+                final CellColour cellRightBot = cellArray[row - 1][col + 1].getCellColour();
+                final CellColour cellRightMid = cellArray[row][col + 1].getCellColour();
+                final CellColour cellRightTop = cellArray[row + 1][col + 1].getCellColour();
+
+                final boolean midCellsAreSame = cellLeftMid != null && cellLeftMid == cellRightMid;
+                final boolean makesZ = (cellLeftMid == cellLeftTop && cellLeftMid == cellRightBot) || (cellLeftMid == cellLeftBot && cellLeftMid == cellRightTop);
+
+                if (midCellsAreSame && makesZ) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
     private void matchingPointsWithLOrTToTheRight(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
         for (int row = 0; row < rowLength - 2; row++) {
             for (int col = 0; col < colLength - 1; col++) {
                 final CellColour cellLeftBot = cellArray[row][col].getCellColour();
                 final CellColour cellLeftMid = cellArray[row + 1][col].getCellColour();
                 final CellColour cellLeftTop = cellArray[row + 2][col].getCellColour();
-                //do any of (1,0) (1,1) or (1,2) have the same colour
                 final CellColour cellRightBot = cellArray[row][col + 1].getCellColour();
                 final CellColour cellRightMid = cellArray[row + 1][col + 1].getCellColour();
                 final CellColour cellRightTop = cellArray[row + 2][col + 1].getCellColour();
 
                 final boolean isAtleastOneMatchingOnRight = cellLeftBot != null && (cellLeftBot == cellRightBot ||
                         cellLeftBot == cellRightMid || cellLeftBot == cellRightTop);
-
-                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
 
                 if (isAtleastOneMatchingOnRight && cellLeftBot == cellLeftMid && cellLeftMid == cellLeftTop) {
                     addMatchingResult(resultList, row, col);
@@ -199,15 +248,12 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 final CellColour cellLeftBot = cellArray[row][col].getCellColour();
                 final CellColour cellLeftMid = cellArray[row + 1][col].getCellColour();
                 final CellColour cellLeftTop = cellArray[row + 2][col].getCellColour();
-                //do any of (1,0) (1,1) or (1,2) have the same colour
                 final CellColour cellRightBot = cellArray[row][col - 1].getCellColour();
                 final CellColour cellRightMid = cellArray[row + 1][col - 1].getCellColour();
                 final CellColour cellRightTop = cellArray[row + 2][col - 1].getCellColour();
 
                 final boolean isAtleastOneMatchingOnRight = cellLeftBot != null && (cellLeftBot == cellRightBot ||
                         cellLeftBot == cellRightMid || cellLeftBot == cellRightTop);
-
-                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
 
                 if (isAtleastOneMatchingOnRight && cellLeftBot == cellLeftMid && cellLeftMid == cellLeftTop) {
                     addMatchingResult(resultList, row, col);
@@ -222,15 +268,12 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 final CellColour cellRightBot = cellArray[row][col].getCellColour();
                 final CellColour cellRightMid = cellArray[row][col + 1].getCellColour();
                 final CellColour cellRightTop = cellArray[row][col + 2].getCellColour();
-                //do any of (1,0) (1,1) or (1,2) have the same colour
                 final CellColour cellLeftBot = cellArray[row - 1][col].getCellColour();
                 final CellColour cellLeftMid = cellArray[row - 1][col + 1].getCellColour();
                 final CellColour cellLeftTop = cellArray[row - 1][col + 2].getCellColour();
 
                 final boolean isAtleastOneMatchingOnRight = cellRightBot != null && (cellRightBot == cellLeftBot ||
                         cellRightBot == cellLeftMid || cellRightBot == cellLeftTop);
-
-                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
 
                 if (isAtleastOneMatchingOnRight && cellRightBot == cellRightMid && cellRightMid == cellRightTop) {
                     addMatchingResult(resultList, row, col);
@@ -245,15 +288,12 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 final CellColour cellLeftBot = cellArray[row][col].getCellColour();
                 final CellColour cellLeftMid = cellArray[row][col + 1].getCellColour();
                 final CellColour cellLeftTop = cellArray[row][col + 2].getCellColour();
-                //do any of (1,0) (1,1) or (1,2) have the same colour
                 final CellColour cellRightBot = cellArray[row + 1][col].getCellColour();
                 final CellColour cellRightMid = cellArray[row + 1][col + 1].getCellColour();
                 final CellColour cellRightTop = cellArray[row + 1][col + 2].getCellColour();
 
                 final boolean isAtleastOneMatchingOnRight = cellLeftBot != null && (cellLeftBot == cellRightBot ||
                         cellLeftBot == cellRightMid || cellLeftBot == cellRightTop);
-
-                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
 
                 if (isAtleastOneMatchingOnRight && cellLeftBot == cellLeftMid && cellLeftMid == cellLeftTop) {
                     addMatchingResult(resultList, row, col);
