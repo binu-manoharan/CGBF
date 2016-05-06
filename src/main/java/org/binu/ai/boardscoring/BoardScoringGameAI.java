@@ -14,6 +14,7 @@ public class BoardScoringGameAI extends GameAI {
 
     @Override
     public int calculateNextMove() {
-        return 0;
+        final BoardScoringMoveAnalyser moveAnalyser = new BoardScoringMoveAnalyser(board, blockQueue);
+        return moveAnalyser.findBestMove();
     }
 }

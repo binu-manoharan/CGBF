@@ -25,7 +25,7 @@ cat $playerFilePath >> $outFilePath
 for i in `find $srcMainPath -type f | grep -v Main| grep java$`
 do
     echo "File names "$i
-    cat $i | grep -v import | grep -v package | sed -e 's/public class/class/g' -e 's/public enum/enum/g' -e 's/@Nullable//g'>> $outFilePath
+    cat $i | grep -v import | grep -v package | sed -e 's/public class/class/g' -e 's/public enum/enum/g' -e 's/public interface/interface/g' -e 's/public abstract/abstract/g' -e 's/@Nullable//g'>> $outFilePath
 done
 
 
