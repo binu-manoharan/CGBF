@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link IBoardClearer}
@@ -121,10 +121,10 @@ public class IBoardClearerTest {
                 "......",
                 "......",
                 "......",
-                "......",
-                "......",
-                "......",
-                "......",
+                "1.....",
+                "1.....",
+                "1.....",
+                "1.....",
                 "0000..",
                 "2010..",
                 "2010..",
@@ -144,6 +144,7 @@ public class IBoardClearerTest {
         assertRowStatus("Second Column", secondColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
         assertRowStatus("Third Column", thirdColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Fourth Column", fourthColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
+        assertThat("The second vertical line on first column is cleared", board.getCell(0, 5).getCellStatus(), is(CellStatus.EMPTY));
     }
 
     @Test
