@@ -24,7 +24,8 @@ public class BoardClearerImpl implements IBoardClearer {
         final Board columnClearedBoard = clearBoardByColumn(board);
         final Board rowClearedBoard = clearBoardByRow(columnClearedBoard);
         final Board squareClearedBoard = clearBoardBySquare(rowClearedBoard);
-        return squareClearedBoard;
+        final Board lAndTClearedBoard = clearBoardByTAndL(squareClearedBoard);
+        return lAndTClearedBoard;
     }
 
     @Override
@@ -59,6 +60,16 @@ public class BoardClearerImpl implements IBoardClearer {
             clearedSqareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
         }
         return clearedSqareBoard;
+    }
+
+    @Override
+    public Board clearBoardByTAndL(Board board) {
+        final List<int[]> cellList = cellArrayHelper.getIndexOfLAndT(board.getBoard());
+        Board clearedSquareBoard = board;
+        for (int[] cell : cellList) {
+            clearedSquareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+        }
+        return clearedSquareBoard;
     }
 
     private Board clearFromCellAndSurroundingCells(int rowId, int columnId, Board board) {

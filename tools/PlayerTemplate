@@ -33,7 +33,7 @@ class Player {
             }
 
 
-            GameAI gameAI = new BoardScoringAI(myBoard, blockQueue);
+            GameAI gameAI = new BoardScoringGameAI(myBoard, blockQueue);
             int nextMove = gameAI.calculateNextMove();
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");

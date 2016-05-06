@@ -27,7 +27,7 @@ public class IBoardScoreCalculatorTest {
     }
 
     @Test
-    public void should_compile() throws Exception {
+    public void should_compute_score_based_on_number_of_disappeared_cells() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -53,7 +53,7 @@ public class IBoardScoreCalculatorTest {
         assertThat("The score for column 2 is 40", boardScoreCalculator.calculateColumnScore(1), is(40));
         assertThat("The score for column 3 is 0", boardScoreCalculator.calculateColumnScore(2), is(40));
         assertThat("The score for column 4 is 0", boardScoreCalculator.calculateColumnScore(3), is(0));
-        assertThat("The score for column 5 is 0", boardScoreCalculator.calculateColumnScore(4), is(0));
+        assertThat("The score for column 5 is 0", boardScoreCalculator.calculateColumnScore(4), is(70));
         assertThat("The score for column 6 is 0", boardScoreCalculator.calculateColumnScore(5), is(70));
     }
 

@@ -33,4 +33,14 @@ public interface IBoardClearer {
      * @return Board
      */
     Board clearBoardBySquare(Board board);
+
+    /**
+     * Empty out cells making a 4 with a T or L shape
+     * @param board board to parse
+     * @return Board
+     */
+    Board clearBoardByTAndL(Board board);
+
+    //TODO clear board Z
+
 }

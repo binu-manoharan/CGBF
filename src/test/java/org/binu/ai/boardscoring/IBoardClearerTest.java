@@ -114,8 +114,9 @@ public class IBoardClearerTest {
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
     }
 
+    //TODO What if there are two of these in a column / convert to list points
     @Test
-    public void should_clear_a_4_vertically_row() throws Exception {
+    public void should_clear_a_4_vertically_column() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -199,6 +200,37 @@ public class IBoardClearerTest {
         assertRowStatus("First row", firstRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
         assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Third row", thirdRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
+    }
+
+    @Test
+    public void should_clear_a_4_T_and_L_block() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "00....",
+                "100020",
+                "110020",
+                "100022"
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board clearedBoard = boardClearer.clearBoardByTAndL(board);
+        final Cell[] firstRow = clearedBoard.getRow(0);
+        final Cell[] secondRow = clearedBoard.getRow(1);
+        final Cell[] thirdRow = clearedBoard.getRow(2);
+        final Cell[] fourthRow = clearedBoard.getRow(3);
+
+        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Third row", thirdRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Fourth row", fourthRow, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
     }
 
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,

@@ -68,4 +68,11 @@ public interface CellArrayHelper {
      * @return dropped cell array
      */
     Cell[] dropBlockIntoColumn(Cell[] cells, Block block);
+
+    /**
+     * Get cell indexes of L and T formations
+     * @param cellArray cellArray to parse
+     * @return list of x and y co-ordinates of atleast a cell within the shape
+     */
+    List<int[]> getIndexOfLAndT(Cell[][] cellArray);
 }

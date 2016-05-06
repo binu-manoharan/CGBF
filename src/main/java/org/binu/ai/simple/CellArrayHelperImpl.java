@@ -87,6 +87,11 @@ public class CellArrayHelperImpl implements CellArrayHelper {
 
         final List<int[]> resultList = new ArrayList<>();
 
+        matchingPointsWith4Block(cellArray, rowLength, colLength, resultList);
+        return resultList;
+    }
+
+    private void matchingPointsWith4Block(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
         for (int row = 0; row < rowLength - 1; row++) {
             for (int col = 0; col < colLength - 1; col++) {
                 final CellColour cellBotLeft = cellArray[row][col].getCellColour();
@@ -95,15 +100,11 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
 
                 if (cellBotLeft != null && cellBotLeft == cellBotRight && cellTopLeft == cellTopRight && cellBotLeft == cellTopRight) {
-                    final int[] matchingResult = new int[2];
-                    matchingResult[0] = row;
-                    matchingResult[1] = col;
-                    resultList.add(matchingResult);
+                    addMatchingResult(resultList, row, col);
                     col++;
                 }
             }
         }
-        return resultList;
     }
 
     @Override
@@ -149,10 +150,123 @@ public class CellArrayHelperImpl implements CellArrayHelper {
             droppedCells[firstEmptyPosition] = blockCells[0];
             droppedCells[firstEmptyPosition + 1] = blockCells[1];
         } else {
-            assert true: "Cell is too full!";
+            assert true : "Cell is too full!";
         }
 
         return droppedCells;
+    }
+
+    @Override
+    public List<int[]> getIndexOfLAndT(Cell[][] cellArray) {
+        final int rowLength = cellArray.length;
+        final int colLength = cellArray[0].length;
+
+        final List<int[]> resultList = new ArrayList<>();
+
+        matchingPointsWithLOrTToTheTop(cellArray, rowLength, colLength, resultList);
+        matchingPointsWithLOrTToTheBottom(cellArray, rowLength, colLength, resultList);
+        matchingPointsWithLOrTToTheRight(cellArray, rowLength, colLength, resultList);
+        matchingPointsWithLOrTToTheLeft(cellArray, rowLength, colLength, resultList);
+        return resultList;
+    }
+
+    private void matchingPointsWithLOrTToTheRight(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 0; row < rowLength - 2; row++) {
+            for (int col = 0; col < colLength - 1; col++) {
+                final CellColour cellLeftBot = cellArray[row][col].getCellColour();
+                final CellColour cellLeftMid = cellArray[row + 1][col].getCellColour();
+                final CellColour cellLeftTop = cellArray[row + 2][col].getCellColour();
+                //do any of (1,0) (1,1) or (1,2) have the same colour
+                final CellColour cellRightBot = cellArray[row][col + 1].getCellColour();
+                final CellColour cellRightMid = cellArray[row + 1][col + 1].getCellColour();
+                final CellColour cellRightTop = cellArray[row + 2][col + 1].getCellColour();
+
+                final boolean isAtleastOneMatchingOnRight = cellLeftBot != null && (cellLeftBot == cellRightBot ||
+                        cellLeftBot == cellRightMid || cellLeftBot == cellRightTop);
+
+                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
+
+                if (isAtleastOneMatchingOnRight && cellLeftBot == cellLeftMid && cellLeftMid == cellLeftTop) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
+    private void matchingPointsWithLOrTToTheLeft(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 0; row < rowLength - 2; row++) {
+            for (int col = 1; col < colLength; col++) {
+                final CellColour cellLeftBot = cellArray[row][col].getCellColour();
+                final CellColour cellLeftMid = cellArray[row + 1][col].getCellColour();
+                final CellColour cellLeftTop = cellArray[row + 2][col].getCellColour();
+                //do any of (1,0) (1,1) or (1,2) have the same colour
+                final CellColour cellRightBot = cellArray[row][col - 1].getCellColour();
+                final CellColour cellRightMid = cellArray[row + 1][col - 1].getCellColour();
+                final CellColour cellRightTop = cellArray[row + 2][col - 1].getCellColour();
+
+                final boolean isAtleastOneMatchingOnRight = cellLeftBot != null && (cellLeftBot == cellRightBot ||
+                        cellLeftBot == cellRightMid || cellLeftBot == cellRightTop);
+
+                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
+
+                if (isAtleastOneMatchingOnRight && cellLeftBot == cellLeftMid && cellLeftMid == cellLeftTop) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
+    private void matchingPointsWithLOrTToTheBottom(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 1; row < rowLength; row++) {
+            for (int col = 0; col < colLength - 2; col++) {
+                final CellColour cellRightBot = cellArray[row][col].getCellColour();
+                final CellColour cellRightMid = cellArray[row][col + 1].getCellColour();
+                final CellColour cellRightTop = cellArray[row][col + 2].getCellColour();
+                //do any of (1,0) (1,1) or (1,2) have the same colour
+                final CellColour cellLeftBot = cellArray[row - 1][col].getCellColour();
+                final CellColour cellLeftMid = cellArray[row - 1][col + 1].getCellColour();
+                final CellColour cellLeftTop = cellArray[row - 1][col + 2].getCellColour();
+
+                final boolean isAtleastOneMatchingOnRight = cellRightBot != null && (cellRightBot == cellLeftBot ||
+                        cellRightBot == cellLeftMid || cellRightBot == cellLeftTop);
+
+                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
+
+                if (isAtleastOneMatchingOnRight && cellRightBot == cellRightMid && cellRightMid == cellRightTop) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
+    private void matchingPointsWithLOrTToTheTop(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 0; row < rowLength - 1; row++) {
+            for (int col = 0; col < colLength - 2; col++) {
+                final CellColour cellLeftBot = cellArray[row][col].getCellColour();
+                final CellColour cellLeftMid = cellArray[row][col + 1].getCellColour();
+                final CellColour cellLeftTop = cellArray[row][col + 2].getCellColour();
+                //do any of (1,0) (1,1) or (1,2) have the same colour
+                final CellColour cellRightBot = cellArray[row + 1][col].getCellColour();
+                final CellColour cellRightMid = cellArray[row + 1][col + 1].getCellColour();
+                final CellColour cellRightTop = cellArray[row + 1][col + 2].getCellColour();
+
+                final boolean isAtleastOneMatchingOnRight = cellLeftBot != null && (cellLeftBot == cellRightBot ||
+                        cellLeftBot == cellRightMid || cellLeftBot == cellRightTop);
+
+                //final CellColour cellBotRight = cellArray[row][col + 1].getCellColour();
+
+                if (isAtleastOneMatchingOnRight && cellLeftBot == cellLeftMid && cellLeftMid == cellLeftTop) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
+    private void addMatchingResult(List<int[]> resultList, int row, int col) {
+        final int[] matchingResult = new int[2];
+        matchingResult[0] = row;
+        matchingResult[1] = col;
+        resultList.add(matchingResult);
     }
 
     private int getNumberOfElementsWithSameColourAsTopElement(Cell[] cells, int topElementPosition, CellColour topElementColour, int numberOfElementsWithSameColourAsTopElement) {
