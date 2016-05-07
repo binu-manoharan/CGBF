@@ -49,12 +49,12 @@ public class IBoardScoreCalculatorTest {
         blockQueue.add(block);
 
         final IBoardScoreCalculator boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
-        assertThat("The score for column 1 is 0", boardScoreCalculator.calculateColumnScore(0), is(40));
+        assertThat("The score for column 1 is 40", boardScoreCalculator.calculateColumnScore(0), is(40));
         assertThat("The score for column 2 is 40", boardScoreCalculator.calculateColumnScore(1), is(40));
-        assertThat("The score for column 3 is 0", boardScoreCalculator.calculateColumnScore(2), is(40));
+        assertThat("The score for column 3 is 40", boardScoreCalculator.calculateColumnScore(2), is(40));
         assertThat("The score for column 4 is 0", boardScoreCalculator.calculateColumnScore(3), is(0));
-        assertThat("The score for column 5 is 0", boardScoreCalculator.calculateColumnScore(4), is(70));
-        assertThat("The score for column 6 is 0", boardScoreCalculator.calculateColumnScore(5), is(70));
+        assertThat("The score for column 5 is 70", boardScoreCalculator.calculateColumnScore(4), is(70));
+        assertThat("The score for column 6 is 70", boardScoreCalculator.calculateColumnScore(5), is(70));
     }
 
     private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {

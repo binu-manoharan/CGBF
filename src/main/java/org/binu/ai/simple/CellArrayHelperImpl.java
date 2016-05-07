@@ -195,7 +195,7 @@ public class CellArrayHelperImpl implements CellArrayHelper {
     }
 
     private void matchingPointsWithLinesToTheRight(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
-        for (int row = 0; row < rowLength - 1; row++) {
+        for (int row = 0; row < rowLength; row++) {
             for (int col = 0; col < colLength - 3; col++) {
                 final CellColour cellLeft = cellArray[row][col].getCellColour();
                 final CellColour cellMidLeft = cellArray[row][col + 1].getCellColour();
@@ -213,7 +213,7 @@ public class CellArrayHelperImpl implements CellArrayHelper {
 
     private void matchingPointsWithLinesToTheTop(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
         for (int row = 0; row < rowLength - 3; row++) {
-            for (int col = 0; col < colLength - 1; col++) {
+            for (int col = 0; col < colLength; col++) {
                 final CellColour cellBot = cellArray[row][col].getCellColour();
                 final CellColour cellMidBot = cellArray[row + 1][col].getCellColour();
                 final CellColour cellMidTop = cellArray[row + 2][col].getCellColour();

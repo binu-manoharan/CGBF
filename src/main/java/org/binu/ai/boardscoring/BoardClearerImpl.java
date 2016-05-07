@@ -32,21 +32,21 @@ public class BoardClearerImpl implements IBoardClearer {
     @Override
     public Board clearBoardByLine(Board board) {
         final List<int[]> cellList = cellArrayHelper.getIndexOfLines(board.getBoard());
-        Board clearedSqareBoard = board;
+        Board clearedLineBoard = board;
         for (int[] cell : cellList) {
-            clearedSqareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+            clearedLineBoard = clearFromCell(cell[0], cell[1], board);
         }
-        return clearedSqareBoard;
+        return clearedLineBoard;
     }
 
     @Override
     public Board clearBoardBySquare(Board board) {
         final List<int[]> cellList = cellArrayHelper.getIndexOf4BlockGroup(board.getBoard());
-        Board clearedSqareBoard = board;
+        Board clearedSquareBoard = board;
         for (int[] cell : cellList) {
-            clearedSqareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+            clearedSquareBoard = clearFromCell(cell[0], cell[1], board);
         }
-        return clearedSqareBoard;
+        return clearedSquareBoard;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class BoardClearerImpl implements IBoardClearer {
         final List<int[]> cellList = cellArrayHelper.getIndexOfLAndT(board.getBoard());
         Board clearedTLBoard = board;
         for (int[] cell : cellList) {
-            clearedTLBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+            clearedTLBoard = clearFromCell(cell[0], cell[1], board);
         }
         return clearedTLBoard;
     }
@@ -64,31 +64,22 @@ public class BoardClearerImpl implements IBoardClearer {
         final List<int[]> cellList = cellArrayHelper.getIndexOfZ(board.getBoard());
         Board clearedZBoard = board;
         for (int[] cell : cellList) {
-            clearedZBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
+            clearedZBoard = clearFromCell(cell[0], cell[1], board);
         }
         return clearedZBoard;
     }
 
-    private Board clearFromCellAndSurroundingCells(int rowId, int columnId, Board board) {
+    private Board clearFromCell(int rowId, int columnId, Board board) {
         final Cell collapsingCell = board.getCell(rowId, columnId);
         final CellColour cellColour = collapsingCell.getCellColour();
 
-        final Board clearedBoard = clearSurroundingCell(rowId, columnId, board, cellColour);
+        final Board clearedBoard = clearCellAndAround(rowId, columnId, board, cellColour);
 
         return clearedBoard;
     }
 
-    private Board clearSurroundingCell(int rowId, int columnId, Board board, CellColour cellColour) {
-        clearCell(rowId, columnId, board, cellColour);
-        clearCell(rowId - 1, columnId, board, cellColour);
-        clearCell(rowId, columnId - 1, board, cellColour);
-        clearCell(rowId, columnId + 1, board, cellColour);
-        clearCell(rowId + 1, columnId, board, cellColour);
-        return board;
-    }
-
-    private Board clearCell(int rowId, int columnId, Board board, CellColour cellColour) {
-        if (rowId >= 0 && rowId < Board.ROW_LENGTH && columnId >= 0 && columnId < Board.COLUMN_LENGTH) {
+    private Board clearCellAndAround(int rowId, int columnId, Board board, CellColour cellColour) {
+        if (rowId >= 0 && rowId < Board.ROW_LENGTH && columnId >= 0 && columnId < Board.COLUMN_LENGTH && cellColour != null) {
             final Cell cell = board.getCell(rowId, columnId);
             final CellStatus currentCellStatus = cell.getCellStatus();
             final CellColour currentCellColour = cell.getCellColour();
@@ -99,6 +90,14 @@ public class BoardClearerImpl implements IBoardClearer {
                 }
             }
         }
+        return board;
+    }
+
+    private Board clearSurroundingCell(int rowId, int columnId, Board board, CellColour cellColour) {
+        clearCellAndAround(rowId - 1, columnId, board, cellColour);
+        clearCellAndAround(rowId, columnId - 1, board, cellColour);
+        clearCellAndAround(rowId, columnId + 1, board, cellColour);
+        clearCellAndAround(rowId + 1, columnId, board, cellColour);
         return board;
     }
 }

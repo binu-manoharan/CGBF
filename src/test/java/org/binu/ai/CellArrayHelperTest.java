@@ -277,10 +277,10 @@ public class CellArrayHelperTest {
                 "..5...",
                 "..5...",
                 "..5...",
-                "4.5.3.",
-                "4...3.",
-                "4...3.",
-                "4...3.",
+                "4.5.34",
+                "4...34",
+                "4...34",
+                "4...34",
                 "......",
                 "1.2222",
                 "1.....",
@@ -291,14 +291,15 @@ public class CellArrayHelperTest {
 
         final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOfLines(board.getBoard());
 
-        assertThat("Index of block of 4 is", indexOf4BlockGroup.size(), is(6));
+        assertThat("Index of block of 4 is", indexOf4BlockGroup.size(), is(7));
 
         assertBlockItems(indexOf4BlockGroup.get(0)[0], 0, indexOf4BlockGroup.get(0)[1], 0);
         assertBlockItems(indexOf4BlockGroup.get(1)[0], 5, indexOf4BlockGroup.get(1)[1], 0);
         assertBlockItems(indexOf4BlockGroup.get(2)[0], 5, indexOf4BlockGroup.get(2)[1], 4);
-        assertBlockItems(indexOf4BlockGroup.get(3)[0], 8, indexOf4BlockGroup.get(3)[1], 2);
-        assertBlockItems(indexOf4BlockGroup.get(4)[0], 1, indexOf4BlockGroup.get(4)[1], 2);
-        assertBlockItems(indexOf4BlockGroup.get(5)[0], 3, indexOf4BlockGroup.get(5)[1], 2);
+        assertBlockItems(indexOf4BlockGroup.get(3)[0], 5, indexOf4BlockGroup.get(3)[1], 5);
+        assertBlockItems(indexOf4BlockGroup.get(4)[0], 8, indexOf4BlockGroup.get(4)[1], 2);
+        assertBlockItems(indexOf4BlockGroup.get(5)[0], 1, indexOf4BlockGroup.get(5)[1], 2);
+        assertBlockItems(indexOf4BlockGroup.get(6)[0], 3, indexOf4BlockGroup.get(6)[1], 2);
     }
 
     @Test
