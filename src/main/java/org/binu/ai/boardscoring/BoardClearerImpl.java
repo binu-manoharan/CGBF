@@ -19,7 +19,6 @@ public class BoardClearerImpl implements IBoardClearer {
         this.cellArrayHelper = cellArrayHelper;
     }
 
-    //TODO add test for clearBoard()
     @Override
     public Board clearBoard(Board board) {
         final Board lineClearedBoard = clearBoardByLine(board);

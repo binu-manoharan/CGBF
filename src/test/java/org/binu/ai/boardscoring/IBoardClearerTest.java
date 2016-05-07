@@ -234,6 +234,37 @@ public class IBoardClearerTest {
     }
 
     @Test
+    public void should_clear_all_shapes_from_board() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "444111",
+                "453312",
+                "555332",
+                "111122"
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        final Board clearedBoard = boardClearer.clearBoard(board);
+        final Cell[] firstRow = clearedBoard.getRow(0);
+        final Cell[] secondRow = clearedBoard.getRow(1);
+        final Cell[] thirdRow = clearedBoard.getRow(2);
+        final Cell[] fourthRow = clearedBoard.getRow(3);
+
+        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Third row", thirdRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+        assertRowStatus("Fourth row", fourthRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
+    }
+
+    @Test
     public void should_clear_a_Z_block() throws Exception {
         final String[] boardString = {
                 "......",
