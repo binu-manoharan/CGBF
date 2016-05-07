@@ -14,11 +14,13 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
     private final BlockQueue blockQueue;
     private final CellArrayHelper cellArrayHelper;
     private final BoardClearerImpl boardClearer;
+    private final BoardCollapserImpl boardCollapser;
 
     public BoardScoreCalculatorImpl(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         cellArrayHelper = new CellArrayHelperImpl();
+        boardCollapser = new BoardCollapserImpl(cellArrayHelper);
         boardClearer = new BoardClearerImpl(cellArrayHelper);
     }
 
@@ -29,12 +31,19 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
     }
 
     private int getScore(int column) {
-        final Board tempBoardBefore = getBoardWithDroppedQueue(column);
-        final Board tempBoardAfter = new Board(tempBoardBefore);
-        boardClearer.clearBoard(tempBoardAfter);
+        final Board tempBoardBeforeClear = getBoardWithDroppedQueue(column);
+        final Board tempBoardAfterClear = new Board(tempBoardBeforeClear);
+        boardClearer.clearBoard(tempBoardAfterClear);
 
-        final int score = getScore(tempBoardBefore, tempBoardAfter);
-        return score;
+        final int score = getScore(tempBoardBeforeClear, tempBoardAfterClear);
+
+        boardCollapser.collapseBoard(tempBoardAfterClear);
+        final Board tempBoardAfterCollapse = new Board(tempBoardAfterClear);
+        boardClearer.clearBoard(tempBoardAfterCollapse);
+
+        final int comboScore = getScore(tempBoardAfterClear, tempBoardAfterCollapse) * 8;
+        final int totalScore = comboScore + score;
+        return totalScore;
     }
 
     private int getScore(Board tempBoardBefore, Board tempBoardAfter) {
