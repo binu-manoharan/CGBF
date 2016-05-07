@@ -92,4 +92,45 @@ public class DataParser {
 
         return board;
     }
+
+    public String[] createBoardString(Board board) {
+        final String[] boardRows = new String[12];
+        final char[] rowString = new char[6];
+        for (int row = 0; row < Board.ROW_LENGTH; row++) {
+            for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
+                final Cell cell = board.getCell(row, col);
+                final CellStatus cellStatus = cell.getCellStatus();
+                final CellColour cellColour = cell.getCellColour();
+                char ch =' ';
+                if (cellStatus == CellStatus.BLOCKED) {
+                    ch = '0';
+                } else if (cellStatus == CellStatus.EMPTY){
+                    ch = '.';
+                } else if (cellStatus == CellStatus.OCCUPIED){
+                    switch (cellColour) {
+                        case BLUE:
+                            ch = '1';
+                            break;
+                        case GREEN:
+                            ch = '2';
+                            break;
+                        case PURPLE:
+                            ch = '3';
+                            break;
+                        case RED:
+                            ch = '4';
+                            break;
+                        case YELLOW:
+                            ch = '5';
+                            break;
+                    }
+                } else {
+                    throw new AssertionError("Invalid char in board row input");
+                }
+                rowString[col] = ch;
+            }
+            boardRows[Board.ROW_LENGTH - row - 1] = new String(rowString);
+        }
+        return boardRows;
+    }
 }

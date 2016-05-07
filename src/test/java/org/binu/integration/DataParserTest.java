@@ -100,10 +100,37 @@ public class DataParserTest {
         assertBoardRowCell(board.getCell(1, 5), null, CellStatus.EMPTY);
     }
 
+    @Test
+    public void should_provide_a_board_string() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                ".0350.",
+                "012414"
+        };
+
+        final Board board = dataParser.createBoard(boardString);
+        final String[] outputBoardString = dataParser.createBoardString(board);
+
+        for (int i = 0; i < boardString.length; i++) {
+            assertThat("Board strings match", outputBoardString[i].equals(boardString[i]), is(true));
+        }
+    }
+
     private void assertBoardRowCell(Cell cell, CellColour cellColour, CellStatus cellStatus) {
         assertThat("Board first element is " + cellColour, cell.getCellColour(), is(cellColour));
         assertThat("Board first element is " + cellStatus, cell.getCellStatus(), is(cellStatus));
     }
+
+
 
     private void assertBlockData(Block block, CellColour firstColour, CellColour secondColour) {
         final Cell[] cells = block.getCells();
