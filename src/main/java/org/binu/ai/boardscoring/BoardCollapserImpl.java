@@ -19,13 +19,8 @@ class BoardCollapserImpl implements IBoardCollapser {
     /** {@inheritDoc} */
     @Override
     public Board collapseBoard(Board board) {
-        final long startTime = System.nanoTime();
-
         boardClearer.clearBoard(board);
         cellArrayHelper.collapseEmptyCells(board);
-
-        final long endTime = System.nanoTime();
-        System.out.println(endTime - startTime);
         return board;
     }
 }
