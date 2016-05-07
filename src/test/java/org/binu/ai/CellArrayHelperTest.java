@@ -355,6 +355,57 @@ public class CellArrayHelperTest {
         assertThat("The 4th cell should be BLUE", column[3].getCellColour(), is(nullValue()));
     }
 
+    @Test
+    public void should_drop_cells_on_the_column_as_there_is_slots_left() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Cell[] column = board.getColumn(0);
+        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(column, block);
+
+        assertThat("The 1st cell should be BLUE", cells[10].getCellColour(), is(CellColour.BLUE));
+        assertThat("The 2nd cell should be BLUE", cells[11].getCellColour(), is(CellColour.BLUE));
+    }
+
+    @Test (expected = ArrayIndexOutOfBoundsException.class)
+    public void should_not_allow_drop_cells_on_the_column_as_there_are_not_enough_slots_left() throws Exception {
+        final String[] boardString = {
+                "......",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Cell[] column = board.getColumn(0);
+        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+        cellArrayHelper.dropBlockIntoColumn(column, block);
+    }
+
     private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
         final Cell[] blockCells = getCells(cell1Colour, cell1Status, cell2Colour, cell2Status);
         return new Block(blockCells);

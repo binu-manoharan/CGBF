@@ -31,7 +31,16 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
     }
 
     private int getScore(int column) {
-        final Board tempBoardBeforeClear = getBoardWithDroppedQueue(column);
+        Board tempBoardBeforeClear;
+
+        //TODO clean up try catch mess later?
+        try {
+            tempBoardBeforeClear = getBoardWithDroppedQueue(column);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //never take this path
+            return -10000;
+        }
+
         final Board tempBoardAfterClear = new Board(tempBoardBeforeClear);
         boardClearer.clearBoard(tempBoardAfterClear);
 
@@ -58,9 +67,11 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
         return score;
     }
 
-    private Board getBoardWithDroppedQueue(int column) {
+    private Board getBoardWithDroppedQueue(int column) throws ArrayIndexOutOfBoundsException{
         final Board tempBoardBefore = new Board(board);
-        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(tempBoardBefore.getColumn(column), blockQueue.getNext());
+        final Cell[] columnToDropInto = tempBoardBefore.getColumn(column);
+
+        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(columnToDropInto, blockQueue.getNext());
         tempBoardBefore.setColumn(column, cells);
         return tempBoardBefore;
     }

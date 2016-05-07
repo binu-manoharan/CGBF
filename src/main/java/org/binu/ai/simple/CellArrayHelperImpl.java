@@ -138,6 +138,9 @@ public class CellArrayHelperImpl implements CellArrayHelper {
     @Override
     public Cell[] dropBlockIntoColumn(Cell[] cells, Block block) {
         final int firstEmptyPosition = getFirstEmptyPosition(cells);
+        if (firstEmptyPosition + block.getCells().length > cells.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         final int length = cells.length;
         final Cell[] droppedCells = new Cell[length];
 
