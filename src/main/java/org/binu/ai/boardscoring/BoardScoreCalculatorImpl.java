@@ -10,10 +10,10 @@ import org.binu.board.Cell;
  * Basic board scoring.
  */
 public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
-    private Board board;
-    private BlockQueue blockQueue;
+    private final Board board;
+    private final BlockQueue blockQueue;
     private final CellArrayHelper cellArrayHelper;
-    private BoardClearerImpl boardClearer;
+    private final BoardClearerImpl boardClearer;
 
     public BoardScoreCalculatorImpl(Board board, BlockQueue blockQueue) {
         this.board = board;
