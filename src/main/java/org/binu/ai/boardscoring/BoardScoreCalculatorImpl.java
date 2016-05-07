@@ -5,6 +5,7 @@ import org.binu.ai.simple.CellArrayHelperImpl;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;
+import org.binu.data.CellStatus;
 
 /**
  * Basic board scoring.
@@ -31,7 +32,7 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
     }
 
     private int getScore(int column) {
-        Board tempBoardBeforeClear;
+        final Board tempBoardBeforeClear;
 
         //TODO clean up try catch mess later?
         try {
@@ -59,7 +60,9 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
         int score = 0;
         for (int i = 0; i < Board.ROW_LENGTH; i++) {
             for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
-                if (tempBoardAfter.getCell(i, j).getCellStatus() != tempBoardBefore.getCell(i, j).getCellStatus()) {
+                final CellStatus beforeCellStatus = tempBoardBefore.getCell(i, j).getCellStatus();
+                //TODO: Don't agressively remove blocks might be helpful for combos.
+                if (tempBoardAfter.getCell(i, j).getCellStatus() != beforeCellStatus && beforeCellStatus != CellStatus.BLOCKED) {
                     score++;
                 }
             }

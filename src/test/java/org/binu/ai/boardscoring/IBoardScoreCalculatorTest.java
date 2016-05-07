@@ -53,8 +53,8 @@ public class IBoardScoreCalculatorTest {
         assertThat("The score for column 2 is 40", boardScoreCalculator.calculateColumnScore(1), is(40));
         assertThat("The score for column 3 is 40", boardScoreCalculator.calculateColumnScore(2), is(40));
         assertThat("The score for column 4 is 0", boardScoreCalculator.calculateColumnScore(3), is(0));
-        assertThat("The score for column 5 is 70", boardScoreCalculator.calculateColumnScore(4), is(70));
-        assertThat("The score for column 6 is 70", boardScoreCalculator.calculateColumnScore(5), is(70));
+        assertThat("The score for column 5 is 50", boardScoreCalculator.calculateColumnScore(4), is(50));
+        assertThat("The score for column 6 is 50", boardScoreCalculator.calculateColumnScore(5), is(50));
     }
 
     @Test
@@ -81,11 +81,11 @@ public class IBoardScoreCalculatorTest {
 
         final IBoardScoreCalculator boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
         assertThat("The score for column 1 is 0", boardScoreCalculator.calculateColumnScore(0), is(0));
-        assertThat("The score for column 2 is 370", boardScoreCalculator.calculateColumnScore(1), is(370));
-        assertThat("The score for column 3 is 370", boardScoreCalculator.calculateColumnScore(2), is(370));
+        assertThat("The score for column 2 is 360", boardScoreCalculator.calculateColumnScore(1), is(360));
+        assertThat("The score for column 3 is 360", boardScoreCalculator.calculateColumnScore(2), is(360));
         assertThat("The score for column 4 is 0", boardScoreCalculator.calculateColumnScore(3), is(0));
-        assertThat("The score for column 5 is 70", boardScoreCalculator.calculateColumnScore(4), is(70));
-        assertThat("The score for column 6 is 70", boardScoreCalculator.calculateColumnScore(5), is(70));
+        assertThat("The score for column 5 is 50", boardScoreCalculator.calculateColumnScore(4), is(50));
+        assertThat("The score for column 6 is 50", boardScoreCalculator.calculateColumnScore(5), is(50));
     }
 
     private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
