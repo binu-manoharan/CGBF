@@ -108,7 +108,7 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByRow(board);
+        final Board clearedBoard = boardClearer.clearBoardByLine(board);
         final Cell[] firstRow = clearedBoard.getRow(0);
 
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -134,7 +134,7 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByColumn(board);
+        final Board clearedBoard = boardClearer.clearBoardByLine(board);
         final Cell[] firstColumn = clearedBoard.getColumn(0);
         final Cell[] secondColumn = clearedBoard.getColumn(1);
         final Cell[] thirdColumn = clearedBoard.getColumn(2);
@@ -166,7 +166,7 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByRow(board);
+        final Board clearedBoard = boardClearer.clearBoardByLine(board);
         final Cell[] firstRow = clearedBoard.getRow(0);
         final Cell[] secondRow = clearedBoard.getRow(1);
 
@@ -193,7 +193,7 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByRow(board);
+        final Board clearedBoard = boardClearer.clearBoardByLine(board);
         final Cell[] firstRow = clearedBoard.getRow(0);
         final Cell[] secondRow = clearedBoard.getRow(1);
         final Cell[] thirdRow = clearedBoard.getRow(2);

@@ -182,13 +182,59 @@ public class CellArrayHelperImpl implements CellArrayHelper {
         return resultList;
     }
 
+    @Override
+    public List<int[]> getIndexOfLines(Cell[][] cellArray) {
+        final int rowLength = cellArray.length;
+        final int colLength = cellArray[0].length;
+
+        final List<int[]> resultList = new ArrayList<>();
+
+        matchingPointsWithLinesToTheTop(cellArray, rowLength, colLength, resultList);
+        matchingPointsWithLinesToTheRight(cellArray, rowLength, colLength, resultList);
+        return resultList;
+    }
+
+    private void matchingPointsWithLinesToTheRight(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 0; row < rowLength - 1; row++) {
+            for (int col = 0; col < colLength - 3; col++) {
+                final CellColour cellLeft = cellArray[row][col].getCellColour();
+                final CellColour cellMidLeft = cellArray[row][col + 1].getCellColour();
+                final CellColour cellMidRight = cellArray[row][col + 2].getCellColour();
+                final CellColour cellTop = cellArray[row][col + 3].getCellColour();
+
+                final boolean makesLine = cellLeft != null && cellLeft == cellMidLeft && cellMidRight == cellMidLeft && cellTop == cellMidRight;
+
+                if (makesLine) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
+    private void matchingPointsWithLinesToTheTop(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
+        for (int row = 0; row < rowLength - 3; row++) {
+            for (int col = 0; col < colLength - 1; col++) {
+                final CellColour cellBot = cellArray[row][col].getCellColour();
+                final CellColour cellMidBot = cellArray[row + 1][col].getCellColour();
+                final CellColour cellMidTop = cellArray[row + 2][col].getCellColour();
+                final CellColour cellTop = cellArray[row + 3][col].getCellColour();
+
+                final boolean makesLine = cellBot != null && cellBot == cellMidBot && cellMidTop == cellMidBot && cellTop == cellMidTop;
+
+                if (makesLine) {
+                    addMatchingResult(resultList, row, col);
+                }
+            }
+        }
+    }
+
     private void matchingPointsWithZToTheLeft(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
         for (int row = 0; row < rowLength - 1; row++) {
             for (int col = 1; col < colLength - 1; col++) {
                 final CellColour cellLeftBot = cellArray[row][col - 1].getCellColour();
                 final CellColour cellLeftMid = cellArray[row][col].getCellColour();
                 final CellColour cellLeftTop = cellArray[row][col + 1].getCellColour();
-                final CellColour cellRightBot = cellArray[row + 1][col -1].getCellColour();
+                final CellColour cellRightBot = cellArray[row + 1][col - 1].getCellColour();
                 final CellColour cellRightMid = cellArray[row + 1][col].getCellColour();
                 final CellColour cellRightTop = cellArray[row + 1][col + 1].getCellColour();
 

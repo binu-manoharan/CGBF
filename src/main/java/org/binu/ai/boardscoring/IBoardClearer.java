@@ -20,15 +20,7 @@ public interface IBoardClearer {
      * @param board board to parse
      * @return Board
      */
-    Board clearBoardByColumn(Board board);
-
-    /**
-     * Empty out cells of the board checking for 4 match in row horizontally
-     *
-     * @param board board to parse
-     * @return Board
-     */
-    Board clearBoardByRow(Board board);
+    Board clearBoardByLine(Board board);
 
     /**
      * Empty out cells of a board checking for 4 square match

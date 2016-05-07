@@ -22,36 +22,21 @@ public class BoardClearerImpl implements IBoardClearer {
     //TODO add test for clearBoard()
     @Override
     public Board clearBoard(Board board) {
-        final Board columnClearedBoard = clearBoardByColumn(board);
-        final Board rowClearedBoard = clearBoardByRow(columnClearedBoard);
-        final Board squareClearedBoard = clearBoardBySquare(rowClearedBoard);
+        final Board lineClearedBoard = clearBoardByLine(board);
+        final Board squareClearedBoard = clearBoardBySquare(lineClearedBoard);
         final Board lAndTClearedBoard = clearBoardByTAndL(squareClearedBoard);
         final Board zClearedBoard = clearBoardByZ(lAndTClearedBoard);
         return zClearedBoard;
     }
 
     @Override
-    public Board clearBoardByColumn(Board board) {
-        for (int columnId = 0; columnId < Board.COLUMN_LENGTH; columnId++) {
-            final Cell[] column = board.getColumn(columnId);
-            final int rowId = cellArrayHelper.getFirstIndexOfRepeatOf4Group(column);
-            if (rowId != -1) {
-                clearFromCellAndSurroundingCells(rowId, columnId, board);
-            }
+    public Board clearBoardByLine(Board board) {
+        final List<int[]> cellList = cellArrayHelper.getIndexOfLines(board.getBoard());
+        Board clearedSqareBoard = board;
+        for (int[] cell : cellList) {
+            clearedSqareBoard = clearFromCellAndSurroundingCells(cell[0], cell[1], board);
         }
-        return board;
-    }
-
-    @Override
-    public Board clearBoardByRow(Board board) {
-        for (int rowId = 0; rowId < Board.ROW_LENGTH; rowId++) {
-            final Cell[] row = board.getRow(rowId);
-            final int columnId = cellArrayHelper.getFirstIndexOfRepeatOf4Group(row);
-            if (columnId != -1) {
-                clearFromCellAndSurroundingCells(rowId, columnId, board);
-            }
-        }
-        return board;
+        return clearedSqareBoard;
     }
 
     @Override

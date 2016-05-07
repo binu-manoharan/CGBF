@@ -87,4 +87,12 @@ public interface CellArrayHelper {
      * @return list of x and y co-ordinates of at least a cell within the shape
      */
     List<int[]> getIndexOfZ(Cell[][] cellArray);
+
+    /**
+     * Get cell indexes of line formations
+     *
+     * @param cellArray cellArray to parse
+     * @return list of x and y co-ordinates of at least a cell within the shape
+     */
+    List<int[]> getIndexOfLines(Cell[][] cellArray);
 }

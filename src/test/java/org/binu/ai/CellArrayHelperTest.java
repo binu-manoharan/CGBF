@@ -272,6 +272,36 @@ public class CellArrayHelperTest {
     }
 
     @Test
+    public void should_provide_the_indexes_of_the_elements_in_the_form_4_block_line() throws Exception {
+        final String[] boardString = {
+                "..5...",
+                "..5...",
+                "..5...",
+                "4.5.3.",
+                "4...3.",
+                "4...3.",
+                "4...3.",
+                "......",
+                "1.2222",
+                "1.....",
+                "1.4444",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+
+        final List<int[]> indexOf4BlockGroup = cellArrayHelper.getIndexOfLines(board.getBoard());
+
+        assertThat("Index of block of 4 is", indexOf4BlockGroup.size(), is(6));
+
+        assertBlockItems(indexOf4BlockGroup.get(0)[0], 0, indexOf4BlockGroup.get(0)[1], 0);
+        assertBlockItems(indexOf4BlockGroup.get(1)[0], 5, indexOf4BlockGroup.get(1)[1], 0);
+        assertBlockItems(indexOf4BlockGroup.get(2)[0], 5, indexOf4BlockGroup.get(2)[1], 4);
+        assertBlockItems(indexOf4BlockGroup.get(3)[0], 8, indexOf4BlockGroup.get(3)[1], 2);
+        assertBlockItems(indexOf4BlockGroup.get(4)[0], 1, indexOf4BlockGroup.get(4)[1], 2);
+        assertBlockItems(indexOf4BlockGroup.get(5)[0], 3, indexOf4BlockGroup.get(5)[1], 2);
+    }
+
+    @Test
     public void should_move_cells_to_empty_positions() throws Exception {
         final String[] boardString = {
                 "......",
