@@ -133,4 +133,18 @@ public class DataParser {
         }
         return boardRows;
     }
+
+    public String[] prettifyBoardString(String[] outputBoardString) {
+        for (int i = 0; i < outputBoardString.length; i++) {
+            final String prettyBoardRow = outputBoardString[i].replaceAll("\\.", "  .");
+            outputBoardString[i] = "|" + prettyBoardRow + "|";
+        }
+        return outputBoardString;
+    }
+
+    public String[] prettifyBoard(Board board) {
+        final String[] boardString = createBoardString(board);
+        final String[] prettifiedBoardString = prettifyBoardString(boardString);
+        return prettifiedBoardString;
+    }
 }

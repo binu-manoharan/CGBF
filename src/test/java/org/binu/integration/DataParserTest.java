@@ -125,12 +125,20 @@ public class DataParserTest {
         }
     }
 
+    @Test
+    public void should_prettify_row() throws Exception {
+        final String[] boardRow = new String[1];
+        boardRow[0] = "..11..";
+        final String[] prettifiedString = dataParser.prettifyBoardString(boardRow);
+
+        final String expectedPrettification = "|  .  .11  .  .|";
+        assertThat("String is prettified", prettifiedString[0].equals(expectedPrettification), is(true));
+    }
+
     private void assertBoardRowCell(Cell cell, CellColour cellColour, CellStatus cellStatus) {
         assertThat("Board first element is " + cellColour, cell.getCellColour(), is(cellColour));
         assertThat("Board first element is " + cellStatus, cell.getCellStatus(), is(cellStatus));
     }
-
-
 
     private void assertBlockData(Block block, CellColour firstColour, CellColour secondColour) {
         final Cell[] cells = block.getCells();
