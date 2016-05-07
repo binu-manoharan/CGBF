@@ -29,13 +29,15 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
     }
 
     private int getScore(int column) {
-        final Board tempBoardBefore = new Board(board);
-        //TODO Extract into board comparator?
-        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(tempBoardBefore.getColumn(column), blockQueue.getNext());
-        tempBoardBefore.setColumn(column, cells);
+        final Board tempBoardBefore = getBoardWithDroppedQueue(column);
         final Board tempBoardAfter = new Board(tempBoardBefore);
         boardClearer.clearBoard(tempBoardAfter);
 
+        final int score = getScore(tempBoardBefore, tempBoardAfter);
+        return score;
+    }
+
+    private int getScore(Board tempBoardBefore, Board tempBoardAfter) {
         int score = 0;
         for (int i = 0; i < Board.ROW_LENGTH; i++) {
             for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
@@ -45,5 +47,12 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
             }
         }
         return score;
+    }
+
+    private Board getBoardWithDroppedQueue(int column) {
+        final Board tempBoardBefore = new Board(board);
+        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(tempBoardBefore.getColumn(column), blockQueue.getNext());
+        tempBoardBefore.setColumn(column, cells);
+        return tempBoardBefore;
     }
 }
