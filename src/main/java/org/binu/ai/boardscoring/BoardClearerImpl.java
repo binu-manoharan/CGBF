@@ -6,6 +6,7 @@ import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +22,18 @@ public class BoardClearerImpl implements IBoardClearer {
 
     @Override
     public void clearBoard(Board board) {
-        clearBoardByLine(board);
-        clearBoardBySquare(board);
-        clearBoardByTAndL(board);
-        clearBoardByZ(board);
+        clearBoardForAllShapes(board);
+    }
+
+    private void clearBoardForAllShapes(Board board) {
+        final ArrayList<int[]> cellList = new ArrayList<>();
+        cellList.addAll(cellArrayHelper.getIndexOfLines(board.getBoard()));
+        cellList.addAll(cellArrayHelper.getIndexOf4BlockGroup(board.getBoard()));
+        cellList.addAll(cellArrayHelper.getIndexOfLAndT(board.getBoard()));
+        cellList.addAll(cellArrayHelper.getIndexOfZ(board.getBoard()));
+        for (int[] cell : cellList) {
+            clearFromCell(cell[0], cell[1], board);
+        }
     }
 
     @Override
