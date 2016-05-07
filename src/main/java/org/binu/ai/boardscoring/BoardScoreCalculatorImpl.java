@@ -28,7 +28,7 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
     @Override
     public int calculateColumnScore(int column) {
         final int score = getScore(column);
-        return score * 10;
+        return score;
     }
 
     private int getScore(int column) {
@@ -62,8 +62,12 @@ public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
             for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
                 final CellStatus beforeCellStatus = tempBoardBefore.getCell(i, j).getCellStatus();
                 //TODO: Don't agressively remove blocks might be helpful for combos.
-                if (tempBoardAfter.getCell(i, j).getCellStatus() != beforeCellStatus && beforeCellStatus != CellStatus.BLOCKED) {
-                    score++;
+                if (tempBoardAfter.getCell(i, j).getCellStatus() != beforeCellStatus) {
+                    if (beforeCellStatus != CellStatus.BLOCKED) {
+                        score += 10;
+                    } else {
+                        score -= 5;
+                    }
                 }
             }
         }
