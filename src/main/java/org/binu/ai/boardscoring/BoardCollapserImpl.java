@@ -21,11 +21,11 @@ class BoardCollapserImpl implements IBoardCollapser {
     public Board collapseBoard(Board board) {
         final long startTime = System.nanoTime();
 
-        final Board clearedBoard = boardClearer.clearBoard(board);
-        cellArrayHelper.collapseEmptyCells(clearedBoard);
+        boardClearer.clearBoard(board);
+        cellArrayHelper.collapseEmptyCells(board);
 
         final long endTime = System.nanoTime();
         System.out.println(endTime - startTime);
-        return clearedBoard;
+        return board;
     }
 }

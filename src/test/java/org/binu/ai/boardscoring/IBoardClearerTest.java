@@ -46,10 +46,10 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardBySquare(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
-        final Cell[] thirdRow = clearedBoard.getRow(2);
+        boardClearer.clearBoardBySquare(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
+        final Cell[] thirdRow = board.getRow(2);
 
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
         assertRowStatus("Second Row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -75,12 +75,12 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardBySquare(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
-        final Cell[] thirdRow = clearedBoard.getRow(2);
-        final Cell[] fourthRow = clearedBoard.getRow(3);
-        final Cell[] fifthRow = clearedBoard.getRow(4);
+        boardClearer.clearBoardBySquare(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
+        final Cell[] thirdRow = board.getRow(2);
+        final Cell[] fourthRow = board.getRow(3);
+        final Cell[] fifthRow = board.getRow(4);
 
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second Row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -108,8 +108,8 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByLine(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
+        boardClearer.clearBoardByLine(board);
+        final Cell[] firstRow = board.getRow(0);
 
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
     }
@@ -133,11 +133,11 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByLine(board);
-        final Cell[] firstColumn = clearedBoard.getColumn(0);
-        final Cell[] secondColumn = clearedBoard.getColumn(1);
-        final Cell[] thirdColumn = clearedBoard.getColumn(2);
-        final Cell[] fourthColumn = clearedBoard.getColumn(3);
+        boardClearer.clearBoardByLine(board);
+        final Cell[] firstColumn = board.getColumn(0);
+        final Cell[] secondColumn = board.getColumn(1);
+        final Cell[] thirdColumn = board.getColumn(2);
+        final Cell[] fourthColumn = board.getColumn(3);
 
         assertRowStatus("First Column", firstColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second Column", secondColumn, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY);
@@ -165,9 +165,9 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByLine(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
+        boardClearer.clearBoardByLine(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
 
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second row", secondRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -192,10 +192,10 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByLine(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
-        final Cell[] thirdRow = clearedBoard.getRow(2);
+        boardClearer.clearBoardByLine(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
+        final Cell[] thirdRow = board.getRow(2);
 
         assertRowStatus("First row", firstRow, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED);
         assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -221,11 +221,11 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByTAndL(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
-        final Cell[] thirdRow = clearedBoard.getRow(2);
-        final Cell[] fourthRow = clearedBoard.getRow(3);
+        boardClearer.clearBoardByTAndL(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
+        final Cell[] thirdRow = board.getRow(2);
+        final Cell[] fourthRow = board.getRow(3);
 
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -252,11 +252,11 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoard(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
-        final Cell[] thirdRow = clearedBoard.getRow(2);
-        final Cell[] fourthRow = clearedBoard.getRow(3);
+        boardClearer.clearBoard(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
+        final Cell[] thirdRow = board.getRow(2);
+        final Cell[] fourthRow = board.getRow(3);
 
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -283,12 +283,12 @@ public class IBoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        final Board clearedBoard = boardClearer.clearBoardByZ(board);
-        final Cell[] firstRow = clearedBoard.getRow(0);
-        final Cell[] secondRow = clearedBoard.getRow(1);
-        final Cell[] thirdRow = clearedBoard.getRow(2);
-        final Cell[] fourthRow = clearedBoard.getRow(3);
-        final Cell[] fifthRow = clearedBoard.getRow(3);
+        boardClearer.clearBoardByZ(board);
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
+        final Cell[] thirdRow = board.getRow(2);
+        final Cell[] fourthRow = board.getRow(3);
+        final Cell[] fifthRow = board.getRow(3);
 
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.BLOCKED, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
