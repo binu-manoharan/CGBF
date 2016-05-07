@@ -128,13 +128,11 @@ public class CellArrayHelperImpl implements CellArrayHelper {
     }
 
     @Override
-    public Board collapseEmptyCells(Board board) {
-        Board collapsedBoard = new Board();
+    public void collapseEmptyCells(Board board) {
         for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
             final Cell[] cells = collapseEmptyCells(board.getColumn(col));
-            collapsedBoard.setColumn(col, cells);
+            board.setColumn(col, cells);
         }
-        return collapsedBoard;
     }
 
     @Override

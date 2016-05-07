@@ -57,10 +57,9 @@ public interface CellArrayHelper {
     /**
      * Collapse empty cells on a board
      *
-     * @param board 2d cell array
-     * @return collapsed board
+     * @param board 2d cell array to collapse empty cells on
      */
-    Board collapseEmptyCells(Board board);
+    void collapseEmptyCells(Board board);
 
     /**
      * Drop block into cell[]
