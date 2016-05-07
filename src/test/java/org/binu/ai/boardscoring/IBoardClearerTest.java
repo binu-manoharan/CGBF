@@ -114,7 +114,6 @@ public class IBoardClearerTest {
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
     }
 
-    //TODO What if there are two of these in a column / convert to list points
     @Test
     public void should_clear_a_4_vertically_column() throws Exception {
         final String[] boardString = {
