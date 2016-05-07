@@ -11,7 +11,6 @@ import java.util.List;
  * Logic for parsing a cell array.
  */
 public interface CellArrayHelper {
-    //TODO Fix methods that don't find second occurrence
     /**
      * Returns index of the first non empty position in the cell array where new block can sit
      *
