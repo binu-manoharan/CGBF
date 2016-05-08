@@ -66,16 +66,30 @@ public class BlockQueueTest {
         blockQueue.add(firstBlock);
         blockQueue.add(firstBlock);
         blockQueue.add(firstBlock);
-        blockQueue.add(firstBlock);
-        blockQueue.add(firstBlock);
-        blockQueue.add(firstBlock);
-        blockQueue.add(firstBlock);
-        blockQueue.add(firstBlock);
-        blockQueue.add(firstBlock);
+
+        assertThat("Block queue has size 4", blockQueue.getSize(), is(4));
         blockQueue.add(firstBlock);
         blockQueue.add(firstBlock);
 
+        assertThat("Block queue has size 6", blockQueue.getSize(), is(6));
+        blockQueue.add(firstBlock);
+        blockQueue.add(firstBlock);
+
+        assertThat("Block queue has size 8", blockQueue.getSize(), is(8));
+        blockQueue.add(firstBlock);
+        blockQueue.add(firstBlock);
+        blockQueue.add(firstBlock);
+        blockQueue.add(firstBlock);
+        assertThat("Block queue has size 8", blockQueue.getSize(), is(8));
+
         assertThat("BlockQueue contains the block we just added", blockQueue.getNext(), is(firstBlock));
+
+        final BlockQueue anotherBlockQueue = new BlockQueue(new BlockQueue(blockQueue));
+        blockQueue.getNextAndPop();
+        assertThat("Block queue has size 7", blockQueue.getSize(), is(7));
+        assertThat("Another block queue has size 8", blockQueue.getSize(), is(8));
+
+        assertThat("Both queues have different references", blockQueue != anotherBlockQueue, is(true));
     }
 
     @Test

@@ -16,6 +16,18 @@ public class BlockQueue {
     }
 
     /**
+     * Copy constructor
+     * @param blockQueue block list
+     */
+    public BlockQueue(BlockQueue blockQueue) {
+        this.blocks = new ArrayList<>(blockQueue.getBlocks());
+    }
+
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
+    /**
      * Add element to the block queue
      * @param block element to add
      */
@@ -37,7 +49,7 @@ public class BlockQueue {
      * Pops the block and retuns the popped block.
      * @return the popped block
      */
-    Block getNextAndPop() {
+    public Block getNextAndPop() {
         final Block next = getNext();
         if (next != null) {
             blocks.remove(0);
@@ -52,5 +64,13 @@ public class BlockQueue {
      */
     public Block getBlock(int blockIndex) {
         return blocks.get(blockIndex);
+    }
+
+    /**
+     * Get current size of block queue
+     * @return size
+     */
+    public int getSize() {
+        return blocks.size();
     }
 }
