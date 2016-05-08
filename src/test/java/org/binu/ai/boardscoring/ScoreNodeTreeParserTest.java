@@ -8,26 +8,20 @@ import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Collections;
-
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link ScoreNodeTreeFactory}
+ * Test for {@link ScoreNodeTreeParser}
  */
-public class ScoreNodeTreeFactoryTest {
-
+public class ScoreNodeTreeParserTest {
     private DataParser dataParser;
     private Board board;
-    private ScoreNode rootNode;
     private ScoreNodeTreeFactory scoreNodeTreeFactory;
     private BlockQueue blockQueue;
+    private ScoreNode rootNode;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +33,7 @@ public class ScoreNodeTreeFactoryTest {
     }
 
     @Test
-    public void should_create_score_node_with_six_children() throws Exception {
+    public void should_compute_score_for_3_move_combo() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -47,61 +41,78 @@ public class ScoreNodeTreeFactoryTest {
                 "......",
                 "......",
                 "......",
-                "......",
-                "......",
-                "......",
-                "0.....",
                 "1.....",
-                "1....."
-        };
-        board = dataParser.createBoard(boardString);
-
-        blockQueue.add(getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED));
-        blockQueue.add(getBlock(CellColour.GREEN, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
-
-        scoreNodeTreeFactory.populateRootNodeTree(board, blockQueue, rootNode, 2);
-        assertThat("Score root node exists", rootNode, is(not(nullValue())));
-        assertThat("Score node has six children", rootNode.getChildren().size(), is(6));
-        assertThat("Score node's children has six children", rootNode.getChildren().get(0).getChildren().size(), is(6));
-    }
-
-    @Test
-    public void should_get_355_score_in_one_path_in_a_3_level_scoring_tree() throws Exception {
-        final String[] boardString = {
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "0.....",
                 "1.....",
-                "1....."
+                "2.....",
+                "2.....",
+                "3.1...",
+                "3.1..."
         };
+
+//        {
+//            "......",
+//            "......",
+//            "......",
+//            "......",
+//            "......",
+//            "......",
+//            "1.....",
+//            "1.....",
+//            "2.....",
+//            "2.....",
+//            "3.1...",
+//            "3.1..."
+//        } ;
 
         board = dataParser.createBoard(boardString);
 
-        blockQueue.add(getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED));
         blockQueue.add(getBlock(CellColour.GREEN, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
         blockQueue.add(getBlock(CellColour.GREEN, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.YELLOW, CellStatus.OCCUPIED, CellColour.YELLOW, CellStatus.OCCUPIED));
         scoreNodeTreeFactory.populateRootNodeTree(board, blockQueue, rootNode, 3);
-        assertThat("Score root node exists", rootNode, is(not(nullValue())));
-        assertThat("Score node has six children", rootNode.getChildren().size(), is(6));
 
-        assertChildrenScore(1, rootNode, 0, 35, 0, 0, 0, 0);
-        assertChildrenScore(2, rootNode.getChildren().get(0), 0, 0, 0, 0, 0, 0);
-        assertChildrenScore(3, rootNode.getChildren().get(0).getChildren().get(1), 0, 355, 40, 0, 0, 0);
+        final ScoreNodeTreeParser scoreNodeTreeParser = new ScoreNodeTreeParser();
+        final int[] bestScoringPath = scoreNodeTreeParser.findBestScoringPath(rootNode, 3);
 
-        assertThat("Column 1 combinations don't exists" , rootNode.getChildren().get(1).getChildren(), is(Collections.emptyList()));
-        assertChildrenScore(13, rootNode.getChildren().get(0).getChildren().get(1), 0, 355, 40, 0, 0, 0);
+        assertThat("First move is", bestScoringPath[0], is(1));
+        assertThat("First move is", bestScoringPath[1], is(1));
+        assertThat("First move is", bestScoringPath[2], is(0));
     }
 
-    @Ignore
     @Test
-    public void should_compute_4_move_combo_score() throws Exception {
+    public void should_compute_score_normally() throws Exception {
+        final String[] boardString = {
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+
+        board = dataParser.createBoard(boardString);
+
+        blockQueue.add(getBlock(CellColour.PURPLE, CellStatus.OCCUPIED, CellColour.PURPLE, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.YELLOW, CellStatus.OCCUPIED, CellColour.YELLOW, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.RED, CellStatus.OCCUPIED));
+        scoreNodeTreeFactory.populateRootNodeTree(board, blockQueue, rootNode, 3);
+
+        final ScoreNodeTreeParser scoreNodeTreeParser = new ScoreNodeTreeParser();
+        final int[] bestScoringPath = scoreNodeTreeParser.findBestScoringPath(rootNode, 3);
+
+        assertThat("First move is", bestScoringPath[0], is(1));
+        assertThat("First move is", bestScoringPath[1], is(1));
+        assertThat("First move is", bestScoringPath[2], is(1));
+    }
+
+    @Test
+    public void should_compute_score_for_4_move_combo() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -125,14 +136,18 @@ public class ScoreNodeTreeFactoryTest {
         blockQueue.add(getBlock(CellColour.PURPLE, CellStatus.OCCUPIED, CellColour.PURPLE, CellStatus.OCCUPIED));
         scoreNodeTreeFactory.populateRootNodeTree(board, blockQueue, rootNode, 4);
 
-        assertChildrenScore(1, rootNode, 0, 0 , 0, 0, 0, 0);
-        assertChildrenScore(2, rootNode.getChildren().get(0), 0, 0, 35, 0, 0, 0);
-        assertChildrenScore(3, rootNode.getChildren().get(0).getChildren().get(1), 0, 0, 0, 0, 0, 0);
-        assertChildrenScore(4, rootNode.getChildren().get(0).getChildren().get(1). getChildren().get(2), 0, 0, 2875, 40, 0, 0);
+        final ScoreNodeTreeParser scoreNodeTreeParser = new ScoreNodeTreeParser();
+        final int[] bestScoringPath = scoreNodeTreeParser.findBestScoringPath(rootNode, 4);
+
+        assertThat("First move is", bestScoringPath[0], is(0));
+
+//        assertChildrenScore(1, rootNode, 0, 0 , 0, 0, 0, 0);
+//        assertChildrenScore(2, rootNode.getChildren().get(0), 0, 0, 35, 0, 0, 0);
+//        assertChildrenScore(3, rootNode.getChildren().get(0).getChildren().get(1), 0, 0, 0, 0, 0, 0);
+//        assertChildrenScore(4, rootNode.getChildren().get(0).getChildren().get(1). getChildren().get(2), 0, 0, 2875, 40, 0, 0);
     }
 
     private void assertChildrenScore(int childLevel, ScoreNode node, int... scores) {
-
         assertNode(childLevel, 0, node.getChildren().get(0).getNodeScore(), scores[0]);
         assertNode(childLevel, 1, node.getChildren().get(1).getNodeScore(), scores[1]);
         assertNode(childLevel, 2, node.getChildren().get(2).getNodeScore(), scores[2]);

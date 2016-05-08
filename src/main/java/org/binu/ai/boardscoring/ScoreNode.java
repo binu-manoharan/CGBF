@@ -59,7 +59,6 @@ public class ScoreNode {
         children.add(childNode);
     }
 
-
     public int getLevel() {
         ScoreNode node = getParent();
         int levelsToRoot = 0;

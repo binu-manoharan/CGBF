@@ -14,24 +14,25 @@ import org.jetbrains.annotations.NotNull;
 public class ScoreNodeTreeFactory {
 
     private final BoardClearerImpl boardClearer;
-    private final ScoreNode rootNode;
     private final CellArrayHelper cellArrayHelper;
 
-    public ScoreNodeTreeFactory(ScoreNode rootNode) {
-        this.rootNode = rootNode;
+    public ScoreNodeTreeFactory() {
         cellArrayHelper = new CellArrayHelperImpl();
         boardClearer = new BoardClearerImpl(cellArrayHelper);
     }
 
-    public ScoreNode populateRootNodeTree(Board board, BlockQueue blockQueue, int depth) {
+    public void populateRootNodeTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int depth) {
         addToScoreNode(rootNode, board, blockQueue, depth);
-        return rootNode;
     }
 
     private void addToScoreNode(ScoreNode scoreNode, Board board, BlockQueue blockQueue, int depth) {
 
         final int level = scoreNode.getLevel();
         if (level >= depth) {
+            return;
+        }
+
+        if (cellArrayHelper.isClearable(board)) {
             return;
         }
 

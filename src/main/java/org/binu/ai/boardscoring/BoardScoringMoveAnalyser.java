@@ -12,23 +12,38 @@ import java.util.ArrayList;
 public class BoardScoringMoveAnalyser extends AbstractMoveAnalyser {
     private Board board;
     private BlockQueue blockQueue;
+    private ScoreNodeTreeFactory scoreNodeTreeFactory;
+    private ScoreNode rootNode;
+    private ScoreNodeTreeParser scoreNodeTreeParser;
+
+    private int level;
 
     public BoardScoringMoveAnalyser(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
+        rootNode = new ScoreNode();
+        level = 4;
+        scoreNodeTreeParser = new ScoreNodeTreeParser();
+        scoreNodeTreeFactory = new ScoreNodeTreeFactory();
     }
 
     @Override
     public int findBestMove() {
-        final BoardScoreCalculatorImpl boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
+        scoreNodeTreeFactory.populateRootNodeTree(board, blockQueue, rootNode, level);
+        final int[] bestScoringPath = scoreNodeTreeParser.findBestScoringPath(rootNode, level);
+        System.err.println("1: " + bestScoringPath[0]);
+        System.err.println("2: " + bestScoringPath[1]);
+        System.err.println("3: " + bestScoringPath[2]);
+        return bestScoringPath[0];
+    }
 
-        final int[][] columnScores = new int[6][2];
-        final int highestColumnScore = getHighestColumnScore(boardScoreCalculator, columnScores);
-
-        final ArrayList<Integer> highestColumnIndex = getHighestScoringIndexes(columnScores, highestColumnScore);
-
-        final Integer winningIndex = getWinningIndex(highestColumnIndex);
-        return winningIndex;
+    @NotNull
+    private ScoreNode getScoreNode(BoardScoreCalculatorImpl boardScoreCalculator, int columnIndex, ScoreNode parent) {
+        final ScoreNode child = new ScoreNode();
+        child.nodeIndex = columnIndex;
+        child.nodeScore = boardScoreCalculator.calculateColumnScore(columnIndex);
+        child.setParent(parent);
+        return child;
     }
 
     private Integer getWinningIndex(ArrayList<Integer> highestColumnIndex) {
@@ -59,5 +74,9 @@ public class BoardScoringMoveAnalyser extends AbstractMoveAnalyser {
             }
         }
         return highestColumnScore;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

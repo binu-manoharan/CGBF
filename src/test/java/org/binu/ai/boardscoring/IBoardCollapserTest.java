@@ -86,22 +86,20 @@ public class IBoardCollapserTest {
         assertRowColour("Second row", secondRow, null, null, null, null, null, null);
     }
 
-    @Ignore
     @Test
     public void should_collapse_all_shapes_recursively() throws Exception {
-        //TODO recursively collapse test
         final String[] boardString = {
                 "......",
                 "......",
                 "......",
                 "......",
                 "......",
-                "......",
-                "......",
-                "......",
+                "..4...",
+                "..45..",
+                "..45..",
                 "3.22..",
                 "3.22..",
-                "3.....",
+                "3.455.",
                 "31111."
         };
 

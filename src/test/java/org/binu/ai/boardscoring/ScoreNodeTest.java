@@ -25,5 +25,20 @@ public class ScoreNodeTest {
         assertThat("Grandchild node level is 2", grandChild.getLevel(), is(2));
     }
 
+    @Test
+    public void should_set_show_highest_scoring_child() throws Exception {
+        final ScoreNode rootNode = new ScoreNode();
+        final ScoreNode node1 = new ScoreNode(0, 20);
+        final ScoreNode node2 = new ScoreNode(1, 30);
+        final ScoreNode node3 = new ScoreNode(1, 30);
+        node1.setParent(rootNode);
+        node2.setParent(rootNode);
+        node3.setParent(rootNode);
+        rootNode.addChild(node1);
+        rootNode.addChild(node2);
+        rootNode.addChild(node3);
 
+        assertThat("Root node score is 0.", rootNode.getChildren().size(), is(3));
+        //TODO method for max child
+    }
 }
