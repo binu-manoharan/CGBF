@@ -41,12 +41,14 @@ public class CellArrayHelperTest {
 
     @Test
     public void should_return_top_of_column_as_2() throws Exception {
+        board = new Board();
         cells[0] = getCell(CellColour.GREEN, CellStatus.OCCUPIED);
         cells[1] = getCell(CellColour.RED, CellStatus.OCCUPIED);
 
         final int firstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(cells);
 
         assertThat("First empty position is 2 (zero indexed)", firstEmptyPosition, is(2));
+        assertThat("Board is not clearable", cellArrayHelper.isClearable(board), is(false));
     }
 
     @Test
@@ -300,6 +302,7 @@ public class CellArrayHelperTest {
         assertBlockItems(indexOf4BlockGroup.get(4)[0], 8, indexOf4BlockGroup.get(4)[1], 2);
         assertBlockItems(indexOf4BlockGroup.get(5)[0], 1, indexOf4BlockGroup.get(5)[1], 2);
         assertBlockItems(indexOf4BlockGroup.get(6)[0], 3, indexOf4BlockGroup.get(6)[1], 2);
+        assertThat("Board is clearable", cellArrayHelper.isClearable(board), is(true));
     }
 
     @Test

@@ -195,6 +195,27 @@ public class CellArrayHelperImpl implements CellArrayHelper {
         return resultList;
     }
 
+    @Override
+    public List<int[]> getIndexesOfAllShapes(Cell[][] cellArray) {
+        final ArrayList<int[]> cellList = new ArrayList<>();
+        cellList.addAll(getIndexOfLines(cellArray));
+        cellList.addAll(getIndexOf4BlockGroup(cellArray));
+        cellList.addAll(getIndexOfLAndT(cellArray));
+        cellList.addAll(getIndexOfZ(cellArray));
+
+        return cellList;
+    }
+
+    @Override
+    public boolean isClearable(Board board) {
+        final Cell[][] cellArray = board.getBoard();
+        if (!getIndexOfLines(cellArray).isEmpty()) return true;
+        if (!getIndexOf4BlockGroup(cellArray).isEmpty()) return true;
+        if (!getIndexOfLAndT(cellArray).isEmpty()) return true;
+        if (!getIndexOfZ(cellArray).isEmpty()) return true;
+        return false;
+    }
+
     private void matchingPointsWithLinesToTheRight(Cell[][] cellArray, int rowLength, int colLength, List<int[]> resultList) {
         for (int row = 0; row < rowLength; row++) {
             for (int col = 0; col < colLength - 3; col++) {

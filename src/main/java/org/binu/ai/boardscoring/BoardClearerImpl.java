@@ -27,10 +27,7 @@ public class BoardClearerImpl implements IBoardClearer {
 
     private void clearBoardForAllShapes(Board board) {
         final ArrayList<int[]> cellList = new ArrayList<>();
-        cellList.addAll(cellArrayHelper.getIndexOfLines(board.getBoard()));
-        cellList.addAll(cellArrayHelper.getIndexOf4BlockGroup(board.getBoard()));
-        cellList.addAll(cellArrayHelper.getIndexOfLAndT(board.getBoard()));
-        cellList.addAll(cellArrayHelper.getIndexOfZ(board.getBoard()));
+        cellList.addAll(cellArrayHelper.getIndexesOfAllShapes(board.getBoard()));
         for (int[] cell : cellList) {
             clearFromCell(cell[0], cell[1], board);
         }

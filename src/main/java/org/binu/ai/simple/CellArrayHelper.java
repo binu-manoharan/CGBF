@@ -93,4 +93,20 @@ public interface CellArrayHelper {
      * @return list of x and y co-ordinates of at least a cell within the shape
      */
     List<int[]> getIndexOfLines(Cell[][] cellArray);
+
+    /**
+     * Get cell indexes of all formations
+     *
+     * @param cellArray cellArray to parse
+     * @return list of x and y co-ordinates of at least a cell within the shape
+     */
+    List<int[]> getIndexesOfAllShapes(Cell[][] cellArray);
+
+
+    /**
+     * does the board contain any desirable shape
+     * @return true if the board contains any of the shapes
+     * @param board board to check the status for
+     */
+    boolean isClearable(Board board);
 }
