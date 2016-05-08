@@ -95,7 +95,7 @@ public class ScoreNodeTreeFactoryTest {
     }
 
     @Test
-    public void should_create_score_node() throws Exception {
+    public void should_compute_4_move_combo_score() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
