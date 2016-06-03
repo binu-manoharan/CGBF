@@ -1,12 +1,11 @@
-package org.binu.ai.boardscoring;
+package org.binu.ai.framework;
 
-import org.binu.ai.framework.CellArrayHelper;
 import org.binu.board.Board;
 
 /**
  * Simple board collapser implementation.
  */
-class BoardCollapserImpl implements BoardCollapser {
+public class BoardCollapserImpl implements BoardCollapser {
 
     private CellArrayHelper cellArrayHelper;
     private BoardClearerImpl boardClearer;

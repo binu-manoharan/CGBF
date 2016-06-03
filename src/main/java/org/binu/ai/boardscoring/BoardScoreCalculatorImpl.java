@@ -1,5 +1,7 @@
 package org.binu.ai.boardscoring;
 
+import org.binu.ai.framework.BoardClearerImpl;
+import org.binu.ai.framework.BoardCollapserImpl;
 import org.binu.ai.framework.CellArrayHelper;
 import org.binu.ai.framework.CellArrayHelperImpl;
 import org.binu.board.BlockQueue;
