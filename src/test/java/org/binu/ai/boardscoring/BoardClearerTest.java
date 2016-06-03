@@ -13,12 +13,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link IBoardClearer}
+ * Test for {@link BoardClearer}
  */
-public class IBoardClearerTest {
+public class BoardClearerTest {
     private DataParser dataParser;
     private Board board;
-    private IBoardClearer boardClearer;
+    private BoardClearer boardClearer;
 
     @Before
     public void setUp() throws Exception {

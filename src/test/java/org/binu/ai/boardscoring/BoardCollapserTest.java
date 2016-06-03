@@ -7,16 +7,15 @@ import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link IBoardCollapser}
+ * Test for {@link BoardCollapser}
  */
-public class IBoardCollapserTest {
+public class BoardCollapserTest {
 
     private DataParser dataParser;
     private Board board;

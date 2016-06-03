@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Simple board clearer implementation.
  */
-public class BoardClearerImpl implements IBoardClearer {
+public class BoardClearerImpl implements BoardClearer {
 
     private CellArrayHelper cellArrayHelper;
 

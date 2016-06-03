@@ -8,6 +8,7 @@ import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -112,6 +113,7 @@ public class ScoreNodeTreeParserTest {
     }
 
     @Test
+    @Ignore
     public void should_compute_score_for_4_move_combo() throws Exception {
         final String[] boardString = {
                 "......",

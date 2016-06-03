@@ -58,6 +58,7 @@ public class BoardScoringMoveAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void should_compile_blah() throws Exception {
         //blockQueue [1,1]@col1 [2,2]@col2 [2,2]@col2
         final String[] boardString = {
@@ -90,6 +91,7 @@ public class BoardScoringMoveAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void should_make_a_3_step_chain() throws Exception {
         //blockQueue [1,1]@col1 [2,2]@col2 [2,2]@col2
         final String[] boardString = {

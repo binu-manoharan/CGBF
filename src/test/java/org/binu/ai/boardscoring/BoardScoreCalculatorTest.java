@@ -14,9 +14,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link IBoardScoreCalculator}.
+ * Test for {@link BoardScoreCalculator}.
  */
-public class IBoardScoreCalculatorTest {
+public class BoardScoreCalculatorTest {
     private DataParser dataParser;
     private BlockQueue blockQueue;
 
@@ -48,7 +48,7 @@ public class IBoardScoreCalculatorTest {
         final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
         blockQueue.add(block);
 
-        final IBoardScoreCalculator boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
+        final BoardScoreCalculator boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
         assertThat("The score for column 1 is 40", boardScoreCalculator.calculateColumnScore(0), is(40));
         assertThat("The score for column 2 is 40", boardScoreCalculator.calculateColumnScore(1), is(40));
         assertThat("The score for column 3 is 40", boardScoreCalculator.calculateColumnScore(2), is(40));
@@ -79,7 +79,7 @@ public class IBoardScoreCalculatorTest {
         final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
         blockQueue.add(block);
 
-        final IBoardScoreCalculator boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
+        final BoardScoreCalculator boardScoreCalculator = new BoardScoreCalculatorImpl(board, blockQueue);
         assertThat("The score for column 1 is 0", boardScoreCalculator.calculateColumnScore(0), is(0));
         assertThat("The score for column 2 is 360", boardScoreCalculator.calculateColumnScore(1), is(355));
         assertThat("The score for column 3 is 360", boardScoreCalculator.calculateColumnScore(2), is(355));

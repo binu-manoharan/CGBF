@@ -6,7 +6,7 @@ import org.binu.board.Board;
  * Collapses a board where there is a block of 4 colours together.
  * This formation can be either vertical or horizontal or a square of 4.
  */
-interface IBoardCollapser {
+interface BoardCollapser {
     //TODO add isCollapsable
     /**
      * Collapse the board based on the 4 together rule.

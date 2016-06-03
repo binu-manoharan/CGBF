@@ -5,7 +5,7 @@ import org.binu.board.Board;
 /**
  * Clears board pieces that make 4 and ones surrounding it.
  */
-public interface IBoardClearer {
+public interface BoardClearer {
     /**
      * Clear the board based on the 4 together rule.
      *

@@ -6,7 +6,7 @@ import org.binu.board.Board;
 /**
  * Simple board collapser implementation.
  */
-class BoardCollapserImpl implements IBoardCollapser {
+class BoardCollapserImpl implements BoardCollapser {
 
     private CellArrayHelper cellArrayHelper;
     private BoardClearerImpl boardClearer;

@@ -10,7 +10,7 @@ import org.binu.data.CellStatus;
 /**
  * Basic board scoring.
  */
-public class BoardScoreCalculatorImpl implements IBoardScoreCalculator {
+public class BoardScoreCalculatorImpl implements BoardScoreCalculator {
     private final Board board;
     private final BlockQueue blockQueue;
     private final CellArrayHelper cellArrayHelper;
