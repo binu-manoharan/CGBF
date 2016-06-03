@@ -1,7 +1,7 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.framework.BoardClearer;
-import org.binu.ai.framework.BoardClearerImpl;
+import org.binu.ai.framework.ChainClearer;
+import org.binu.ai.framework.ChainClearerImpl;
 import org.binu.ai.framework.CellArrayHelper;
 import org.binu.ai.framework.CellArrayHelperImpl;
 import org.binu.board.Board;
@@ -15,18 +15,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link BoardClearer}
+ * Test for {@link ChainClearer}
  */
-public class BoardClearerTest {
+public class ChainClearerTest {
     private DataParser dataParser;
     private Board board;
-    private BoardClearer boardClearer;
+    private ChainClearer chainClearer;
 
     @Before
     public void setUp() throws Exception {
         dataParser = new DataParser();
         final CellArrayHelper cellArrayHelper = new CellArrayHelperImpl();
-        boardClearer = new BoardClearerImpl(cellArrayHelper);
+        chainClearer = new ChainClearerImpl(cellArrayHelper);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardBySquare(board);
+        chainClearer.clearBoardBySquare(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
         final Cell[] thirdRow = board.getRow(2);
@@ -77,7 +77,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardBySquare(board);
+        chainClearer.clearBoardBySquare(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
         final Cell[] thirdRow = board.getRow(2);
@@ -110,7 +110,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardByLine(board);
+        chainClearer.clearBoardByLine(board);
         final Cell[] firstRow = board.getRow(0);
 
         assertRowStatus("First Row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY);
@@ -135,7 +135,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardByLine(board);
+        chainClearer.clearBoardByLine(board);
         final Cell[] firstColumn = board.getColumn(0);
         final Cell[] secondColumn = board.getColumn(1);
         final Cell[] thirdColumn = board.getColumn(2);
@@ -167,7 +167,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardByLine(board);
+        chainClearer.clearBoardByLine(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
 
@@ -194,7 +194,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardByLine(board);
+        chainClearer.clearBoardByLine(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
         final Cell[] thirdRow = board.getRow(2);
@@ -223,7 +223,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardByTAndL(board);
+        chainClearer.clearBoardByTAndL(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
         final Cell[] thirdRow = board.getRow(2);
@@ -254,7 +254,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoard(board);
+        chainClearer.clearBoard(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
         final Cell[] thirdRow = board.getRow(2);
@@ -285,7 +285,7 @@ public class BoardClearerTest {
 
         board = dataParser.createBoard(boardString);
 
-        boardClearer.clearBoardByZ(board);
+        chainClearer.clearBoardByZ(board);
         final Cell[] firstRow = board.getRow(0);
         final Cell[] secondRow = board.getRow(1);
         final Cell[] thirdRow = board.getRow(2);

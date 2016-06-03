@@ -1,6 +1,6 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.framework.BoardClearerImpl;
+import org.binu.ai.framework.ChainClearerImpl;
 import org.binu.ai.framework.CellArrayHelper;
 import org.binu.ai.framework.CellArrayHelperImpl;
 import org.binu.board.BlockQueue;
@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScoreNodeTreeFactory {
 
-    private final BoardClearerImpl boardClearer;
+    private final ChainClearerImpl boardClearer;
     private final CellArrayHelper cellArrayHelper;
 
     public ScoreNodeTreeFactory() {
         cellArrayHelper = new CellArrayHelperImpl();
-        boardClearer = new BoardClearerImpl(cellArrayHelper);
+        boardClearer = new ChainClearerImpl(cellArrayHelper);
     }
 
     public void populateRootNodeTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int depth) {

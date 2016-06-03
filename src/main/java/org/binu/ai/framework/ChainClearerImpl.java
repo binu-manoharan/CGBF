@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * Simple board clearer implementation.
  */
-public class BoardClearerImpl implements BoardClearer {
+public class ChainClearerImpl implements ChainClearer {
 
     private CellArrayHelper cellArrayHelper;
 
-    public BoardClearerImpl(CellArrayHelper cellArrayHelper) {
+    public ChainClearerImpl(CellArrayHelper cellArrayHelper) {
         this.cellArrayHelper = cellArrayHelper;
     }
 

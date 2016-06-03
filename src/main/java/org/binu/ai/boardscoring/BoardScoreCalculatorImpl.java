@@ -1,6 +1,6 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.framework.BoardClearerImpl;
+import org.binu.ai.framework.ChainClearerImpl;
 import org.binu.ai.framework.BoardCollapserImpl;
 import org.binu.ai.framework.CellArrayHelper;
 import org.binu.ai.framework.CellArrayHelperImpl;
@@ -16,7 +16,7 @@ public class BoardScoreCalculatorImpl implements BoardScoreCalculator {
     private final Board board;
     private final BlockQueue blockQueue;
     private final CellArrayHelper cellArrayHelper;
-    private final BoardClearerImpl boardClearer;
+    private final ChainClearerImpl boardClearer;
     private final BoardCollapserImpl boardCollapser;
 
     public BoardScoreCalculatorImpl(Board board, BlockQueue blockQueue) {
@@ -24,7 +24,7 @@ public class BoardScoreCalculatorImpl implements BoardScoreCalculator {
         this.blockQueue = blockQueue;
         cellArrayHelper = new CellArrayHelperImpl();
         boardCollapser = new BoardCollapserImpl(cellArrayHelper);
-        boardClearer = new BoardClearerImpl(cellArrayHelper);
+        boardClearer = new ChainClearerImpl(cellArrayHelper);
     }
 
     @Override

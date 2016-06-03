@@ -8,17 +8,17 @@ import org.binu.board.Board;
 public class BoardCollapserImpl implements BoardCollapser {
 
     private CellArrayHelper cellArrayHelper;
-    private BoardClearerImpl boardClearer;
+    private ChainClearer chainClearer;
 
     public BoardCollapserImpl(CellArrayHelper cellArrayHelper) {
         this.cellArrayHelper = cellArrayHelper;
-        boardClearer = new BoardClearerImpl(cellArrayHelper);
+        chainClearer = new ChainClearerImpl(cellArrayHelper);
     }
 
     /** {@inheritDoc} */
     @Override
     public Board collapseBoard(Board board) {
-        boardClearer.clearBoard(board);
+        chainClearer.clearBoard(board);
         cellArrayHelper.collapseEmptyCells(board);
         return board;
     }

@@ -5,7 +5,7 @@ import org.binu.board.Board;
 /**
  * Clears board pieces that make 4 and ones surrounding it.
  */
-public interface BoardClearer {
+public interface ChainClearer {
     /**
      * Clear the board based on the 4 together rule.
      *
@@ -40,6 +40,4 @@ public interface BoardClearer {
      * @param board board to parse
      */
     void clearBoardByZ(Board board);
-
-
 }
