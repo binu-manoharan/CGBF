@@ -1,6 +1,8 @@
 package org.binu.ai.simple;
 
 import org.binu.ai.GameAI;
+import org.binu.ai.framework.CellArrayHelper;
+import org.binu.ai.framework.CellArrayHelperImpl;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;

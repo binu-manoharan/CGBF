@@ -1,4 +1,4 @@
-package org.binu.ai.simple;
+package org.binu.ai.framework;
 
 import org.binu.board.Block;
 import org.binu.board.Board;

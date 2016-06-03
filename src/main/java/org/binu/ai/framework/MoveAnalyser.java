@@ -1,4 +1,4 @@
-package org.binu.ai.boardscoring;
+package org.binu.ai.framework;
 
 /**
  * Calculate the better of the move.

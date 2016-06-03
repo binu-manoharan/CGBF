@@ -1,6 +1,6 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.simple.CellArrayHelper;
+import org.binu.ai.framework.CellArrayHelper;
 import org.binu.board.Board;
 
 /**

@@ -1,5 +1,6 @@
 package org.binu.ai.boardscoring;
 
+import org.binu.ai.framework.AbstractMoveAnalyser;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.jetbrains.annotations.NotNull;

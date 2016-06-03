@@ -1,4 +1,6 @@
-package org.binu.ai.boardscoring;
+package org.binu.ai.framework;
+
+import org.binu.ai.framework.MoveAnalyser;
 
 /**
  * Abstract move analyser.

@@ -1,5 +1,6 @@
-package org.binu.ai.simple;
+package org.binu.ai.framework;
 
+import org.binu.ai.framework.CellArrayHelper;
 import org.binu.board.Block;
 import org.binu.board.Board;
 import org.binu.board.Cell;
