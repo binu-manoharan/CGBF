@@ -1,0 +1,46 @@
+@startuml
+
+hide empty fields
+hide empty method
+
+interface IGameAI {
+    + calculateNextMove()
+}
+abstract class GameAI extends IGameAI {
+    ~ Board board
+    ~ BlockQueue blockQueue
+}
+
+class SimpleGameAI extends GameAI {
+}
+
+class ShinyNewAI extends GameAI {
+}
+
+interface MoveAnalyser {
+    + findBestMove()
+}
+
+class MoveAnalyserImpl implements MoveAnalyser{
+}
+
+interface BoardCollapser {
+    + collapseBoard()
+}
+
+class BoardCollapserImpl implements BoardCollapser{
+    + collapseBoard()
+}
+
+interface ChainClearer {
+    + clearBoard()
+}
+
+class ChainClearerImpl implements ChainClearer {
+}
+
+ShinyNewAI --> MoveAnalyser
+MoveAnalyser --> BoardCollapser
+MoveAnalyser --> ChainClearer
+BoardCollapser --> ChainClearer
+@enduml
