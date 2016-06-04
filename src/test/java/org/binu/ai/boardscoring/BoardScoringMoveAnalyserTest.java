@@ -27,7 +27,6 @@ public class BoardScoringMoveAnalyserTest {
         blockQueue = new BlockQueue();
     }
 
-    //TODO identify another chain
     @Ignore
     @Test
     public void should_compute_score_based_on_number_of_disappeared_cells_and_give_more_points_to_chains() throws Exception {

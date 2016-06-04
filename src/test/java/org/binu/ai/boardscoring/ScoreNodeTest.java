@@ -39,6 +39,5 @@ public class ScoreNodeTest {
         rootNode.addChild(node3);
 
         assertThat("Root node score is 0.", rootNode.getChildren().size(), is(3));
-        //TODO method for max child
     }
 }

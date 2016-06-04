@@ -36,7 +36,6 @@ public class BoardScoreCalculatorImpl implements BoardScoreCalculator {
     private int getScore(int column) {
         final Board tempBoardBeforeClear;
 
-        //TODO clean up try catch mess later?
         try {
             tempBoardBeforeClear = getBoardWithDroppedQueue(column);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -63,7 +62,6 @@ public class BoardScoreCalculatorImpl implements BoardScoreCalculator {
         for (int i = 0; i < Board.ROW_LENGTH; i++) {
             for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
                 final CellStatus beforeCellStatus = tempBoardBefore.getCell(i, j).getCellStatus();
-                //TODO: Don't agressively remove blocks might be helpful for combos.
                 if (tempBoardAfter.getCell(i, j).getCellStatus() != beforeCellStatus) {
                     if (beforeCellStatus != CellStatus.BLOCKED) {
                         score += 10;
