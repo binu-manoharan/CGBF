@@ -27,60 +27,6 @@ public class CellArrayHelperImpl implements CellArrayHelper {
     }
 
     @Override
-    public int getCellArrayScore(Cell[] cells, Block block) {
-        final Cell[] blockCells = block.getCells();
-
-        final Cell bottomCell = blockCells[0];
-
-        final int firstEmptyPosition = getFirstEmptyPosition(cells);
-
-        final int topElementPosition = firstEmptyPosition - 1;
-
-        if (topElementPosition >= 0) {
-            final CellColour topElementColour = cells[topElementPosition].getCellColour();
-            int numberOfElementsWithSameColourAsTopElement = 1;
-
-            numberOfElementsWithSameColourAsTopElement = getNumberOfElementsWithSameColourAsTopElement(cells, topElementPosition, topElementColour, numberOfElementsWithSameColourAsTopElement);
-
-            if (topElementColour == bottomCell.getCellColour() && numberOfElementsWithSameColourAsTopElement > 1) {
-                return numberOfElementsWithSameColourAsTopElement - 1;
-            }
-
-            if (topElementColour != bottomCell.getCellColour()) {
-                return numberOfElementsWithSameColourAsTopElement * -1;
-            }
-
-        }
-        return 0;
-    }
-
-    @Override
-    public int getFirstIndexOfRepeatOf4Group(Cell[] cells) {
-        int numberOfSameAdjacentCells = 1;
-        CellColour lastColour = null;
-        for (int elementIndex = 0; elementIndex < cells.length; elementIndex++) {
-            if (cells[elementIndex].getCellStatus() == CellStatus.OCCUPIED) {
-                final CellColour currentCellColour = cells[elementIndex].getCellColour();
-
-                if (lastColour == currentCellColour) {
-                    numberOfSameAdjacentCells++;
-
-                    if (numberOfSameAdjacentCells == 4) {
-                        return elementIndex;
-                    }
-                } else {
-                    numberOfSameAdjacentCells = 1;
-                }
-
-                lastColour = currentCellColour;
-            } else {
-                numberOfSameAdjacentCells = 1;
-            }
-        }
-        return -1;
-    }
-
-    @Override
     public List<int[]> getIndexOf4BlockGroup(Cell[][] cellArray) {
         final int rowLength = cellArray.length;
         final int colLength = cellArray[0].length;
