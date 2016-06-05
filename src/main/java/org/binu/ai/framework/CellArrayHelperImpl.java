@@ -27,7 +27,7 @@ public class CellArrayHelperImpl implements CellArrayHelper {
     }
 
     @Override
-    public int getCellArrayScore(Cell[] cells, @Nullable Block block) {
+    public int getCellArrayScore(Cell[] cells, Block block) {
         final Cell[] blockCells = block.getCells();
 
         final Cell bottomCell = blockCells[0];
@@ -155,6 +155,29 @@ public class CellArrayHelperImpl implements CellArrayHelper {
         }
 
         return droppedCells;
+    }
+
+    @Override
+    public boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex) {
+        final Cell[] column = board.getColumn(columnIndex);
+        final int firstEmptyPosition = getFirstEmptyPosition(column);
+        return firstEmptyPosition + block.getCells().length <= column.length;
+    }
+
+    @Override
+    public boolean dropBlockIntoBoard(Board board, Block block, int columnIndex) {
+        //TODO see if block is droppable on column can be merged here to not call firstEmptyPosition twice
+        final boolean isDroppable = blockIsDroppableOnColumn(board, block, columnIndex);
+        if (isDroppable) {
+            final Cell[] column = board.getColumn(columnIndex);
+            final int firstEmptyPosition = getFirstEmptyPosition(column);
+            int offset = 0;
+            for (Cell cell: block.getCells()) {
+                board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
+                offset++;
+            }
+        }
+        return isDroppable;
     }
 
     @Override

@@ -409,6 +409,84 @@ public class CellArrayHelperTest {
         cellArrayHelper.dropBlockIntoColumn(column, block);
     }
 
+    @Test
+    public void should_return_true_to_the_block_is_droppable_on_the_board_column_0() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+
+        final boolean isDroppable = cellArrayHelper.blockIsDroppableOnColumn(board, block, 0);
+        assertThat("Block is droppable on column 0: ", isDroppable, is(true));
+    }
+
+    @Test
+    public void should_return_false_to_the_block_is_droppable_on_the_board_column_0() throws Exception {
+        final String[] boardString = {
+                "......",
+                "5.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+
+        final boolean isDroppable = cellArrayHelper.blockIsDroppableOnColumn(board, block, 0);
+        assertThat("Block is droppable on column 0: ", isDroppable, is(false));
+    }
+
+    @Test
+    public void should_drop_cells_on_the_board_column_1_as_there_is_slots_left() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+
+        final boolean operationResult = cellArrayHelper.dropBlockIntoBoard(this.board, block, 0);
+
+        assertThat("Drop was successful: ", operationResult, is(true));
+        assertThat("The 1st cell should be BLUE", board.getCell(10, 0).getCellColour(), is(CellColour.BLUE));
+        assertThat("The 2nd cell should be BLUE", board.getCell(10, 0).getCellColour(), is(CellColour.BLUE));
+    }
+
     private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
         final Cell[] blockCells = getCells(cell1Colour, cell1Status, cell2Colour, cell2Status);
         return new Block(blockCells);
@@ -451,8 +529,7 @@ public class CellArrayHelperTest {
         cells[0] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);
         cells[1] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);
 
-        final Block block = new Block(cells);
-        return block;
+        return new Block(cells);
     }
 
     private void initEmptyCells() {

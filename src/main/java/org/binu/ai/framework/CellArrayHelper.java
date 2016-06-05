@@ -26,6 +26,7 @@ public interface CellArrayHelper {
      * @param block  block that is being checked against the column
      * @return score for the block landing on the column
      */
+    @Deprecated
     int getCellArrayScore(Cell[] column, @Nullable Block block);
 
 
@@ -71,6 +72,25 @@ public interface CellArrayHelper {
     Cell[] dropBlockIntoColumn(Cell[] cells, Block block);
 
     /**
+     * Is there space to fit in the block
+     *
+     * @param board       board against which is droppable is checked
+     * @param block       block that needs to be placed on the board
+     * @param columnIndex index of the column to drop on  @return true if there is space to drop
+     */
+    boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex);
+
+    /**
+     * Drop the block into the board at a certain index
+     *
+     * @param board       board on which the block is dropped
+     * @param block       block to be dropped
+     * @param columnIndex column index where the block is dropped
+     * @return true if the column was dropped successful, false when there is no space to drop it
+     */
+    boolean dropBlockIntoBoard(Board board, Block block, int columnIndex);
+
+    /**
      * Get cell indexes of L and T formations
      *
      * @param cellArray cellArray to parse
@@ -102,11 +122,11 @@ public interface CellArrayHelper {
      */
     List<int[]> getIndexesOfAllShapes(Cell[][] cellArray);
 
-
     /**
      * does the board contain any desirable shape
-     * @return true if the board contains any of the shapes
+     *
      * @param board board to check the status for
+     * @return true if the board contains any of the shapes
      */
     boolean isClearable(Board board);
 }
