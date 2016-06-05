@@ -2,10 +2,12 @@ package org.binu.data;
 
 /**
  * Enum for Rotation of the block
- * HORIZONTAL 1 -> 4
- * VERTCIAL 1 below 4
- * HORIZONTAL_REVERSED 4 -> 1
- * VERTICAL_REVERSED 4 below 1
+ * <ul>
+ * <li>HORIZONTAL 1 -> 4</li>
+ * <li>VERTCIAL 1 below 4</li>
+ * <li>HORIZONTAL_REVERSED 4 -> 1</li>
+ * <li>VERTICAL_REVERSED 4 below 1</li>
+ * </ul>
  */
 public enum Orientation {
     HORIZONTAL,
