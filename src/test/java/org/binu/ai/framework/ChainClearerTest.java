@@ -1,9 +1,5 @@
-package org.binu.ai.boardscoring;
+package org.binu.ai.framework;
 
-import org.binu.ai.framework.ChainClearer;
-import org.binu.ai.framework.ChainClearerImpl;
-import org.binu.ai.framework.CellArrayHelper;
-import org.binu.ai.framework.CellArrayHelperImpl;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellStatus;

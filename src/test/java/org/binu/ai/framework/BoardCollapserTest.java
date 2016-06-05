@@ -1,8 +1,5 @@
-package org.binu.ai.boardscoring;
+package org.binu.ai.framework;
 
-import org.binu.ai.framework.BoardCollapser;
-import org.binu.ai.framework.BoardCollapserImpl;
-import org.binu.ai.framework.CellArrayHelperImpl;
 import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
