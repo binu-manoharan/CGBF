@@ -1,8 +1,8 @@
 package org.binu.ai.boardscoring;
 
-import org.binu.ai.framework.ChainClearerImpl;
-import org.binu.ai.framework.CellArrayHelper;
-import org.binu.ai.framework.CellArrayHelperImpl;
+import org.binu.framework.ChainClearerImpl;
+import org.binu.framework.CellArrayHelper;
+import org.binu.framework.CellArrayHelperImpl;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.board.Cell;

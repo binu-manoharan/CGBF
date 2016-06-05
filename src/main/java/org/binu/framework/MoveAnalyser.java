@@ -1,4 +1,4 @@
-package org.binu.ai.framework;
+package org.binu.framework;
 
 /**
  * Calculate the better of the move.

@@ -1,9 +1,8 @@
-package org.binu.ai.framework;
+package org.binu.framework;
 
 import org.binu.board.Block;
 import org.binu.board.Board;
 import org.binu.board.Cell;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

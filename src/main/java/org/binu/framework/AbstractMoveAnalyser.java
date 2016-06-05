@@ -1,6 +1,4 @@
-package org.binu.ai.framework;
-
-import org.binu.ai.framework.MoveAnalyser;
+package org.binu.framework;
 
 /**
  * Abstract move analyser.
