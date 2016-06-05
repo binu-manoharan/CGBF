@@ -20,34 +20,6 @@ public interface CellArrayHelper {
     int getFirstEmptyPosition(Cell[] cells);
 
     /**
-     * Get Array score. This probably doesn't belong to this method.
-     *
-     * @param column cell array
-     * @param block  block that is being checked against the column
-     * @return score for the block landing on the column
-     */
-    @Deprecated
-    int getCellArrayScore(Cell[] column, @Nullable Block block);
-
-
-    /**
-     * Returns index of an element which forms four of the same colour
-     *
-     * @param cells cell array to check for repeated group
-     * @return max index of an element within the group
-     */
-    int getFirstIndexOfRepeatOf4Group(Cell[] cells);
-
-    /**
-     * Returns int [] containing two values which is the x and y within the 2d array for an element with the first
-     * repeated group block
-     *
-     * @param cellArray 2d array
-     * @return x and y containing the repeated groups
-     */
-    List<int[]> getIndexOf4BlockGroup(Cell[][] cellArray);
-
-    /**
      * Collapses any empty cells that exists between other types of cells
      *
      * @param cells cell array to parse
@@ -89,6 +61,15 @@ public interface CellArrayHelper {
      * @return true if the column was dropped successful, false when there is no space to drop it
      */
     boolean dropBlockIntoBoard(Board board, Block block, int columnIndex);
+
+    /**
+     * Returns int [] containing two values which is the x and y within the 2d array for an element with the first
+     * repeated group block
+     *
+     * @param cellArray 2d array
+     * @return x and y containing the repeated groups
+     */
+    List<int[]> getIndexOf4BlockGroup(Cell[][] cellArray);
 
     /**
      * Get cell indexes of L and T formations
