@@ -23,7 +23,6 @@ public class BoardScorerImpl implements BoardScorer {
         this.boardCollapser = boardCollapser;
     }
 
-    //TODO Invalidated
     @Override
     public int scoreBoard(Board board) {
         final int score = calculateScore(board, 0);
