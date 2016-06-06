@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
- * Created by binu on 05/06/16.
+ * Test for {@link BoardScorerImpl}
  */
 public class BoardScorerTest {
 
