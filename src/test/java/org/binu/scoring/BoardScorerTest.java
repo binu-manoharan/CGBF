@@ -1,6 +1,8 @@
 package org.binu.scoring;
 
 import org.binu.board.Board;
+import org.binu.data.CellColour;
+import org.binu.data.CellStatus;
 import org.binu.framework.*;
 import org.binu.integration.DataParser;
 import org.junit.Before;
@@ -48,7 +50,7 @@ public class BoardScorerTest {
                 "11...."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
 
         assertThat("Score is 40", score, is(40));
     }
@@ -70,9 +72,34 @@ public class BoardScorerTest {
                 "112..."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
 
         assertThat("Score is 360", score, is(360));
+        assertThat("Board [0][0] is cleared ", board.getCell(0, 0).getCellStatus(), is(CellStatus.EMPTY));
+    }
+
+    @Test
+    public void should_score_360_to_the_board_and_update_board() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "..2...",
+                "..2...",
+                "..2...",
+                "110...",
+                "112..."
+        };
+        board = dataParser.createBoard(boardString);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
+
+        assertThat("Score is 360", score, is(360));
+        assertThat("Board [0][0] is cleared ", board.getCell(0, 0).getCellStatus(), is(CellStatus.OCCUPIED));
+        assertThat("Board [0][0] is cleared ", board.getCell(0, 0).getCellColour(), is(CellColour.BLUE));
     }
 
     @Test
@@ -92,7 +119,7 @@ public class BoardScorerTest {
                 "..23.."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
 
         assertThat("Score is 840", score, is(840));
     }
@@ -114,7 +141,7 @@ public class BoardScorerTest {
                 "..23.."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
 
         assertThat("Score is 1240", score, is(1240));
     }
@@ -136,7 +163,7 @@ public class BoardScorerTest {
                 "155355"
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
 
         assertThat("Score is 2990", score, is(2990));
     }

@@ -24,8 +24,14 @@ public class BoardScorerImpl implements BoardScorer {
     }
 
     @Override
-    public int scoreBoardAndRecursivelyClearAndCollapse(Board board) {
-        final int score = calculateScore(board, 0);
+    public int scoreBoardAndRecursivelyClearAndCollapse(Board board, boolean updateBoard) {
+        final int score;
+        if (updateBoard) {
+            score = calculateScore(board, 0);
+        } else {
+            final Board tempBoard = new Board(board);
+            score = calculateScore(tempBoard, 0);
+        }
         return score;
     }
 
