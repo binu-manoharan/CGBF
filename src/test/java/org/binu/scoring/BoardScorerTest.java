@@ -98,6 +98,28 @@ public class BoardScorerTest {
     }
 
     @Test
+    public void should_score_1240_to_the_board() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "..23..",
+                "..23..",
+                "..23..",
+                ".1111.",
+                "..23..",
+                "..23.."
+        };
+        board = dataParser.createBoard(boardString);
+        final int score = boardScorer.scoreBoard(board);
+
+        assertThat("Score is 840", score, is(840));
+    }
+
+    @Test
     public void should_score_2990_to_the_board() throws Exception {
         final String[] boardString = {
                 "......",
