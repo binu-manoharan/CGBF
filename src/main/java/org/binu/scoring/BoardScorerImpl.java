@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class BoardScorerImpl implements BoardScorer {
 
-    private ChainClearer chainClearer;
-    private BoardCollapser boardCollapser;
+    private final ChainClearer chainClearer;
+    private final BoardCollapser boardCollapser;
 
     public BoardScorerImpl(ChainClearer chainClearer, BoardCollapser boardCollapser) {
         this.chainClearer = chainClearer;
@@ -62,7 +62,7 @@ public class BoardScorerImpl implements BoardScorer {
             final int colourBonus = getColourBonus(colourSizeMap.size());
             int groupBonus = 0;
             for (Integer integer : colourSizeMap.values()) {
-                if (integer.intValue() > 4) {
+                if (integer > 4) {
                     groupBonus += integer - 4;
                 }
             }
