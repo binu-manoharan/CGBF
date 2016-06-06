@@ -6,6 +6,7 @@ import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -40,9 +41,9 @@ public class BoardCollapserTest {
                 "......",
                 "......",
                 "......",
-                "...452",
-                ".23222",
-                ".1111."
+                "...45.",
+                ".23...",
+                "......"
         };
 
         board = dataParser.createBoard(boardString);
@@ -55,36 +56,7 @@ public class BoardCollapserTest {
     }
 
     @Test
-    public void should_collapse_all_shapes() throws Exception {
-        final String[] boardString = {
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "......",
-                "3522..",
-                "352244",
-                "35544.",
-                "31111."
-        };
-
-        board = dataParser.createBoard(boardString);
-        final Board collapsedBoard = boardCollapser.collapseBoard(boardCollapser.collapseBoard(board));
-        final Cell[] firstRow = collapsedBoard.getRow(0);
-        final Cell[] secondRow = collapsedBoard.getRow(1);
-
-        assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
-                CellStatus.EMPTY, CellStatus.EMPTY);
-        assertRowColour("First row", firstRow, null, null, null, null, null, null);
-        assertRowStatus("Second row", secondRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
-                CellStatus.EMPTY, CellStatus.EMPTY);
-        assertRowColour("Second row", secondRow, null, null, null, null, null, null);
-    }
-
-    @Test
+    @Ignore
     public void should_collapse_all_shapes_recursively() throws Exception {
         final String[] boardString = {
                 "......",
