@@ -4,6 +4,7 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.framework.BoardCollapser;
 import org.binu.framework.ChainClearer;
 
 import java.util.HashMap;
@@ -15,9 +16,11 @@ import java.util.Map;
 public class BoardScorerImpl implements BoardScorer {
 
     private ChainClearer chainClearer;
+    private BoardCollapser boardCollapser;
 
-    public BoardScorerImpl(ChainClearer chainClearer) {
+    public BoardScorerImpl(ChainClearer chainClearer, BoardCollapser boardCollapser) {
         this.chainClearer = chainClearer;
+        this.boardCollapser = boardCollapser;
     }
 
     //TODO Invalidated
@@ -54,7 +57,9 @@ public class BoardScorerImpl implements BoardScorer {
                 }
             }
 
-            final int colourBonus = colourSizeMap.size();
+            boardCollapser.collapseBoard(board);
+
+            final int colourBonus = getColourBonus(colourSizeMap.size());
             int groupBonus = 0;
             for (Integer integer : colourSizeMap.values()) {
                 if (integer.intValue() > 4) {
@@ -64,15 +69,33 @@ public class BoardScorerImpl implements BoardScorer {
 
             for (Map.Entry<CellColour, Integer> cellColourIntegerEntry : colourSizeMap.entrySet()) {
                 final Integer numberOfBlock = cellColourIntegerEntry.getValue();
-                score = (numberOfBlock * 10) * (chainPower + colourBonus + groupBonus);
+                final int comboTotal = chainPower + colourBonus + groupBonus;
+                score += (numberOfBlock * 10) * (comboTotal == 0 ? 1: comboTotal);
             }
 
-            //TODO Collapse board
-            int updateChainPower = chainPower == 0 ? 8 : chainPower * 2;
+            final int updateChainPower = chainPower == 0 ? 8 : chainPower * 2;
             return score + calculateScore(board, updateChainPower);
         }
         else {
             return 0;
+        }
+    }
+
+    private int getColourBonus(int numColours) {
+        switch (numColours) {
+            case 1:
+                return 0;
+            case 2:
+                return 2;
+            case 3:
+                return 4;
+            case 4:
+                return 8;
+            case 5:
+                return 16;
+            default:
+                assert false;
+                return 0;
         }
     }
 }
