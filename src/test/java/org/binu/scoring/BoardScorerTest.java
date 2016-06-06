@@ -116,7 +116,7 @@ public class BoardScorerTest {
         board = dataParser.createBoard(boardString);
         final int score = boardScorer.scoreBoard(board);
 
-        assertThat("Score is 840", score, is(840));
+        assertThat("Score is 1240", score, is(1240));
     }
 
     @Test
