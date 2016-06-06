@@ -48,7 +48,7 @@ public class BoardScorerTest {
                 "11...."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoard(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
 
         assertThat("Score is 40", score, is(40));
     }
@@ -70,7 +70,7 @@ public class BoardScorerTest {
                 "112..."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoard(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
 
         assertThat("Score is 360", score, is(360));
     }
@@ -92,7 +92,7 @@ public class BoardScorerTest {
                 "..23.."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoard(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
 
         assertThat("Score is 840", score, is(840));
     }
@@ -114,7 +114,7 @@ public class BoardScorerTest {
                 "..23.."
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoard(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
 
         assertThat("Score is 1240", score, is(1240));
     }
@@ -136,7 +136,7 @@ public class BoardScorerTest {
                 "155355"
         };
         board = dataParser.createBoard(boardString);
-        final int score = boardScorer.scoreBoard(board);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board);
 
         assertThat("Score is 2990", score, is(2990));
     }

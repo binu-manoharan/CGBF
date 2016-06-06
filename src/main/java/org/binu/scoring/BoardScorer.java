@@ -14,5 +14,5 @@ public interface BoardScorer {
      * @param board board to compute score for
      * @return score value
      */
-    int scoreBoard(Board board);
+    int scoreBoardAndRecursivelyClearAndCollapse(Board board);
 }

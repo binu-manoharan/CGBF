@@ -24,7 +24,7 @@ public class BoardScorerImpl implements BoardScorer {
     }
 
     @Override
-    public int scoreBoard(Board board) {
+    public int scoreBoardAndRecursivelyClearAndCollapse(Board board) {
         final int score = calculateScore(board, 0);
         return score;
     }
