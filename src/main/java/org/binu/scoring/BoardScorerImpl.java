@@ -57,9 +57,15 @@ public class BoardScorerImpl implements BoardScorer {
                 }
             }
 
+            final int numColours = colourSizeMap.size();
+
+            if (numColours == 0) {
+                return 0;
+            }
+
             boardCollapser.collapseBoard(board);
 
-            final int colourBonus = getColourBonus(colourSizeMap.size());
+            final int colourBonus = getColourBonus(numColours);
             int groupBonus = 0;
             for (Integer integer : colourSizeMap.values()) {
                 if (integer > 4) {
