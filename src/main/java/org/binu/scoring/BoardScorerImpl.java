@@ -67,7 +67,7 @@ public class BoardScorerImpl implements BoardScorer {
                 score = (numberOfBlock * 10) * (chainPower + colourBonus + groupBonus);
             }
 
-
+            //TODO Collapse board
             int updateChainPower = chainPower == 0 ? 8 : chainPower * 2;
             return score + calculateScore(board, updateChainPower);
         }
