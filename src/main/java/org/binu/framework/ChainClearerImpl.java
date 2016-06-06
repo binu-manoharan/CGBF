@@ -64,6 +64,11 @@ public class ChainClearerImpl implements ChainClearer {
         }
     }
 
+    @Override
+    public boolean isClearable(Board board) {
+        return cellArrayHelper.isClearable(board);
+    }
+
     private void clearFromCell(int rowId, int columnId, Board board) {
         final Cell collapsingCell = board.getCell(rowId, columnId);
         final CellColour cellColour = collapsingCell.getCellColour();

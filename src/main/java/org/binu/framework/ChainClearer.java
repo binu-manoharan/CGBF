@@ -40,4 +40,12 @@ public interface ChainClearer {
      * @param board board to parse
      */
     void clearBoardByZ(Board board);
+
+    /**
+     * Board has at least one step to clear
+     *
+     * @param board board to check against
+     * @return true if board has at least one item to clear
+     */
+    boolean isClearable(Board board);
 }

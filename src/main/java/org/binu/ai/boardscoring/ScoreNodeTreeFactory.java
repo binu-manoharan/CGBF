@@ -85,7 +85,6 @@ public class ScoreNodeTreeFactory {
         return scoreBoard(tempBoardAfterClear, boardDifferentialScore, multiplier) ;
     }
 
-    @NotNull
     private Board getClearedBoardCopy(Board tempBoardBeforeClear) {
         final Board tempBoardAfterClear = new Board(tempBoardBeforeClear);
         boardClearer.clearBoard(tempBoardAfterClear);

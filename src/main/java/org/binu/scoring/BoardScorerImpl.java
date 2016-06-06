@@ -4,59 +4,75 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
-import org.binu.framework.CellArrayHelperImpl;
 import org.binu.framework.ChainClearer;
-import org.binu.framework.ChainClearerImpl;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Board scoring implementation
  */
 public class BoardScorerImpl implements BoardScorer {
+
+    private ChainClearer chainClearer;
+
+    public BoardScorerImpl(ChainClearer chainClearer) {
+        this.chainClearer = chainClearer;
+    }
+
     //TODO Invalidated
     @Override
     public int scoreBoard(Board board) {
-        final ChainClearer chainClearer = new ChainClearerImpl(new CellArrayHelperImpl());
-
-        calculateScore(board, chainClearer);
-        return 0;
+        final int score = calculateScore(board, 0);
+        return score;
     }
 
-    private void calculateScore(Board board, ChainClearer chainClearer) {
-        final Board currentBoardState = new Board(board);
-        chainClearer.clearBoard(board);
-        //Chain step needs to be known here
-        //Step group
+    private int calculateScore(Board board, int chainPower) {
+        final boolean clearable = chainClearer.isClearable(board);
+        if (clearable) {
+            final Board currentBoardState = new Board(board);
+            chainClearer.clearBoard(board);
 
-        boardStepDiff(board, currentBoardState, 0);
-    }
+            int score = 0;
 
-    private BoardStepDifference boardStepDiff(Board board, Board currentBoardState, int chainPower) {
-        int cellCount = 0;
-        final HashMap<CellColour, Integer> colourSizeMap = new HashMap<>();
-        for (int row = 0; row < Board.ROW_LENGTH; row++) {
-            for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
-                final Cell newCell = board.getCell(row, col);
-                final Cell oldCell = currentBoardState.getCell(row, col);
-                if (oldCell.getCellStatus() != CellStatus.EMPTY && newCell.getCellStatus() == CellStatus.EMPTY) {
+            final HashMap<CellColour, Integer> colourSizeMap = new HashMap<>();
 
-                    final CellColour cellColour = oldCell.getCellColour();
-                    if (!colourSizeMap.containsKey(cellColour)) {
-                        colourSizeMap.put(cellColour, 1);
-                    } else {
-                        final Integer integer = colourSizeMap.get(cellColour);
-                        colourSizeMap.put(cellColour, integer + 1);
+            for (int row = 0; row < Board.ROW_LENGTH; row++) {
+                for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
+                    final Cell newCell = board.getCell(row, col);
+                    final Cell oldCell = currentBoardState.getCell(row, col);
+                    if (oldCell.getCellStatus() != CellStatus.EMPTY && oldCell.getCellStatus() != CellStatus.BLOCKED && newCell.getCellStatus() == CellStatus.EMPTY) {
+
+                        final CellColour cellColour = oldCell.getCellColour();
+                        if (!colourSizeMap.containsKey(cellColour)) {
+                            colourSizeMap.put(cellColour, 1);
+                        } else {
+                            final Integer integer = colourSizeMap.get(cellColour);
+                            colourSizeMap.put(cellColour, integer + 1);
+                        }
                     }
-
-                    if (oldCell.getCellStatus() != CellStatus.BLOCKED) {
-                        cellCount++;
-                    }
-                    //TODO find different colours
-                    //TODO find number of cells
                 }
             }
+
+            final int colourBonus = colourSizeMap.size();
+            int groupBonus = 0;
+            for (Integer integer : colourSizeMap.values()) {
+                if (integer.intValue() > 4) {
+                    groupBonus += integer - 4;
+                }
+            }
+
+            for (Map.Entry<CellColour, Integer> cellColourIntegerEntry : colourSizeMap.entrySet()) {
+                final Integer numberOfBlock = cellColourIntegerEntry.getValue();
+                score = (numberOfBlock * 10) * (chainPower + colourBonus + groupBonus);
+            }
+
+
+            int updateChainPower = chainPower == 0 ? 8 : chainPower * 2;
+            return score + calculateScore(board, updateChainPower);
         }
-        return new BoardStepDifference(cellCount, chainPower, colourSizeMap.size());
+        else {
+            return 0;
+        }
     }
 }
