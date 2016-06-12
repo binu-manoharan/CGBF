@@ -91,6 +91,9 @@ public class ScoreNode {
         return levelsToRoot;
     }
 
+    public int getTreeLevel() {
+        return level;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
