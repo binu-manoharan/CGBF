@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class ShinyNewRandomMoveMakerTest {
 
-    public static final int ROOT_NODE_LEVEL = 0;
+    private static final int ROOT_NODE_LEVEL = 0;
     private Board board;
     private DataParser dataParser;
     private BlockQueue blockQueue;
