@@ -8,19 +8,24 @@ import org.binu.data.ScoreNode;
  * Shiny!!! move analysis.
  */
 public class ShinyNewMoveAnalyser {
-    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue) {
+    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode) {
         final ShinyNewRandomMoveMaker shinyNewRandomMoveMaker = new ShinyNewRandomMoveMaker();
-        final ScoreNode rootNode = new ScoreNode();
+        final ScoreNode calculatedRootNode;
+        if (rootNode == null) {
+            calculatedRootNode = new ScoreNode();
+        } else {
+            calculatedRootNode = rootNode;
+        }
         final long startTime = System.currentTimeMillis();
         long currentTime = System.currentTimeMillis();
         int count = 0;
         while (currentTime - startTime < 50) {
-            shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, 0);
+            shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode, 0);
             currentTime = System.currentTimeMillis();
             count++;
         }
-        System.out.println(count);
+        System.err.println("Number of searches: " + count);
 
-        return rootNode;
+        return calculatedRootNode;
     }
 }

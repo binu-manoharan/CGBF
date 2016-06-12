@@ -51,7 +51,7 @@ public class ShinyNewMoveAnalyserTest {
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
 
         shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
-        shinyNewMoveAnalyser.makeScoreTree(board, blockQueue);
+        shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, null);
 
     }
 
