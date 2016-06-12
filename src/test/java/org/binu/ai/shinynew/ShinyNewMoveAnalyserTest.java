@@ -21,6 +21,7 @@ public class ShinyNewMoveAnalyserTest {
     private ShinyNewRandomMoveMaker shinyNewRandomMoveMaker;
     private ShinyNewMoveAnalyser shinyNewMoveAnalyser;
 
+    //TODO fix test name later
     @Test
     public void should_compile() throws Exception {
         final String[] boardString = {

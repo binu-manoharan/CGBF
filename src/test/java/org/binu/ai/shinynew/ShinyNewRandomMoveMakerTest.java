@@ -25,7 +25,7 @@ public class ShinyNewRandomMoveMakerTest {
     private ShinyNewRandomMoveMaker shinyNewRandomMoveMaker;
 
     @Test
-    public void should_compile() throws Exception {
+    public void should_have_at_most_4_children_while_making_random_moves() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
