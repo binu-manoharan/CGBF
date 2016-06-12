@@ -17,7 +17,7 @@ public class RandomValueGeneratorTest {
     @Test
     public void should_generate_random_value_between_1_and_5() throws Exception {
         final RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
-        final int randomValue = randomValueGenerator.getRandomValueBetween(MIN_VALUE1, MAX_VALUE);
+        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE1, MAX_VALUE);
         System.out.println("Random value = " + randomValue);
         assertThat("Random value is between 1 and 5", randomValue <= MAX_VALUE, is(true));
         assertThat("Random value is between 1 and 5", randomValue >= MIN_VALUE1, is(true));
@@ -26,7 +26,7 @@ public class RandomValueGeneratorTest {
     @Test
     public void should_generate_random_value_between_0_and_5() throws Exception {
         final RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
-        final int randomValue = randomValueGenerator.getRandomValueBetween(MIN_VALUE0, MAX_VALUE);
+        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE0, MAX_VALUE);
         System.out.println("Random value = " + randomValue);
         assertThat("Random value is between 1 and 5", randomValue <= MAX_VALUE, is(true));
         assertThat("Random value is between 1 and 5", randomValue >= MIN_VALUE0, is(true));

@@ -7,23 +7,43 @@ import java.util.List;
  * Scoring Node.
  */
 public class ScoreNode {
-    int nodeIndex;
-    int nodeScore;
-    ScoreNode parent;
-
-    List<ScoreNode> children;
+    private int nodeIndex;
+    private int nodeScore;
+    private ScoreNode parent;
+    private Orientation orientation;
+    private List<ScoreNode> children;
+    private int level;
 
     public ScoreNode() {
         this.nodeIndex = 0;
         this.nodeScore = 0;
+        this.level = 0;
         this.parent = null;
         children = new ArrayList<>();
+        orientation = Orientation.VERTICAL;
     }
 
+    @Deprecated
     public ScoreNode(int nodeIndex, int nodeScore) {
         this.nodeIndex = nodeIndex;
         this.nodeScore = nodeScore;
         children = new ArrayList<>();
+    }
+
+    public ScoreNode(int nodeIndex, int nodeScore, Orientation orientation, int level) {
+        this.nodeIndex = nodeIndex;
+        this.nodeScore = nodeScore;
+        children = new ArrayList<>();
+        this.orientation = orientation;
+        this.level = level;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public int getNodeIndex() {
@@ -59,6 +79,7 @@ public class ScoreNode {
         children.add(childNode);
     }
 
+    @Deprecated
     public int getLevel() {
         ScoreNode node = getParent();
         int levelsToRoot = 0;
@@ -67,5 +88,25 @@ public class ScoreNode {
             node = node.getParent();
         }
         return levelsToRoot;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ScoreNode scoreNode = (ScoreNode) o;
+
+        if (nodeIndex != scoreNode.nodeIndex) return false;
+        if (level != scoreNode.level) return false;
+        return orientation == scoreNode.orientation;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = nodeIndex;
+        result = 31 * result + orientation.hashCode();
+        result = 31 * result + level;
+        return result;
     }
 }
