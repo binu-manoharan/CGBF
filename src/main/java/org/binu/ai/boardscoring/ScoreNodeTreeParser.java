@@ -1,5 +1,7 @@
 package org.binu.ai.boardscoring;
 
+import org.binu.data.ScoreNode;
+
 import java.util.List;
 
 /**

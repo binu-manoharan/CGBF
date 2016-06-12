@@ -1,5 +1,6 @@
 package org.binu.ai.boardscoring;
 
+import org.binu.data.ScoreNode;
 import org.binu.framework.AbstractMoveAnalyser;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
@@ -41,8 +42,8 @@ public class BoardScoringMoveAnalyser extends AbstractMoveAnalyser {
     @NotNull
     private ScoreNode getScoreNode(BoardScoreCalculatorImpl boardScoreCalculator, int columnIndex, ScoreNode parent) {
         final ScoreNode child = new ScoreNode();
-        child.nodeIndex = columnIndex;
-        child.nodeScore = boardScoreCalculator.calculateColumnScore(columnIndex);
+        child.setNodeIndex(columnIndex);
+        child.setNodeScore(boardScoreCalculator.calculateColumnScore(columnIndex));
         child.setParent(parent);
         return child;
     }

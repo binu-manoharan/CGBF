@@ -1,5 +1,6 @@
 package org.binu.ai.boardscoring;
 
+import org.binu.data.ScoreNode;
 import org.binu.framework.ChainClearerImpl;
 import org.binu.framework.CellArrayHelper;
 import org.binu.framework.CellArrayHelperImpl;

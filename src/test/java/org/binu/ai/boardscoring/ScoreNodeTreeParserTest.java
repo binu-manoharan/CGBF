@@ -6,6 +6,7 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.data.ScoreNode;
 import org.binu.integration.DataParser;
 import org.junit.Before;
 import org.junit.Ignore;

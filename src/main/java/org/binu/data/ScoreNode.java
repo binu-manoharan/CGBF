@@ -1,4 +1,4 @@
-package org.binu.ai.boardscoring;
+package org.binu.data;
 
 import java.util.ArrayList;
 import java.util.List;

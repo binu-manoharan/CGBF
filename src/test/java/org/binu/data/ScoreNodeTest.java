@@ -1,9 +1,9 @@
-package org.binu.ai.boardscoring;
+package org.binu.data;
 
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link ScoreNode}.
