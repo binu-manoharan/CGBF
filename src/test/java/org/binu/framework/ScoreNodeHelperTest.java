@@ -33,7 +33,7 @@ public class ScoreNodeHelperTest {
         rootNode.addChild(fifthChild);
         rootNode.addChild(sixthChild);
 
-        final ScoreNode nodeWithBestScore = scoreNodeHelper.getBestScoreForLevel(rootNode, 1);
+        final ScoreNode nodeWithBestScore = scoreNodeHelper.getBestScoreNodeForLevel(rootNode, 1);
         final int nodeScore = nodeWithBestScore.getNodeScore();
         assertThat("Node score is 90", nodeScore, is(90));
         assertThat("Node with score 90 is the fifth node", nodeWithBestScore, is(fifthChild));
@@ -55,7 +55,7 @@ public class ScoreNodeHelperTest {
         firstChild.addChild(secondLevelChild2);
         secondChild.addChild(secondLevelChild3);
 
-        final ScoreNode nodeWithBestScore = scoreNodeHelper.getBestScoreForLevel(rootNode, 2);
+        final ScoreNode nodeWithBestScore = scoreNodeHelper.getBestScoreNodeForLevel(rootNode, 2);
         final int nodeScore = nodeWithBestScore.getNodeScore();
         assertThat("Node score is 75", nodeScore, is(75));
         assertThat("Node with score 75 is the secondLevelChild2 node", nodeWithBestScore, is(secondLevelChild2));

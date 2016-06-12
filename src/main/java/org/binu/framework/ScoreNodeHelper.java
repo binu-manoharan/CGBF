@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ScoreNodeHelper {
 
-    public ScoreNode getBestScoreForLevel(ScoreNode currentNode, int level) {
+    public ScoreNode getBestScoreNodeForLevel(ScoreNode currentNode, int level) {
 
         final List<ScoreNode> scoreNodes = getScoreNodes(currentNode, level);
         int highestNodeScore = 0;
