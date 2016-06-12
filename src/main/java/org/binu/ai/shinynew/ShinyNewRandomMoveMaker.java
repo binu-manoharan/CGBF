@@ -38,15 +38,15 @@ public class ShinyNewRandomMoveMaker {
         final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, randomValue);
         if (droppedSuccessfully) {
             final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
-            ScoreNode currentNode = new ScoreNode(randomValue, score, Orientation.VERTICAL, ++level);
+            ScoreNode currentNode = new ScoreNode(randomValue, score, Orientation.VERTICAL, level);
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);
-                makeRandomMove(board, blockQueue, currentNode, level);
+                makeRandomMove(board, blockQueue, currentNode, ++level);
             } else {
                 final int currentNodeIndex = children.indexOf(currentNode);
                 currentNode = children.get(currentNodeIndex);
-                makeRandomMove(board, blockQueue, currentNode, level);
+                makeRandomMove(board, blockQueue, currentNode, ++level);
             }
         }
     }

@@ -25,7 +25,7 @@ public class ShinyNewRandomMoveMakerTest {
     private ShinyNewRandomMoveMaker shinyNewRandomMoveMaker;
 
     @Test
-    public void should_have_at_most_4_children_while_making_random_moves() throws Exception {
+    public void should_have_at_most_6_children_while_making_random_moves() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -58,8 +58,20 @@ public class ShinyNewRandomMoveMakerTest {
         shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
         shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
         shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+        shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
 
-        assertThat("Root node has at most 4 children. ", rootNode.getChildren().size() <= 4, is(true));
+        assertThat("Root node has at most 6 children. ", rootNode.getChildren().size() <= 6, is(true));
     }
 
     private void addBlockToBlockQueue(CellColour cell1Colour, CellColour cell2Colour) {
