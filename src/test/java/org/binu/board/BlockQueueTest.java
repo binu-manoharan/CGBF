@@ -17,6 +17,7 @@ public class BlockQueueTest {
     private BlockQueue blockQueue;
     private Block firstBlock;
     private Block secondBlock;
+    private Block thirdBlock;
 
     @Before
     public void setUp() throws Exception {
@@ -103,6 +104,21 @@ public class BlockQueueTest {
         blockQueue.add(firstBlock);
 
         assertThat("BlockQueue contains the block we just added", blockQueue.getNext(), is(secondBlock));
+    }
+
+    @Test
+    public void should_return_copy_of_the_block_queue() throws Exception {
+        firstBlock = getBlock(CellColour.GREEN, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED);
+        secondBlock = getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.RED, CellStatus.OCCUPIED);
+        thirdBlock = getBlock(CellColour.PURPLE, CellStatus.OCCUPIED, CellColour.PURPLE, CellStatus.OCCUPIED);
+
+        blockQueue.add(firstBlock);
+        blockQueue.add(secondBlock);
+
+        final BlockQueue blockQueue1 = new BlockQueue(new BlockQueue(blockQueue));
+        blockQueue1.add(thirdBlock);
+        assertThat("BlockQueue1 contains 3", blockQueue1.getBlocks().size(), is(3));
+        assertThat("BlockQueue contains 2", blockQueue.getBlocks().size(), is(2));
     }
 
     private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
