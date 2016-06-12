@@ -76,8 +76,8 @@ public class ScoreNode {
 
     public void addChild(ScoreNode childNode) {
         assert children.size() < 7;
-        children.add(childNode);
         childNode.setParent(this);
+        children.add(childNode);
     }
 
     @Deprecated
