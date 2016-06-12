@@ -14,8 +14,8 @@ import java.util.List;
  * Make random moves
  */
 public class ShinyNewRandomMoveMaker {
-    public static final int MIN_VALUE = 0;
-    public static final int MAX_VALUE = 5;
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 5;
     private RandomValueGenerator randomValueGenerator;
     private CellArrayHelper cellArrayHelper;
     private BoardScorerImpl boardScorer;
