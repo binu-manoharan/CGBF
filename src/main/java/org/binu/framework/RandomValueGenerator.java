@@ -1,4 +1,4 @@
-package org.binu.ai.shinynew;
+package org.binu.framework;
 
 /**
  * Helper to get random values

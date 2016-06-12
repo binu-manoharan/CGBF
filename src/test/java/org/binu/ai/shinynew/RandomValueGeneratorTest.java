@@ -1,5 +1,6 @@
 package org.binu.ai.shinynew;
 
+import org.binu.framework.RandomValueGenerator;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

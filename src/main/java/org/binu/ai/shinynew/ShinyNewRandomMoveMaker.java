@@ -5,10 +5,7 @@ import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.data.Orientation;
 import org.binu.data.ScoreNode;
-import org.binu.framework.BoardCollapserImpl;
-import org.binu.framework.CellArrayHelper;
-import org.binu.framework.CellArrayHelperImpl;
-import org.binu.framework.ChainClearerImpl;
+import org.binu.framework.*;
 import org.binu.scoring.BoardScorerImpl;
 
 import java.util.List;
