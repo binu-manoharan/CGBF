@@ -945,7 +945,7 @@ class ScoreNodeHelper {
         final int treeLevel = currentNode.getTreeLevel();
         final List<ScoreNode> children = currentNode.getChildren();
         final ArrayList<ScoreNode> allChildren = new ArrayList<>();
-        if (treeLevel == level - 1) {
+        if (treeLevel == level - 1 && treeLevel < level) {
             allChildren.addAll(children);
         } else {
             for (ScoreNode child : children) {
