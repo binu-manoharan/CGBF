@@ -55,6 +55,8 @@ class Player {
             // To debug: System.err.println("Debug messages...");
 
             final int nodeIndex = nextMove.getNodeIndex();
+            System.err.println("Current play: " + nodeIndex);
+
             new CellArrayHelperImpl().dropBlockIntoBoard(oldBoard, blockQueue.getNext(), nodeIndex);
             System.out.println(nodeIndex); // "x": the column in which to drop your blocks
             rootNode = nextMove;
