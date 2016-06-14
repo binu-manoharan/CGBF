@@ -40,10 +40,7 @@ class Player {
             }
 
             boolean invalidRootNode = false;
-            if (mylastscore == score1 && opponentlastscore == score2) {
-                invalidRootNode = false;
-                mylastscore = score1;
-            } else {
+            if (opponentlastscore != score2) {
                 invalidRootNode = true;
             }
             opponentlastscore = score2;
