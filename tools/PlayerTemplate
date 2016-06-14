@@ -43,10 +43,10 @@ class Player {
             if (mylastscore == score1 && opponentlastscore == score2) {
                 invalidRootNode = false;
                 mylastscore = score1;
-                opponentlastscore = score2;
             } else {
                 invalidRootNode = true;
             }
+            opponentlastscore = score2;
 
             if (invalidRootNode) {
                 rootNode = null;
