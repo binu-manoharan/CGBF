@@ -9,7 +9,7 @@ class Player {
 
         // game loop
         int mylastscore = 0;
-        int opponentlastscore = 0;
+        int opponentLastScore = 0;
         Board oldBoard = new Board();
         ScoreNode rootNode = null;
         while (true) {
@@ -40,10 +40,10 @@ class Player {
             }
 
             boolean invalidRootNode = false;
-            if (opponentlastscore != score2) {
+            if (opponentLastScore % 420 != score2 % 420) {
                 invalidRootNode = true;
             }
-            opponentlastscore = score2;
+            opponentLastScore = score2;
 
             if (invalidRootNode) {
                 rootNode = null;
