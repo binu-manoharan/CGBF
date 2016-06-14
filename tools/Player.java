@@ -9,7 +9,7 @@ class Player {
 
         // game loop
         int mylastscore = 0;
-        int opponentlastscore = 0;
+        int opponentLastScore = 0;
         Board oldBoard = new Board();
         ScoreNode rootNode = null;
         while (true) {
@@ -40,13 +40,10 @@ class Player {
             }
 
             boolean invalidRootNode = false;
-            if (mylastscore == score1 && opponentlastscore == score2) {
-                invalidRootNode = false;
-                mylastscore = score1;
-                opponentlastscore = score2;
-            } else {
+            if (opponentLastScore % 420 != score2 % 420) {
                 invalidRootNode = true;
             }
+            opponentLastScore = score2;
 
             if (invalidRootNode) {
                 rootNode = null;
@@ -58,6 +55,8 @@ class Player {
             // To debug: System.err.println("Debug messages...");
 
             final int nodeIndex = nextMove.getNodeIndex();
+            System.err.println("Current play: " + nodeIndex);
+
             new CellArrayHelperImpl().dropBlockIntoBoard(oldBoard, blockQueue.getNext(), nodeIndex);
             System.out.println(nodeIndex); // "x": the column in which to drop your blocks
             rootNode = nextMove;
@@ -159,7 +158,13 @@ class ScoreNode {
     }
 
     public int getTreeLevel() {
-        return level;
+        int calculatedLevel = 0;
+        ScoreNode scoreNode = this;
+        while (scoreNode.getParent() != null) {
+            calculatedLevel++;
+            scoreNode = scoreNode.getParent();
+        }
+        return calculatedLevel;
     }
     @Override
     public boolean equals(Object o) {
@@ -169,7 +174,6 @@ class ScoreNode {
         ScoreNode scoreNode = (ScoreNode) o;
 
         if (nodeIndex != scoreNode.nodeIndex) return false;
-        if (level != scoreNode.level) return false;
         return orientation == scoreNode.orientation;
     }
 
@@ -177,7 +181,6 @@ class ScoreNode {
     public int hashCode() {
         int result = nodeIndex;
         result = 31 * result + orientation.hashCode();
-        result = 31 * result + level;
         return result;
     }
 }
@@ -658,18 +661,33 @@ class ShinyNewGameAI {
         final ShinyNewMoveAnalyser shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
         final ScoreNode rootNode1 = shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, rootNode);
 
+        ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
+        highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);
+        return highestScoreNode;
+    }
+
+    public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
+        while (highestScoreNode.getTreeLevel() > 1) {
+            System.err.print("Path: " + highestScoreNode.getNodeIndex() + " <- ");
+            highestScoreNode = highestScoreNode.getParent();
+        }
+        System.err.println("Path: " + highestScoreNode.getNodeIndex());
+        return highestScoreNode;
+    }
+
+    public ScoreNode getHighestScoreNode(ScoreNode rootNode) {
         final ArrayList<ScoreNode> scoreNodes = new ArrayList<>();
         int highestScore = 0;
         int highestIndex = 0;
         for (int i = 1; i < 9; i++) {
-            final ScoreNode bestScoreNodeForLevel = scoreNodeHelper.getBestScoreNodeForLevel(rootNode1, i);
+            final ScoreNode bestScoreNodeForLevel = scoreNodeHelper.getBestScoreNodeForLevel(rootNode, i);
 
 
             if (bestScoreNodeForLevel != null) {
                 final int nodeScore = bestScoreNodeForLevel.getNodeScore();
                 if (nodeScore > highestScore) {
                     highestScore = nodeScore;
-                    highestIndex = scoreNodes.size() - 1;
+                    highestIndex = scoreNodes.size();
                 }
                 scoreNodes.add(bestScoreNodeForLevel);
 
@@ -678,12 +696,6 @@ class ShinyNewGameAI {
         }
 
         ScoreNode scoreNode = scoreNodes.get(highestIndex);
-        while (scoreNode.getParent() != null) {
-            System.err.print("Path: " + scoreNode.getNodeIndex());
-            scoreNode = scoreNode.getParent();
-        }
-        System.err.println("Path: " + scoreNode.getNodeIndex());
-
         System.err.println("Highest index: " + highestIndex);
         return scoreNode;
     }
@@ -933,7 +945,7 @@ class ScoreNodeHelper {
         final int treeLevel = currentNode.getTreeLevel();
         final List<ScoreNode> children = currentNode.getChildren();
         final ArrayList<ScoreNode> allChildren = new ArrayList<>();
-        if (treeLevel + 1 == level) {
+        if (treeLevel == level - 1) {
             allChildren.addAll(children);
         } else {
             for (ScoreNode child : children) {
