@@ -1,6 +1,6 @@
 #/bin/bash
 
-PROJ_HOME='/home/binu/IdeaProjects/battlefield/'
+PROJ_HOME='/home/binu/playground/CGBF/'
 #echo $PROJ_HOME
 
 OUT_FILE='tools/Player.java'
