@@ -92,7 +92,13 @@ public class ScoreNode {
     }
 
     public int getTreeLevel() {
-        return level;
+        int calculatedLevel = 0;
+        ScoreNode scoreNode = this;
+        while (scoreNode.getParent() != null) {
+            calculatedLevel++;
+            scoreNode = scoreNode.getParent();
+        }
+        return calculatedLevel;
     }
     @Override
     public boolean equals(Object o) {
@@ -102,7 +108,6 @@ public class ScoreNode {
         ScoreNode scoreNode = (ScoreNode) o;
 
         if (nodeIndex != scoreNode.nodeIndex) return false;
-        if (level != scoreNode.level) return false;
         return orientation == scoreNode.orientation;
     }
 
@@ -110,7 +115,6 @@ public class ScoreNode {
     public int hashCode() {
         int result = nodeIndex;
         result = 31 * result + orientation.hashCode();
-        result = 31 * result + level;
         return result;
     }
 }

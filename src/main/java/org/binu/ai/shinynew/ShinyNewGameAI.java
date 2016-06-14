@@ -37,7 +37,7 @@ public class ShinyNewGameAI {
                 final int nodeScore = bestScoreNodeForLevel.getNodeScore();
                 if (nodeScore > highestScore) {
                     highestScore = nodeScore;
-                    highestIndex = scoreNodes.size() - 1;
+                    highestIndex = scoreNodes.size();
                 }
                 scoreNodes.add(bestScoreNodeForLevel);
 
@@ -46,7 +46,7 @@ public class ShinyNewGameAI {
         }
 
         ScoreNode scoreNode = scoreNodes.get(highestIndex);
-        while (scoreNode.getParent() != null) {
+        while (scoreNode.getParent() != null && scoreNode.getTreeLevel() > 1) {
             System.err.print("Path: " + scoreNode.getNodeIndex());
             scoreNode = scoreNode.getParent();
         }
