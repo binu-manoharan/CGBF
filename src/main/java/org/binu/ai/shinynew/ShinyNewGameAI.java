@@ -26,11 +26,26 @@ public class ShinyNewGameAI {
         final ShinyNewMoveAnalyser shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
         final ScoreNode rootNode1 = shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, rootNode);
 
+        ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
+        highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);
+        return highestScoreNode;
+    }
+
+    public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
+        while (highestScoreNode.getTreeLevel() > 1) {
+            System.err.print("Path: " + highestScoreNode.getNodeIndex() + " <- ");
+            highestScoreNode = highestScoreNode.getParent();
+        }
+        System.err.println("Path: " + highestScoreNode.getNodeIndex());
+        return highestScoreNode;
+    }
+
+    public ScoreNode getHighestScoreNode(ScoreNode rootNode) {
         final ArrayList<ScoreNode> scoreNodes = new ArrayList<>();
         int highestScore = 0;
         int highestIndex = 0;
         for (int i = 1; i < 9; i++) {
-            final ScoreNode bestScoreNodeForLevel = scoreNodeHelper.getBestScoreNodeForLevel(rootNode1, i);
+            final ScoreNode bestScoreNodeForLevel = scoreNodeHelper.getBestScoreNodeForLevel(rootNode, i);
 
 
             if (bestScoreNodeForLevel != null) {
@@ -46,12 +61,6 @@ public class ShinyNewGameAI {
         }
 
         ScoreNode scoreNode = scoreNodes.get(highestIndex);
-        while (scoreNode.getParent() != null && scoreNode.getTreeLevel() > 1) {
-            System.err.print("Path: " + scoreNode.getNodeIndex());
-            scoreNode = scoreNode.getParent();
-        }
-        System.err.println("Path: " + scoreNode.getNodeIndex());
-
         System.err.println("Highest index: " + highestIndex);
         return scoreNode;
     }
