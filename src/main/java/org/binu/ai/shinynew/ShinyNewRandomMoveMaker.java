@@ -28,6 +28,7 @@ public class ShinyNewRandomMoveMaker {
 
     public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode, int level) {
 
+        //TODO move stuffs to Orientation helper.
         final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
         final Block block = blockQueue.getNextAndPop();
 
