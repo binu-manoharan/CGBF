@@ -26,13 +26,13 @@ public class DataParserTest {
 
     @Test
     public void should_provide_cell_with_matching_colours() throws Exception {
-        final Block redYellowBlock = dataParser.createColourBlock(4, 5);
+        final Block redYellowBlock = dataParser.createColourBlock(5, 4);
         assertBlockData(redYellowBlock, CellColour.RED, CellColour.YELLOW);
 
-        final Block greenPurpleBlock = dataParser.createColourBlock(2, 3);
+        final Block greenPurpleBlock = dataParser.createColourBlock(3, 2);
         assertBlockData(greenPurpleBlock, CellColour.GREEN, CellColour.PURPLE);
 
-        final Block blueGreenBlock = dataParser.createColourBlock(1, 2);
+        final Block blueGreenBlock = dataParser.createColourBlock(2, 1);
         assertBlockData(blueGreenBlock, CellColour.BLUE, CellColour.GREEN);
     }
 
