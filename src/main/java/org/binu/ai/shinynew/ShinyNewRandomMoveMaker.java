@@ -42,11 +42,11 @@ public class ShinyNewRandomMoveMaker {
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);
-                makeRandomMove(new Board(board), new BlockQueue(blockQueue), currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode, ++level);
             } else {
                 final int currentNodeIndex = children.indexOf(currentNode);
                 currentNode = children.get(currentNodeIndex);
-                makeRandomMove(new Board(board), new BlockQueue(blockQueue), currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode, ++level);
             }
         }
     }
