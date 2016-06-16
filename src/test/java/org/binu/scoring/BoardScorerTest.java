@@ -6,6 +6,7 @@ import org.binu.data.CellStatus;
 import org.binu.framework.*;
 import org.binu.integration.DataParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -166,5 +167,34 @@ public class BoardScorerTest {
         final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
 
         assertThat("Score is 2990", score, is(2990));
+    }
+
+    @Test
+    @Ignore
+    public void should_score_60580_to_the_board() throws Exception {
+        final String[] boardString = {
+                ".3431.",
+                ".1452.",
+                ".2253.",
+                ".5344.",
+                ".33544",
+                ".21231",
+                ".12334",
+                ".12423",
+                ".32554",
+                ".11541",
+                "513255",
+                "332254"
+        };
+
+        //TODO: Optional fix it. Marking test as ignored for now.
+        //Step 7 score of the chain should be (as both the chains have same colour
+        // (4 * 10) * (256 + 0 + 1) + (50 * 10) * (256 + 0 + 1) but is
+        // (9 * 10) * (256 + 0 + 5)
+
+        board = dataParser.createBoard(boardString);
+        final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, false);
+
+        assertThat("Score is 60580", score, is(60580));
     }
 }
