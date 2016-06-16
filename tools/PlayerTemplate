@@ -40,7 +40,7 @@ class Player {
             }
 
             boolean invalidRootNode = false;
-            if (opponentLastScore % 420 != score2 % 420) {
+            if (opponentLastScore / 420 != score2 / 420) {
                 invalidRootNode = true;
             }
             opponentLastScore = score2;
