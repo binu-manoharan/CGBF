@@ -40,7 +40,7 @@ class Player {
             }
 
             boolean invalidRootNode = false;
-            if (opponentLastScore % 420 != score2 % 420) {
+            if (opponentLastScore / 420 != score2 / 420) {
                 invalidRootNode = true;
             }
             opponentLastScore = score2;
@@ -630,11 +630,11 @@ class ShinyNewRandomMoveMaker {
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);
-                makeRandomMove(new Board(board), new BlockQueue(blockQueue), currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode, ++level);
             } else {
                 final int currentNodeIndex = children.indexOf(currentNode);
                 currentNode = children.get(currentNodeIndex);
-                makeRandomMove(new Board(board), new BlockQueue(blockQueue), currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode, ++level);
             }
         }
     }
@@ -1418,11 +1418,11 @@ class ChainClearerImpl implements ChainClearer {
 class DataParser {
     /**
      * Creates a block with two cells from the given 1-indexed values
-     * @param bottomCellIndex 1-indexed enum value for bottom cell
      * @param topCellIndex 1-indexed enum value for top cell
+     * @param bottomCellIndex 1-indexed enum value for bottom cell
      * @return block with both cells
      */
-    public Block createColourBlock(int bottomCellIndex, int topCellIndex) {
+    public Block createColourBlock(int topCellIndex, int bottomCellIndex) {
         final CellColour bottomCellColour = CellColour.values()[bottomCellIndex - 1];
         final CellColour topCellColour = CellColour.values()[topCellIndex - 1];
 
@@ -1438,7 +1438,7 @@ class DataParser {
     public BlockQueue createBlockQueue(int[][] blockQueueData) {
         final BlockQueue blockQueue = new BlockQueue();
         for (int[] aBlockQueueData : blockQueueData) {
-            final Block colourBlock = createColourBlock(aBlockQueueData[0], aBlockQueueData[1]);
+            final Block colourBlock = createColourBlock(aBlockQueueData[1], aBlockQueueData[0]);
             blockQueue.add(colourBlock);
         }
         return blockQueue;
