@@ -6,6 +6,7 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.data.Orientation;
 import org.binu.integration.DataParser;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -360,7 +361,7 @@ public class CellArrayHelperTest {
         blockQueue = new BlockQueue();
         blockQueue.add(block);
 
-        final boolean isDroppable = cellArrayHelper.blockIsDroppableOnColumn(board, block, 0);
+        final boolean isDroppable = cellArrayHelper.blockIsDroppableOnColumn(board, block, 0, Orientation.VERTICAL);
         assertThat("Block is droppable on column 0: ", isDroppable, is(true));
     }
 
@@ -385,7 +386,7 @@ public class CellArrayHelperTest {
         blockQueue = new BlockQueue();
         blockQueue.add(block);
 
-        final boolean isDroppable = cellArrayHelper.blockIsDroppableOnColumn(board, block, 0);
+        final boolean isDroppable = cellArrayHelper.blockIsDroppableOnColumn(board, block, 0, Orientation.VERTICAL);
         assertThat("Block is droppable on column 0: ", isDroppable, is(false));
     }
 
@@ -410,7 +411,7 @@ public class CellArrayHelperTest {
         blockQueue = new BlockQueue();
         blockQueue.add(block);
 
-        final boolean operationResult = cellArrayHelper.dropBlockIntoBoard(this.board, block, 0);
+        final boolean operationResult = cellArrayHelper.dropBlockIntoBoard(this.board, block, 0, Orientation.VERTICAL);
 
         assertThat("Drop was successful: ", operationResult, is(true));
         assertThat("The 1st cell should be BLUE", board.getCell(10, 0).getCellColour(), is(CellColour.BLUE));

@@ -3,6 +3,7 @@ package org.binu.framework;
 import org.binu.board.Block;
 import org.binu.board.Board;
 import org.binu.board.Cell;
+import org.binu.data.Orientation;
 
 import java.util.List;
 
@@ -44,12 +45,12 @@ public interface CellArrayHelper {
 
     /**
      * Is there space to fit in the block
-     *
-     * @param board       board against which is droppable is checked
+     *  @param board       board against which is droppable is checked
      * @param block       block that needs to be placed on the board
      * @param columnIndex index of the column to drop on  @return true if there is space to drop
+     * @param orientation
      */
-    boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex);
+    boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex, Orientation orientation);
 
     /**
      * Drop the block into the board at a certain index
@@ -57,9 +58,10 @@ public interface CellArrayHelper {
      * @param board       board on which the block is dropped
      * @param block       block to be dropped
      * @param columnIndex column index where the block is dropped
+     * @param orientation
      * @return true if the column was dropped successful, false when there is no space to drop it
      */
-    boolean dropBlockIntoBoard(Board board, Block block, int columnIndex);
+    boolean dropBlockIntoBoard(Board board, Block block, int columnIndex, Orientation orientation);
 
     /**
      * Returns int [] containing two values which is the x and y within the 2d array for an element with the first

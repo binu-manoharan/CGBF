@@ -36,7 +36,7 @@ public class ShinyNewRandomMoveMaker {
             return;
         }
 
-        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, randomValue);
+        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, randomValue, Orientation.VERTICAL);
         if (droppedSuccessfully) {
             final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
             ScoreNode currentNode = new ScoreNode(randomValue, score, Orientation.VERTICAL, level);

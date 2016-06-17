@@ -5,6 +5,7 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.data.Orientation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,16 +104,16 @@ public class CellArrayHelperImpl implements CellArrayHelper {
     }
 
     @Override
-    public boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex) {
+    public boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex, Orientation orientation) {
         final Cell[] column = board.getColumn(columnIndex);
         final int firstEmptyPosition = getFirstEmptyPosition(column);
         return firstEmptyPosition + block.getCells().length <= column.length;
     }
 
     @Override
-    public boolean dropBlockIntoBoard(Board board, Block block, int columnIndex) {
+    public boolean dropBlockIntoBoard(Board board, Block block, int columnIndex, Orientation orientation) {
         //TODO see if block is droppable on column can be merged here to not call firstEmptyPosition twice
-        final boolean isDroppable = blockIsDroppableOnColumn(board, block, columnIndex);
+        final boolean isDroppable = blockIsDroppableOnColumn(board, block, columnIndex, Orientation.VERTICAL);
         if (isDroppable) {
             final Cell[] column = board.getColumn(columnIndex);
             final int firstEmptyPosition = getFirstEmptyPosition(column);
