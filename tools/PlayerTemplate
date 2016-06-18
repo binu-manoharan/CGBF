@@ -10,13 +10,12 @@ class Player {
         // game loop
         int mylastscore = 0;
         int opponentLastScore = 0;
-        Board oldBoard = new Board();
         ScoreNode rootNode = null;
-        while (true) {
+        DataParser dataParser = new DataParser();
 
+        while (true) {
             long startTime = System.currentTimeMillis();
 
-            DataParser dataParser = new DataParser();
             BlockQueue blockQueue = new BlockQueue();
             for (int i = 0; i < 8; i++) {
                 int colorA = in.nextInt(); // color of the first block
@@ -30,7 +29,6 @@ class Player {
                 String row = in.next();
                 Cell[] boardRow = dataParser.createBoardRow(row);
                 myBoard.setRow(Board.ROW_LENGTH - i - 1, boardRow);
-                System.err.println(row);
             }
 
             int score2 = in.nextInt();
@@ -49,20 +47,27 @@ class Player {
                 rootNode = null;
                 System.err.println("Board has dropped skulls!");
             }
+
             ShinyNewGameAI gameAI = new ShinyNewGameAI(myBoard, blockQueue);
             ScoreNode nextMove = gameAI.calculateNextMove(rootNode);
-            // Write an action using System.out.println()
-            // To debug: System.err.println("Debug messages...");
-
             final int nodeIndex = nextMove.getNodeIndex();
             Orientation orientation = nextMove.getOrientation();
-            System.err.println();
-            System.err.println("Current play: " + nodeIndex + "  Orientation: " + orientation);
 
-            new CellArrayHelperImpl().dropBlockIntoBoard(oldBoard, blockQueue.getNext(), nodeIndex, orientation);
-            System.out.println(nodeIndex + " " + orientation.getEquivalentInt()); // "x": the column in which to drop your blocks
+            System.err.println();
+
             rootNode = nextMove;
             rootNode.setParent(null);
+
+            System.err.println("Current play: " + nodeIndex + "  Orientation: " + orientation);
+            final ScoreNode highestScoreNode = gameAI.getHighestScoreNode(rootNode);
+            final Board updatedBoard = dataParser.followPath(myBoard, blockQueue, highestScoreNode);
+            final String[] updatedBoardRows = dataParser.prettifyBoard(updatedBoard);
+            final String[] currentBoardRows = dataParser.prettifyBoard(myBoard);
+            for (int i = 0; i < 12; i++) {
+                System.err.println(currentBoardRows[i] + "   " + updatedBoardRows[i]);
+            }
+
+            System.out.println(nodeIndex + " " + orientation.getEquivalentInt()); // "x": the column in which to drop your blocks
             long endTime = System.currentTimeMillis();
             System.err.print("Exec time: " + ((endTime - startTime)));
 
