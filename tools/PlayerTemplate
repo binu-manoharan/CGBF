@@ -55,9 +55,6 @@ class Player {
 
             System.err.println();
 
-            rootNode = nextMove;
-            rootNode.setParent(null);
-
             System.err.println("Current play: " + nodeIndex + "  Orientation: " + orientation);
             final ScoreNode highestScoreNode = gameAI.getHighestScoreNode(rootNode);
             final Board updatedBoard = dataParser.followPath(myBoard, blockQueue, highestScoreNode);
@@ -67,6 +64,8 @@ class Player {
                 System.err.println(currentBoardRows[i] + "   " + updatedBoardRows[i]);
             }
 
+            rootNode = nextMove;
+            rootNode.setParent(null);
             System.out.println(nodeIndex + " " + orientation.getEquivalentInt()); // "x": the column in which to drop your blocks
             long endTime = System.currentTimeMillis();
             System.err.print("Exec time: " + ((endTime - startTime)));
