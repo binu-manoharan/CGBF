@@ -391,7 +391,7 @@ public class CellArrayHelperTest {
     }
 
     @Test
-    public void should_drop_cells_on_the_board_column_1_as_there_is_slots_left() throws Exception {
+    public void should_drop_cells_vertically_on_the_board_column_1() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -407,7 +407,7 @@ public class CellArrayHelperTest {
                 "1....."
         };
         board = dataParser.createBoard(boardString);
-        final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        final Block block = getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
         blockQueue = new BlockQueue();
         blockQueue.add(block);
 
@@ -415,6 +415,34 @@ public class CellArrayHelperTest {
 
         assertThat("Drop was successful: ", operationResult, is(true));
         assertThat("The 1st cell should be BLUE", board.getCell(10, 0).getCellColour(), is(CellColour.BLUE));
+        assertThat("The 2nd cell should be BLUE", board.getCell(11, 0).getCellColour(), is(CellColour.RED));
+    }
+
+    @Test
+    public void should_drop_cells_reverse_vertically_on_the_board_column_1() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1.....",
+                "2.....",
+                "2.....",
+                "1.....",
+                "1....."
+        };
+        board = dataParser.createBoard(boardString);
+        final Block block = getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.BLUE, CellStatus.OCCUPIED);
+        blockQueue = new BlockQueue();
+        blockQueue.add(block);
+
+        final boolean operationResult = cellArrayHelper.dropBlockIntoBoard(this.board, block, 0, Orientation.VERTICAL_REVERSED);
+
+        assertThat("Drop was successful: ", operationResult, is(true));
+        assertThat("The 1st cell should be BLUE", board.getCell(10, 0).getCellColour(), is(CellColour.RED));
         assertThat("The 2nd cell should be BLUE", board.getCell(11, 0).getCellColour(), is(CellColour.BLUE));
     }
 
@@ -651,14 +679,6 @@ public class CellArrayHelperTest {
     private void assertBlockItems(int actual, int row, int actual2, int col) {
         assertThat("Index of block of block contains row cell index [0, 0]", actual, is(row));
         assertThat("Index of block of block contains row cell index [0, 0]", actual2, is(col));
-    }
-
-    private Block getBlock() {
-        final Cell[] cells = new Cell[2];
-        cells[0] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);
-        cells[1] = new Cell(CellColour.GREEN, CellStatus.OCCUPIED);
-
-        return new Block(cells);
     }
 
     private void initEmptyCells() {

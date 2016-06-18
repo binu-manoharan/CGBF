@@ -16,7 +16,6 @@ import java.util.List;
 public class CellArrayHelperImpl implements CellArrayHelper {
 
     private static final int BLOCK_VERTICAL_HEIGHT = 2;
-    private static final int BLOCK_HORIZONTAL_HEIGHT = 1;
     private static final int HORIZONTAL_PLACEMENT_OFFSET = 1;
 
     @Override
@@ -102,7 +101,7 @@ public class CellArrayHelperImpl implements CellArrayHelper {
             droppedCells[firstEmptyPosition] = blockCells[0];
             droppedCells[firstEmptyPosition + 1] = blockCells[1];
         } else {
-            assert true : "Cell is too full!";
+            assert false : "Cell is too full!";
         }
 
         return droppedCells;
@@ -121,8 +120,8 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                     final Cell[] column2 = board.getColumn(columnIndex + HORIZONTAL_PLACEMENT_OFFSET);
                     final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
                     final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
-                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
-                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
+                    return (firstEmptyPositionOnColumn1 < column1.length)
+                            && (firstEmptyPositionOnColumn2 < column2.length);
                 }
             } else if (orientation == Orientation.HORIZONTAL_REVERSED){
                 //orientation is horizontal reversed
@@ -131,8 +130,8 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                     final Cell[] column2 = board.getColumn(columnIndex - HORIZONTAL_PLACEMENT_OFFSET);
                     final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
                     final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
-                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
-                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
+                    return (firstEmptyPositionOnColumn1 < column1.length)
+                            && (firstEmptyPositionOnColumn2 < column2.length);
                 }
             }
             return false;
@@ -147,18 +146,18 @@ public class CellArrayHelperImpl implements CellArrayHelper {
             if (orientation == Orientation.VERTICAL) {
                 final Cell[] column = board.getColumn(columnIndex);
                 final int firstEmptyPosition = getFirstEmptyPosition(column);
-                int offset = 0;
-                for (Cell cell : block.getCells()) {
-                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
-                    offset++;
-                }
-            } else if (orientation == Orientation.VERTICAL_REVERSED) {
-                final Cell[] column = board.getColumn(columnIndex);
-                final int firstEmptyPosition = getFirstEmptyPosition(column);
                 int offset = 1;
                 for (Cell cell : block.getCells()) {
                     board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
                     offset--;
+                }
+            } else if (orientation == Orientation.VERTICAL_REVERSED) {
+                final Cell[] column = board.getColumn(columnIndex);
+                final int firstEmptyPosition = getFirstEmptyPosition(column);
+                int offset = 0;
+                for (Cell cell : block.getCells()) {
+                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
+                    offset++;
                 }
             } else if (orientation == Orientation.HORIZONTAL) {
                 final Cell[] column1 = board.getColumn(columnIndex);
@@ -184,7 +183,6 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 final Cell secondCellBlock = block.getCells()[1];
                 board.setCell(firstEmptyPositionOnColumn1, columnIndex, firstCellBlock.getCellStatus(), firstCellBlock.getCellColour());
                 board.setCell(firstEmptyPositionOnColumn2, columnIndex - HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
-
             }
         }
         return isDroppable;
