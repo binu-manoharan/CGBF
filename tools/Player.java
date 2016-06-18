@@ -55,10 +55,12 @@ class Player {
             // To debug: System.err.println("Debug messages...");
 
             final int nodeIndex = nextMove.getNodeIndex();
-            System.err.println("Current play: " + nodeIndex);
+            Orientation orientation = nextMove.getOrientation();
+            System.err.println();
+            System.err.println("Current play: " + nodeIndex + "  Orientation: " + orientation);
 
-            new CellArrayHelperImpl().dropBlockIntoBoard(oldBoard, blockQueue.getNext(), nodeIndex);
-            System.out.println(nodeIndex); // "x": the column in which to drop your blocks
+            new CellArrayHelperImpl().dropBlockIntoBoard(oldBoard, blockQueue.getNext(), nodeIndex, orientation);
+            System.out.println(nodeIndex + " " + orientation.getEquivalentInt()); // "x": the column in which to drop your blocks
             rootNode = nextMove;
             rootNode.setParent(null);
             long endTime = System.currentTimeMillis();
@@ -141,7 +143,6 @@ class ScoreNode {
     }
 
     public void addChild(ScoreNode childNode) {
-        assert children.size() < 7;
         children.add(childNode);
         childNode.setParent(this);
     }
@@ -198,16 +199,30 @@ enum CellStatus {
  * Enum for Rotation of the block
  * <ul>
  * <li>HORIZONTAL 1 -> 4</li>
- * <li>VERTCIAL 1 below 4</li>
- * <li>HORIZONTAL_REVERSED 4 -> 1</li>
  * <li>VERTICAL_REVERSED 4 below 1</li>
+ * <li>HORIZONTAL_REVERSED 4 -> 1</li>
+ * <li>VERTCIAL 1 below 4</li>
  * </ul>
  */
 enum Orientation {
     HORIZONTAL,
+    VERTICAL_REVERSED,
     VERTICAL,
-    HORIZONTAL_REVERSED,
-    VERTICAL_REVERSED
+    HORIZONTAL_REVERSED;
+
+    public int getEquivalentInt() {
+        switch (this) {
+            case HORIZONTAL:
+                return 0;
+            case VERTICAL_REVERSED:
+                return 1;
+            case HORIZONTAL_REVERSED:
+                return 2;
+            case VERTICAL:
+                return 3;
+        }
+        return 0;
+    }
 }
 
 /**
@@ -602,31 +617,31 @@ class ShinyNewMoveAnalyser {
  * Make random moves
  */
 class ShinyNewRandomMoveMaker {
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 5;
-    private RandomValueGenerator randomValueGenerator;
     private CellArrayHelper cellArrayHelper;
     private BoardScorerImpl boardScorer;
+    private OrientationHelper orientationHelper;
 
     public ShinyNewRandomMoveMaker() {
-        randomValueGenerator = new RandomValueGenerator();
+        orientationHelper = new OrientationHelper();
         cellArrayHelper = new CellArrayHelperImpl();
         boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
     }
 
     public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode, int level) {
 
-        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
+        final OrientationAndIndex randomOrientationWithDropIndex = orientationHelper.getRandomOrientationWithDropIndex();
+        final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
+        final int nodeIndex = randomOrientationWithDropIndex.getNodeIndex();
         final Block block = blockQueue.getNextAndPop();
 
         if (block == null) {
             return;
         }
 
-        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, randomValue);
+        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, nodeIndex, orientation);
         if (droppedSuccessfully) {
             final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
-            ScoreNode currentNode = new ScoreNode(randomValue, score, Orientation.VERTICAL, level);
+            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation, level);
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);
@@ -668,10 +683,10 @@ class ShinyNewGameAI {
 
     public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
         while (highestScoreNode.getTreeLevel() > 1) {
-            System.err.print("Path: " + highestScoreNode.getNodeIndex() + " <- ");
+            System.err.println("Path: " + highestScoreNode.getNodeIndex() + "("+highestScoreNode.getOrientation()+")");
             highestScoreNode = highestScoreNode.getParent();
         }
-        System.err.println("Path: " + highestScoreNode.getNodeIndex());
+        System.err.println("Path: " + highestScoreNode.getNodeIndex() + "("+highestScoreNode.getOrientation()+")");
         return highestScoreNode;
     }
 
@@ -787,12 +802,12 @@ interface CellArrayHelper {
 
     /**
      * Is there space to fit in the block
-     *
-     * @param board       board against which is droppable is checked
+     *  @param board       board against which is droppable is checked
      * @param block       block that needs to be placed on the board
      * @param columnIndex index of the column to drop on  @return true if there is space to drop
+     * @param orientation
      */
-    boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex);
+    boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex, Orientation orientation);
 
     /**
      * Drop the block into the board at a certain index
@@ -800,9 +815,10 @@ interface CellArrayHelper {
      * @param board       board on which the block is dropped
      * @param block       block to be dropped
      * @param columnIndex column index where the block is dropped
+     * @param orientation
      * @return true if the column was dropped successful, false when there is no space to drop it
      */
-    boolean dropBlockIntoBoard(Board board, Block block, int columnIndex);
+    boolean dropBlockIntoBoard(Board board, Block block, int columnIndex, Orientation orientation);
 
     /**
      * Returns int [] containing two values which is the x and y within the 2d array for an element with the first
@@ -856,6 +872,32 @@ interface CellArrayHelper {
 
 
 /**
+ * Container class to hold Orientation and node information
+ * 0 -> horizontal (0 <= col index < 5)
+ * 1 -> vertical reversed
+ * 2 -> horizontal reversed (1 <= col index < 6)
+ * 3 -> vertical
+ */
+class OrientationAndIndex {
+    private final Orientation orientation;
+    private final int nodeIndex;
+
+    public OrientationAndIndex(Orientation orientation, int nodeIndex) {
+        this.orientation = orientation;
+        this.nodeIndex = nodeIndex;
+    }
+
+    public int getNodeIndex() {
+        return nodeIndex;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+}
+
+
+/**
  * Clears board pieces that make 4 and ones surrounding it.
  */
 interface ChainClearer {
@@ -901,6 +943,51 @@ interface ChainClearer {
      * @return true if board has at least one item to clear
      */
     boolean isClearable(Board board);
+}
+
+
+/**
+ * OrientationHelper uses a random value generator to determine the random orientation and index
+ * for the next move.
+ * 0 -> horizontal (0 <= col index < 5) [rand values 12-16]
+ * 1 -> vertical reversed [rand values 6-11]
+ * 2 -> horizontal reversed (1 <= col index < 6) [rand values 17-22]
+ * 3 -> vertical [rand values 0-5]
+ */
+class OrientationHelper {
+
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 21;
+    private static final int MIN_ACCEPTED_VALUE = 0;
+    private static final int VERTICAL_LIMIT = 6;
+    private static final int VERTICAL_REV_LIMIT = 12;
+    private static final int HORIZONTAL_LIMIT = 17;
+    private static final int HORIZONTAL_REV_LIMIT = 22;
+    private static final int HORIZONTAL_REV_OFFSET = 1;
+
+    public OrientationAndIndex getRandomOrientationWithDropIndex() {
+        RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
+        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
+        return getOrientationAndIndexForValue(randomValue);
+    }
+
+    public OrientationAndIndex getOrientationAndIndexForValue(int value) {
+        OrientationAndIndex orientationAndIndex = null;
+        if (value < MIN_ACCEPTED_VALUE) {
+            assert true : "Random value should not be less than 0";
+        } else if (value < VERTICAL_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, value);
+        } else if (value < VERTICAL_REV_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL_REVERSED, value - VERTICAL_LIMIT);
+        } else if (value < HORIZONTAL_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL, value - VERTICAL_REV_LIMIT);
+        } else if (value < HORIZONTAL_REV_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, value - HORIZONTAL_LIMIT + HORIZONTAL_REV_OFFSET);
+        } else {
+            assert true: "Random value should not be more than 21";
+        }
+        return orientationAndIndex;
+    }
 }
 
 
@@ -975,6 +1062,11 @@ interface MoveAnalyser {
  * Implementation of CellArrayHelper
  */
 class CellArrayHelperImpl implements CellArrayHelper {
+
+    private static final int BLOCK_VERTICAL_HEIGHT = 2;
+    private static final int BLOCK_HORIZONTAL_HEIGHT = 1;
+    private static final int HORIZONTAL_PLACEMENT_OFFSET = 1;
+
     @Override
     public int getFirstEmptyPosition(Cell[] cells) {
         final int length = cells.length;
@@ -1065,23 +1157,82 @@ class CellArrayHelperImpl implements CellArrayHelper {
     }
 
     @Override
-    public boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex) {
-        final Cell[] column = board.getColumn(columnIndex);
-        final int firstEmptyPosition = getFirstEmptyPosition(column);
-        return firstEmptyPosition + block.getCells().length <= column.length;
+    public boolean blockIsDroppableOnColumn(Board board, Block block, int columnIndex, Orientation orientation) {
+        if (orientation == Orientation.VERTICAL || orientation == Orientation.VERTICAL_REVERSED) {
+            final Cell[] column = board.getColumn(columnIndex);
+            final int firstEmptyPosition = getFirstEmptyPosition(column);
+            return firstEmptyPosition + BLOCK_VERTICAL_HEIGHT <= column.length;
+        } else {
+            if (orientation == Orientation.HORIZONTAL) {
+                if (columnIndex >= 0 && columnIndex < 5) {
+                    final Cell[] column1 = board.getColumn(columnIndex);
+                    final Cell[] column2 = board.getColumn(columnIndex + HORIZONTAL_PLACEMENT_OFFSET);
+                    final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                    final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
+                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
+                }
+            } else if (orientation == Orientation.HORIZONTAL_REVERSED){
+                //orientation is horizontal reversed
+                if (columnIndex > 0 && columnIndex <= 5) {
+                    final Cell[] column1 = board.getColumn(columnIndex);
+                    final Cell[] column2 = board.getColumn(columnIndex - HORIZONTAL_PLACEMENT_OFFSET);
+                    final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                    final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
+                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
+                }
+            }
+            return false;
+        }
     }
 
     @Override
-    public boolean dropBlockIntoBoard(Board board, Block block, int columnIndex) {
+    public boolean dropBlockIntoBoard(Board board, Block block, int columnIndex, Orientation orientation) {
         //TODO see if block is droppable on column can be merged here to not call firstEmptyPosition twice
-        final boolean isDroppable = blockIsDroppableOnColumn(board, block, columnIndex);
+        final boolean isDroppable = blockIsDroppableOnColumn(board, block, columnIndex, orientation);
         if (isDroppable) {
-            final Cell[] column = board.getColumn(columnIndex);
-            final int firstEmptyPosition = getFirstEmptyPosition(column);
-            int offset = 0;
-            for (Cell cell: block.getCells()) {
-                board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
-                offset++;
+            if (orientation == Orientation.VERTICAL) {
+                final Cell[] column = board.getColumn(columnIndex);
+                final int firstEmptyPosition = getFirstEmptyPosition(column);
+                int offset = 0;
+                for (Cell cell : block.getCells()) {
+                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
+                    offset++;
+                }
+            } else if (orientation == Orientation.VERTICAL_REVERSED) {
+                final Cell[] column = board.getColumn(columnIndex);
+                final int firstEmptyPosition = getFirstEmptyPosition(column);
+                int offset = 1;
+                for (Cell cell : block.getCells()) {
+                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
+                    offset--;
+                }
+            } else if (orientation == Orientation.HORIZONTAL) {
+                final Cell[] column1 = board.getColumn(columnIndex);
+                final Cell[] column2 = board.getColumn(columnIndex + HORIZONTAL_PLACEMENT_OFFSET);
+                final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+
+                //set first column
+                final Cell[] cells = block.getCells();
+                final Cell firstCellBlock = cells[0];
+                final Cell secondCellBlock = cells[1];
+                board.setCell(firstEmptyPositionOnColumn1, columnIndex, firstCellBlock.getCellStatus(), firstCellBlock.getCellColour());
+                board.setCell(firstEmptyPositionOnColumn2, columnIndex + HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
+
+            } else if (orientation == Orientation.HORIZONTAL_REVERSED) {
+                final Cell[] column1 = board.getColumn(columnIndex);
+                final Cell[] column2 = board.getColumn(columnIndex - HORIZONTAL_PLACEMENT_OFFSET);
+                final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+
+                //set first column
+                final Cell firstCellBlock = block.getCells()[0];
+                final Cell secondCellBlock = block.getCells()[1];
+                board.setCell(firstEmptyPositionOnColumn1, columnIndex, firstCellBlock.getCellStatus(), firstCellBlock.getCellColour());
+                board.setCell(firstEmptyPositionOnColumn2, columnIndex - HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
+
             }
         }
         return isDroppable;
