@@ -6,6 +6,7 @@ import org.binu.data.ScoreNode;
 import org.binu.framework.ScoreNodeHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Shiny!!!
@@ -15,20 +16,25 @@ public class ShinyNewGameAI {
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
+    private ShinyNewMoveAnalyser shinyNewMoveAnalyser;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
+        shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
     }
 
-    public ScoreNode calculateNextMove(ScoreNode rootNode) {
-        final ShinyNewMoveAnalyser shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
+    public List<ScoreNode> calculateNextMove(ScoreNode rootNode) {
         final ScoreNode rootNode1 = shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, rootNode);
 
         ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
         highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);
-        return highestScoreNode;
+
+        final ArrayList<ScoreNode> scoreNodes = new ArrayList<>();
+        scoreNodes.add(rootNode1);
+        scoreNodes.add(highestScoreNode);
+        return scoreNodes;
     }
 
     public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
