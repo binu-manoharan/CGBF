@@ -138,7 +138,7 @@ public class DataParser {
         return boardRows;
     }
 
-    public String[] prettifyBoardString(String[] outputBoardString) {
+    public String[] prettifyBoardStringForTests(String[] outputBoardString) {
         for (int i = 0; i < outputBoardString.length; i++) {
             final String prettyBoardRow = outputBoardString[i].replaceAll("\\.", "  .");
             outputBoardString[i] = "|" + prettyBoardRow + "|";
@@ -146,9 +146,23 @@ public class DataParser {
         return outputBoardString;
     }
 
+    public String[] prettifyBoardForTests(Board board) {
+        final String[] boardString = createBoardString(board);
+        final String[] prettifiedBoardString = prettifyBoardStringForTests(boardString);
+        return prettifiedBoardString;
+    }
+
+    public String[] prettifyBoardString(String[] outputBoardString) {
+        for (int i = 0; i < outputBoardString.length; i++) {
+            final String prettyBoardRow = outputBoardString[i].replaceAll("", "  ");
+            outputBoardString[i] = "|" + prettyBoardRow + "|";
+        }
+        return outputBoardString;
+    }
+
     public String[] prettifyBoard(Board board) {
         final String[] boardString = createBoardString(board);
-        final String[] prettifiedBoardString = prettifyBoardString(boardString);
+        final String[] prettifiedBoardString = prettifyBoardStringForTests(boardString);
         return prettifiedBoardString;
     }
 

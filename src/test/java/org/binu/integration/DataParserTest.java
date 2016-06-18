@@ -131,7 +131,7 @@ public class DataParserTest {
     public void should_prettify_row() throws Exception {
         final String[] boardRow = new String[1];
         boardRow[0] = "..11..";
-        final String[] prettifiedString = dataParser.prettifyBoardString(boardRow);
+        final String[] prettifiedString = dataParser.prettifyBoardStringForTests(boardRow);
 
         final String expectedPrettification = "|  .  .11  .  .|";
         assertThat("String is prettified", prettifiedString[0].equals(expectedPrettification), is(true));
