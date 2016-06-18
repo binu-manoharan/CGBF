@@ -162,7 +162,7 @@ public class DataParser {
 
     public String[] prettifyBoard(Board board) {
         final String[] boardString = createBoardString(board);
-        final String[] prettifiedBoardString = prettifyBoardStringForTests(boardString);
+        final String[] prettifiedBoardString = prettifyBoardString(boardString);
         return prettifiedBoardString;
     }
 
