@@ -143,6 +143,7 @@ class ScoreNode {
     }
 
     public void addChild(ScoreNode childNode) {
+        assert children.size() < 23;
         children.add(childNode);
         childNode.setParent(this);
     }
@@ -966,7 +967,7 @@ class OrientationHelper {
     private static final int HORIZONTAL_REV_OFFSET = 1;
 
     public OrientationAndIndex getRandomOrientationWithDropIndex() {
-        RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
+        final RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
         final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
         return getOrientationAndIndexForValue(randomValue);
     }
@@ -974,7 +975,7 @@ class OrientationHelper {
     public OrientationAndIndex getOrientationAndIndexForValue(int value) {
         OrientationAndIndex orientationAndIndex = null;
         if (value < MIN_ACCEPTED_VALUE) {
-            assert true : "Random value should not be less than 0";
+            assert false : "Random value should not be less than 0";
         } else if (value < VERTICAL_LIMIT) {
             orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, value);
         } else if (value < VERTICAL_REV_LIMIT) {
@@ -984,7 +985,7 @@ class OrientationHelper {
         } else if (value < HORIZONTAL_REV_LIMIT) {
             orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, value - HORIZONTAL_LIMIT + HORIZONTAL_REV_OFFSET);
         } else {
-            assert true: "Random value should not be more than 21";
+            assert false: "Random value should not be more than 21";
         }
         return orientationAndIndex;
     }
@@ -1064,7 +1065,6 @@ interface MoveAnalyser {
 class CellArrayHelperImpl implements CellArrayHelper {
 
     private static final int BLOCK_VERTICAL_HEIGHT = 2;
-    private static final int BLOCK_HORIZONTAL_HEIGHT = 1;
     private static final int HORIZONTAL_PLACEMENT_OFFSET = 1;
 
     @Override
@@ -1150,7 +1150,7 @@ class CellArrayHelperImpl implements CellArrayHelper {
             droppedCells[firstEmptyPosition] = blockCells[0];
             droppedCells[firstEmptyPosition + 1] = blockCells[1];
         } else {
-            assert true : "Cell is too full!";
+            assert false : "Cell is too full!";
         }
 
         return droppedCells;
@@ -1169,8 +1169,8 @@ class CellArrayHelperImpl implements CellArrayHelper {
                     final Cell[] column2 = board.getColumn(columnIndex + HORIZONTAL_PLACEMENT_OFFSET);
                     final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
                     final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
-                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
-                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
+                    return (firstEmptyPositionOnColumn1 < column1.length)
+                            && (firstEmptyPositionOnColumn2 < column2.length);
                 }
             } else if (orientation == Orientation.HORIZONTAL_REVERSED){
                 //orientation is horizontal reversed
@@ -1179,8 +1179,8 @@ class CellArrayHelperImpl implements CellArrayHelper {
                     final Cell[] column2 = board.getColumn(columnIndex - HORIZONTAL_PLACEMENT_OFFSET);
                     final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
                     final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
-                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
-                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
+                    return (firstEmptyPositionOnColumn1 < column1.length)
+                            && (firstEmptyPositionOnColumn2 < column2.length);
                 }
             }
             return false;
@@ -1195,18 +1195,18 @@ class CellArrayHelperImpl implements CellArrayHelper {
             if (orientation == Orientation.VERTICAL) {
                 final Cell[] column = board.getColumn(columnIndex);
                 final int firstEmptyPosition = getFirstEmptyPosition(column);
-                int offset = 0;
-                for (Cell cell : block.getCells()) {
-                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
-                    offset++;
-                }
-            } else if (orientation == Orientation.VERTICAL_REVERSED) {
-                final Cell[] column = board.getColumn(columnIndex);
-                final int firstEmptyPosition = getFirstEmptyPosition(column);
                 int offset = 1;
                 for (Cell cell : block.getCells()) {
                     board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
                     offset--;
+                }
+            } else if (orientation == Orientation.VERTICAL_REVERSED) {
+                final Cell[] column = board.getColumn(columnIndex);
+                final int firstEmptyPosition = getFirstEmptyPosition(column);
+                int offset = 0;
+                for (Cell cell : block.getCells()) {
+                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
+                    offset++;
                 }
             } else if (orientation == Orientation.HORIZONTAL) {
                 final Cell[] column1 = board.getColumn(columnIndex);
@@ -1232,7 +1232,6 @@ class CellArrayHelperImpl implements CellArrayHelper {
                 final Cell secondCellBlock = block.getCells()[1];
                 board.setCell(firstEmptyPositionOnColumn1, columnIndex, firstCellBlock.getCellStatus(), firstCellBlock.getCellColour());
                 board.setCell(firstEmptyPositionOnColumn2, columnIndex - HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
-
             }
         }
         return isDroppable;
@@ -1563,6 +1562,7 @@ class ChainClearerImpl implements ChainClearer {
 }
 
 
+
 /**
  * Data parser for game input
  */
@@ -1702,6 +1702,29 @@ class DataParser {
         final String[] boardString = createBoardString(board);
         final String[] prettifiedBoardString = prettifyBoardString(boardString);
         return prettifiedBoardString;
+    }
+
+    public Board followPath(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
+        final CellArrayHelperImpl cellArrayHelper = new CellArrayHelperImpl();
+        final Board boardWithDrops = new Board(board);
+        final BlockQueue blockQueueToDrop = new BlockQueue(blockQueue);
+        ScoreNode tempNode = scoreNode;
+        final ArrayList<ScoreNode> scoringPath = new ArrayList<>();
+        while (tempNode.getParent() != null) {
+            scoringPath.add(tempNode);
+            tempNode = tempNode.getParent();
+        }
+
+        for (int i = scoringPath.size() - 1; i >= 0; i--) {
+            final Block nextBlock = blockQueueToDrop.getNextAndPop();
+            assert nextBlock != null;
+
+            final ScoreNode scoringPathNode = scoringPath.get(i);
+            final boolean successfulDrop = cellArrayHelper.dropBlockIntoBoard(boardWithDrops, nextBlock,
+                    scoringPathNode.getNodeIndex(), scoringPathNode.getOrientation());
+            assert successfulDrop;
+        }
+        return boardWithDrops;
     }
 }
 
