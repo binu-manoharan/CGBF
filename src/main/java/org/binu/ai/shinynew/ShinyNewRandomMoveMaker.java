@@ -14,32 +14,31 @@ import java.util.List;
  * Make random moves
  */
 public class ShinyNewRandomMoveMaker {
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 5;
-    private RandomValueGenerator randomValueGenerator;
     private CellArrayHelper cellArrayHelper;
     private BoardScorerImpl boardScorer;
+    private OrientationHelper orientationHelper;
 
     public ShinyNewRandomMoveMaker() {
-        randomValueGenerator = new RandomValueGenerator();
+        orientationHelper = new OrientationHelper();
         cellArrayHelper = new CellArrayHelperImpl();
         boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
     }
 
     public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode, int level) {
 
-        //TODO move stuffs to Orientation helper.
-        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
+        final OrientationAndIndex randomOrientationWithDropIndex = orientationHelper.getRandomOrientationWithDropIndex();
+        final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
+        final int nodeIndex = randomOrientationWithDropIndex.getNodeIndex();
         final Block block = blockQueue.getNextAndPop();
 
         if (block == null) {
             return;
         }
 
-        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, randomValue, Orientation.VERTICAL);
+        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, nodeIndex, orientation);
         if (droppedSuccessfully) {
             final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
-            ScoreNode currentNode = new ScoreNode(randomValue, score, Orientation.VERTICAL, level);
+            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation, level);
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);

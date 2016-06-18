@@ -33,10 +33,10 @@ public class ShinyNewGameAI {
 
     public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
         while (highestScoreNode.getTreeLevel() > 1) {
-            System.err.print("Path: " + highestScoreNode.getNodeIndex() + " <- ");
+            System.err.println("Path: " + highestScoreNode.getNodeIndex() + "("+highestScoreNode.getOrientation()+")");
             highestScoreNode = highestScoreNode.getParent();
         }
-        System.err.println("Path: " + highestScoreNode.getNodeIndex());
+        System.err.println("Path: " + highestScoreNode.getNodeIndex() + "("+highestScoreNode.getOrientation()+")");
         return highestScoreNode;
     }
 

@@ -119,20 +119,20 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                 if (columnIndex >= 0 && columnIndex < 5) {
                     final Cell[] column1 = board.getColumn(columnIndex);
                     final Cell[] column2 = board.getColumn(columnIndex + HORIZONTAL_PLACEMENT_OFFSET);
-                    int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
-                    int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
-                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT <= column1.length)
-                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT <= column2.length);
+                    final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                    final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
+                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
                 }
             } else if (orientation == Orientation.HORIZONTAL_REVERSED){
                 //orientation is horizontal reversed
                 if (columnIndex > 0 && columnIndex <= 5) {
                     final Cell[] column1 = board.getColumn(columnIndex);
                     final Cell[] column2 = board.getColumn(columnIndex - HORIZONTAL_PLACEMENT_OFFSET);
-                    int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
-                    int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
-                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT <= column1.length)
-                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT <= column2.length);
+                    final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                    final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+                    return (firstEmptyPositionOnColumn1 + BLOCK_HORIZONTAL_HEIGHT < column1.length)
+                            && (firstEmptyPositionOnColumn2 + BLOCK_HORIZONTAL_HEIGHT < column2.length);
                 }
             }
             return false;
@@ -144,7 +144,7 @@ public class CellArrayHelperImpl implements CellArrayHelper {
         //TODO see if block is droppable on column can be merged here to not call firstEmptyPosition twice
         final boolean isDroppable = blockIsDroppableOnColumn(board, block, columnIndex, orientation);
         if (isDroppable) {
-            if (orientation == Orientation.VERTICAL_REVERSED || orientation == Orientation.VERTICAL) {
+            if (orientation == Orientation.VERTICAL) {
                 final Cell[] column = board.getColumn(columnIndex);
                 final int firstEmptyPosition = getFirstEmptyPosition(column);
                 int offset = 0;
@@ -152,29 +152,38 @@ public class CellArrayHelperImpl implements CellArrayHelper {
                     board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
                     offset++;
                 }
+            } else if (orientation == Orientation.VERTICAL_REVERSED) {
+                final Cell[] column = board.getColumn(columnIndex);
+                final int firstEmptyPosition = getFirstEmptyPosition(column);
+                int offset = 1;
+                for (Cell cell : block.getCells()) {
+                    board.setCell(firstEmptyPosition + offset, columnIndex, cell.getCellStatus(), cell.getCellColour());
+                    offset--;
+                }
             } else if (orientation == Orientation.HORIZONTAL) {
                 final Cell[] column1 = board.getColumn(columnIndex);
                 final Cell[] column2 = board.getColumn(columnIndex + HORIZONTAL_PLACEMENT_OFFSET);
-                int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
-                int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+                final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
 
                 //set first column
-                final Cell firstCellBlock = block.getCells()[0];
-                final Cell secondCellBlock = block.getCells()[1];
+                final Cell[] cells = block.getCells();
+                final Cell firstCellBlock = cells[0];
+                final Cell secondCellBlock = cells[1];
                 board.setCell(firstEmptyPositionOnColumn1, columnIndex, firstCellBlock.getCellStatus(), firstCellBlock.getCellColour());
                 board.setCell(firstEmptyPositionOnColumn2, columnIndex + HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
 
             } else if (orientation == Orientation.HORIZONTAL_REVERSED) {
                 final Cell[] column1 = board.getColumn(columnIndex);
                 final Cell[] column2 = board.getColumn(columnIndex - HORIZONTAL_PLACEMENT_OFFSET);
-                int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
-                int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
+                final int firstEmptyPositionOnColumn1 = getFirstEmptyPosition(column1);
+                final int firstEmptyPositionOnColumn2 = getFirstEmptyPosition(column2);
 
                 //set first column
                 final Cell firstCellBlock = block.getCells()[0];
                 final Cell secondCellBlock = block.getCells()[1];
                 board.setCell(firstEmptyPositionOnColumn1, columnIndex, firstCellBlock.getCellStatus(), firstCellBlock.getCellColour());
-                board.setCell(firstEmptyPositionOnColumn2, columnIndex + HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
+                board.setCell(firstEmptyPositionOnColumn2, columnIndex - HORIZONTAL_PLACEMENT_OFFSET, secondCellBlock.getCellStatus(), secondCellBlock.getCellColour());
 
             }
         }

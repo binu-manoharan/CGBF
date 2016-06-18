@@ -13,5 +13,19 @@ public enum Orientation {
     HORIZONTAL,
     VERTICAL_REVERSED,
     VERTICAL,
-    HORIZONTAL_REVERSED
+    HORIZONTAL_REVERSED;
+
+    public int getEquivalentInt() {
+        switch (this) {
+            case HORIZONTAL:
+                return 0;
+            case VERTICAL_REVERSED:
+                return 1;
+            case HORIZONTAL_REVERSED:
+                return 2;
+            case VERTICAL:
+                return 3;
+        }
+        return 0;
+    }
 }
