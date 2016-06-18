@@ -442,7 +442,7 @@ public class CellArrayHelperTest {
         final boolean operationResult = cellArrayHelper.dropBlockIntoBoard(this.board, block, 0, Orientation.HORIZONTAL);
 
         assertThat("Drop was successful: ", operationResult, is(true));
-        assertThat("The 1st cell should be BLUE", board.getCell(11, 0).getCellColour(), is(CellColour.RED));
+        assertThat("The 1st cell should be RED", board.getCell(11, 0).getCellColour(), is(CellColour.RED));
         assertThat("The 2nd cell should be BLUE", board.getCell(0, 1).getCellColour(), is(CellColour.BLUE));
     }
 
@@ -512,7 +512,7 @@ public class CellArrayHelperTest {
                 "2.....",
                 "2.....",
                 "1.....",
-                "1....."
+                "1...1."
         };
         board = dataParser.createBoard(boardString);
         final Block block = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.RED, CellStatus.OCCUPIED);
@@ -522,8 +522,98 @@ public class CellArrayHelperTest {
         final boolean operationResult = cellArrayHelper.dropBlockIntoBoard(this.board, block, 5, Orientation.HORIZONTAL_REVERSED);
 
         assertThat("Drop was successful: ", operationResult, is(true));
-        assertThat("The 1st cell should be BLUE", board.getCell(0, 4).getCellColour(), is(CellColour.RED));
+        assertThat("The 1st cell should be RED", board.getCell(1, 4).getCellColour(), is(CellColour.RED));
         assertThat("The 2nd cell should be BLUE", board.getCell(0, 5).getCellColour(), is(CellColour.BLUE));
+    }
+
+    @Test
+    public void should_drop_cells_on_the_board_columns_with_horizontal_combinations_exactly_on_top_of_eachother() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......"
+        };
+        board = dataParser.createBoard(boardString);
+        final Block block1 = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.RED, CellStatus.OCCUPIED);
+        final Block block2 = getBlock(CellColour.GREEN, CellStatus.OCCUPIED, CellColour.PURPLE, CellStatus.OCCUPIED);
+
+        final boolean operationResult1 = cellArrayHelper.dropBlockIntoBoard(this.board, block1, 5, Orientation.HORIZONTAL_REVERSED);
+
+        assertThat("Drop was successful: ", operationResult1, is(true));
+        assertThat("The 1st cell should be RED", board.getCell(0, 4).getCellColour(), is(CellColour.RED));
+        assertThat("The 2nd cell should be BLUE", board.getCell(0, 5).getCellColour(), is(CellColour.BLUE));
+
+        final boolean operationResult2 = cellArrayHelper.dropBlockIntoBoard(this.board, block2, 1, Orientation.HORIZONTAL_REVERSED);
+
+        assertThat("Drop was successful: ", operationResult2, is(true));
+        assertThat("The 1st cell should be PURPLE", board.getCell(0, 0).getCellColour(), is(CellColour.PURPLE));
+        assertThat("The 2nd cell should be GREEN", board.getCell(0, 1).getCellColour(), is(CellColour.GREEN));
+
+        final boolean operationResult3 = cellArrayHelper.dropBlockIntoBoard(this.board, block1, 0, Orientation.HORIZONTAL);
+
+        assertThat("Drop was successful: ", operationResult3, is(true));
+        assertThat("The 1st cell should be BLUE", board.getCell(1, 0).getCellColour(), is(CellColour.BLUE));
+        assertThat("The 2nd cell should be RED", board.getCell(1, 1).getCellColour(), is(CellColour.RED));
+
+        final boolean operationResult4 = cellArrayHelper.dropBlockIntoBoard(this.board, block2, 4, Orientation.HORIZONTAL);
+
+        assertThat("Drop was successful: ", operationResult4, is(true));
+        assertThat("The 1st cell should be GREEN", board.getCell(1, 4).getCellColour(), is(CellColour.GREEN));
+        assertThat("The 2nd cell should be PURPLE", board.getCell(1, 5).getCellColour(), is(CellColour.PURPLE));
+    }
+
+    @Test
+    public void should_drop_cells_on_the_board_columns_with_horizontal_combinations_partially_overlapping() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......"
+        };
+        board = dataParser.createBoard(boardString);
+        final Block block1 = getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.RED, CellStatus.OCCUPIED);
+        final Block block2 = getBlock(CellColour.GREEN, CellStatus.OCCUPIED, CellColour.PURPLE, CellStatus.OCCUPIED);
+
+        final boolean operationResult1 = cellArrayHelper.dropBlockIntoBoard(this.board, block1, 5, Orientation.HORIZONTAL_REVERSED);
+
+        assertThat("Drop was successful: ", operationResult1, is(true));
+        assertThat("The 1st cell should be RED", board.getCell(0, 4).getCellColour(), is(CellColour.RED));
+        assertThat("The 2nd cell should be BLUE", board.getCell(0, 5).getCellColour(), is(CellColour.BLUE));
+
+        final boolean operationResult2 = cellArrayHelper.dropBlockIntoBoard(this.board, block2, 1, Orientation.HORIZONTAL_REVERSED);
+
+        assertThat("Drop was successful: ", operationResult2, is(true));
+        assertThat("The 1st cell should be PURPLE", board.getCell(0, 0).getCellColour(), is(CellColour.PURPLE));
+        assertThat("The 2nd cell should be GREEN", board.getCell(0, 1).getCellColour(), is(CellColour.GREEN));
+
+        final boolean operationResult3 = cellArrayHelper.dropBlockIntoBoard(this.board, block1, 1, Orientation.HORIZONTAL);
+
+        assertThat("Drop was successful: ", operationResult3, is(true));
+        assertThat("The 1st cell should be BLUE", board.getCell(1, 1).getCellColour(), is(CellColour.BLUE));
+        assertThat("The 2nd cell should be RED", board.getCell(0, 2).getCellColour(), is(CellColour.RED));
+
+        final boolean operationResult4 = cellArrayHelper.dropBlockIntoBoard(this.board, block2, 3, Orientation.HORIZONTAL);
+
+        assertThat("Drop was successful: ", operationResult4, is(true));
+        assertThat("The 1st cell should be GREEN", board.getCell(0, 3).getCellColour(), is(CellColour.GREEN));
+        assertThat("The 2nd cell should be PURPLE", board.getCell(1, 4).getCellColour(), is(CellColour.PURPLE));
     }
 
     private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
