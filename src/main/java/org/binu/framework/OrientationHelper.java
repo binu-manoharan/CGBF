@@ -22,7 +22,7 @@ public class OrientationHelper {
     private static final int HORIZONTAL_REV_OFFSET = 1;
 
     public OrientationAndIndex getRandomOrientationWithDropIndex() {
-        RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
+        final RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
         final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
         return getOrientationAndIndexForValue(randomValue);
     }
@@ -30,7 +30,7 @@ public class OrientationHelper {
     public OrientationAndIndex getOrientationAndIndexForValue(int value) {
         OrientationAndIndex orientationAndIndex = null;
         if (value < MIN_ACCEPTED_VALUE) {
-            assert true : "Random value should not be less than 0";
+            assert false : "Random value should not be less than 0";
         } else if (value < VERTICAL_LIMIT) {
             orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, value);
         } else if (value < VERTICAL_REV_LIMIT) {
@@ -40,7 +40,7 @@ public class OrientationHelper {
         } else if (value < HORIZONTAL_REV_LIMIT) {
             orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, value - HORIZONTAL_LIMIT + HORIZONTAL_REV_OFFSET);
         } else {
-            assert true: "Random value should not be more than 21";
+            assert false: "Random value should not be more than 21";
         }
         return orientationAndIndex;
     }
