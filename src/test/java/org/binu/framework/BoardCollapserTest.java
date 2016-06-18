@@ -5,6 +5,8 @@ import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
 import org.binu.integration.DataParser;
+import org.binu.scoring.BoardScorer;
+import org.binu.scoring.BoardScorerImpl;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,12 +23,16 @@ public class BoardCollapserTest {
     private Board board;
     private CellArrayHelperImpl cellArrayParser;
     private BoardCollapserImpl boardCollapser;
+    private BoardScorerImpl boardScorer;
+    private ChainClearerImpl chainClearer;
 
     @Before
     public void setUp() throws Exception {
         dataParser = new DataParser();
         cellArrayParser = new CellArrayHelperImpl();
         boardCollapser = new BoardCollapserImpl(cellArrayParser);
+        chainClearer = new ChainClearerImpl(cellArrayParser);
+        boardScorer = new BoardScorerImpl(chainClearer, boardCollapser);
     }
 
     @Test
@@ -56,7 +62,6 @@ public class BoardCollapserTest {
     }
 
     @Test
-    @Ignore
     public void should_collapse_all_shapes_recursively() throws Exception {
         final String[] boardString = {
                 "......",
@@ -74,9 +79,11 @@ public class BoardCollapserTest {
         };
 
         board = dataParser.createBoard(boardString);
-        final Board collapsedBoard = boardCollapser.collapseBoard(boardCollapser.collapseBoard(board));
-        final Cell[] firstRow = collapsedBoard.getRow(0);
-        final Cell[] secondRow = collapsedBoard.getRow(1);
+
+        boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
+
+        final Cell[] firstRow = board.getRow(0);
+        final Cell[] secondRow = board.getRow(1);
 
         assertRowStatus("First row", firstRow, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY, CellStatus.EMPTY,
                 CellStatus.EMPTY, CellStatus.EMPTY);
@@ -85,9 +92,6 @@ public class BoardCollapserTest {
                 CellStatus.EMPTY, CellStatus.EMPTY);
         assertRowColour("Second row", secondRow, null, null, null, null, null, null);
     }
-
-
-
 
     private void assertRowStatus(String messagePrefix, Cell[] firstRow, CellStatus firstCellStatus, CellStatus secondCellStatus,
                                  CellStatus thirdCellStatus, CellStatus fourthCellStatus, CellStatus fifthCellStatus,
