@@ -6,6 +6,8 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.data.Orientation;
+import org.binu.data.ScoreNode;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +48,7 @@ public class DataParserTest {
         assertBlockData(blockQueue.getBlock(2), CellColour.RED, CellColour.YELLOW);
     }
 
-    @Test (expected = AssertionError.class)
+    @Test(expected = AssertionError.class)
     public void should_fail_when_there_is_no_valid_board_row_to_provide() throws Exception {
         final String rowString = "";
         dataParser.createBoardRow(rowString);
@@ -81,7 +83,7 @@ public class DataParserTest {
                 "......",
                 ".0350.",
                 "012414"
-            };
+        };
 
         final Board board = dataParser.createBoard(boardString);
         //row 1
@@ -133,6 +135,86 @@ public class DataParserTest {
 
         final String expectedPrettification = "|  .  .11  .  .|";
         assertThat("String is prettified", prettifiedString[0].equals(expectedPrettification), is(true));
+    }
+
+    @Test
+    public void should_move_cells_to_empty_positions() throws Exception {
+        final String[] boardString = {
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......",
+                "......"
+        };
+        final Board board = dataParser.createBoard(boardString);
+        final BlockQueue blockQueue = new BlockQueue();
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.PURPLE, CellStatus.OCCUPIED, CellColour.YELLOW, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.BLUE, CellStatus.OCCUPIED, CellColour.RED, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+        blockQueue.add(getBlock(CellColour.RED, CellStatus.OCCUPIED, CellColour.GREEN, CellStatus.OCCUPIED));
+
+        //Create score nodes
+        final ScoreNode scoreNode = new ScoreNode();
+        final ScoreNode eighthChild = new ScoreNode(5, 0, Orientation.HORIZONTAL_REVERSED, 0);
+        final ScoreNode seventhChild = getScoreNode(eighthChild, 2, Orientation.VERTICAL);
+        final ScoreNode sixthChild = getScoreNode(seventhChild, 2, Orientation.HORIZONTAL);
+        final ScoreNode fifthChild = getScoreNode(sixthChild, 3, Orientation.HORIZONTAL_REVERSED);
+        final ScoreNode fourthChild = getScoreNode(fifthChild, 1, Orientation.HORIZONTAL);
+        final ScoreNode thirdChild = getScoreNode(fourthChild, 5, Orientation.HORIZONTAL_REVERSED);
+        final ScoreNode secondChild = getScoreNode(thirdChild, 4, Orientation.HORIZONTAL);
+        final ScoreNode firstChild = getScoreNode(secondChild, 3, Orientation.VERTICAL);
+        scoreNode.addChild(firstChild);
+
+        final Board boardFollowingScoringPath = dataParser.followPath(board, blockQueue, eighthChild);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(0, 1), CellColour.RED, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(0, 2), CellColour.GREEN, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(0, 3), CellColour.GREEN, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(0, 4), CellColour.PURPLE, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(0, 5), CellColour.YELLOW, CellStatus.OCCUPIED);
+
+        assertBoardRowCell(boardFollowingScoringPath.getCell(1, 2), CellColour.GREEN, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(1, 3), CellColour.RED, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(1, 4), CellColour.RED, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(1, 5), CellColour.BLUE, CellStatus.OCCUPIED);
+
+        assertBoardRowCell(boardFollowingScoringPath.getCell(2, 2), CellColour.RED, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(2, 3), CellColour.RED, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(2, 4), CellColour.GREEN, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(2, 5), CellColour.RED, CellStatus.OCCUPIED);
+
+        assertBoardRowCell(boardFollowingScoringPath.getCell(3, 2), CellColour.GREEN, CellStatus.OCCUPIED);
+        assertBoardRowCell(boardFollowingScoringPath.getCell(3, 3), CellColour.GREEN, CellStatus.OCCUPIED);
+
+        assertBoardRowCell(boardFollowingScoringPath.getCell(4, 2), CellColour.RED, CellStatus.OCCUPIED);
+    }
+
+    private ScoreNode getScoreNode(ScoreNode eighthChild, int nodeIndex, Orientation vertical) {
+        final ScoreNode seventhChild = new ScoreNode(nodeIndex, 0, vertical, 0);
+        seventhChild.addChild(eighthChild);
+        return seventhChild;
+    }
+
+    private Block getBlock(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
+        final Cell[] blockCells = getCells(cell1Colour, cell1Status, cell2Colour, cell2Status);
+        return new Block(blockCells);
+    }
+
+    private Cell[] getCells(CellColour cell1Colour, CellStatus cell1Status, CellColour cell2Colour, CellStatus cell2Status) {
+        final Cell[] cells = new Cell[2];
+        cells[0] = new Cell(cell1Colour, cell1Status);
+        cells[1] = new Cell(cell2Colour, cell2Status);
+        return cells;
     }
 
     private void assertBoardRowCell(Cell cell, CellColour cellColour, CellStatus cellStatus) {

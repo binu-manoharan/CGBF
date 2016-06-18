@@ -6,6 +6,10 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.data.ScoreNode;
+import org.binu.framework.CellArrayHelperImpl;
+
+import java.util.ArrayList;
 
 /**
  * Data parser for game input
@@ -146,5 +150,28 @@ public class DataParser {
         final String[] boardString = createBoardString(board);
         final String[] prettifiedBoardString = prettifyBoardString(boardString);
         return prettifiedBoardString;
+    }
+
+    public Board followPath(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
+        final CellArrayHelperImpl cellArrayHelper = new CellArrayHelperImpl();
+        final Board boardWithDrops = new Board(board);
+        final BlockQueue blockQueueToDrop = new BlockQueue(blockQueue);
+        ScoreNode tempNode = scoreNode;
+        final ArrayList<ScoreNode> scoringPath = new ArrayList<>();
+        while (tempNode.getParent() != null) {
+            scoringPath.add(tempNode);
+            tempNode = tempNode.getParent();
+        }
+
+        for (int i = scoringPath.size() - 1; i >= 0; i--) {
+            final Block nextBlock = blockQueueToDrop.getNextAndPop();
+            assert nextBlock != null;
+
+            final ScoreNode scoringPathNode = scoringPath.get(i);
+            final boolean successfulDrop = cellArrayHelper.dropBlockIntoBoard(boardWithDrops, nextBlock,
+                    scoringPathNode.getNodeIndex(), scoringPathNode.getOrientation());
+            assert successfulDrop;
+        }
+        return boardWithDrops;
     }
 }
