@@ -29,13 +29,13 @@ public class DataParserTest {
     @Test
     public void should_provide_cell_with_matching_colours() throws Exception {
         final Block redYellowBlock = dataParser.createColourBlock(5, 4);
-        assertBlockData(redYellowBlock, CellColour.RED, CellColour.YELLOW);
+        assertBlockData(redYellowBlock, CellColour.YELLOW, CellColour.RED);
 
         final Block greenPurpleBlock = dataParser.createColourBlock(3, 2);
-        assertBlockData(greenPurpleBlock, CellColour.GREEN, CellColour.PURPLE);
+        assertBlockData(greenPurpleBlock, CellColour.PURPLE, CellColour.GREEN);
 
         final Block blueGreenBlock = dataParser.createColourBlock(2, 1);
-        assertBlockData(blueGreenBlock, CellColour.BLUE, CellColour.GREEN);
+        assertBlockData(blueGreenBlock, CellColour.GREEN, CellColour.BLUE);
     }
 
     @Test
@@ -224,9 +224,9 @@ public class DataParserTest {
 
     private void assertBlockData(Block block, CellColour firstColour, CellColour secondColour) {
         final Cell[] cells = block.getCells();
-        final CellColour bottomCellColour = cells[0].getCellColour();
-        final CellColour topCellColour = cells[1].getCellColour();
-        assertThat("Bottom cell should be " + firstColour, bottomCellColour, is(firstColour));
-        assertThat("Top cell should be " + secondColour, topCellColour, is(secondColour));
+        final CellColour topCellColour = cells[0].getCellColour();
+        final CellColour bottomCellColour = cells[1].getCellColour();
+        assertThat("Top cell should be " + firstColour, topCellColour, is(firstColour));
+        assertThat("Bottom cell should be " + secondColour, bottomCellColour, is(secondColour));
     }
 }

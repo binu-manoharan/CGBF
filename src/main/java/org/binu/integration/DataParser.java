@@ -22,22 +22,22 @@ public class DataParser {
      * @return block with both cells
      */
     public Block createColourBlock(int topCellIndex, int bottomCellIndex) {
-        final CellColour bottomCellColour = CellColour.values()[bottomCellIndex - 1];
-        final CellColour topCellColour = CellColour.values()[topCellIndex - 1];
+        final CellColour topCellColour = CellColour.getEquivalentColour(topCellIndex);
+        final CellColour bottomCellColour = CellColour.getEquivalentColour(bottomCellIndex);
 
-        final Cell bottomCell = new Cell(bottomCellColour, CellStatus.OCCUPIED);
         final Cell topCell = new Cell(topCellColour, CellStatus.OCCUPIED);
+        final Cell bottomCell = new Cell(bottomCellColour, CellStatus.OCCUPIED);
 
         final Cell[] cells = new Cell[2];
-        cells[0] = bottomCell;
-        cells[1] = topCell;
+        cells[0] = topCell;
+        cells[1] = bottomCell;
         return new Block(cells);
     }
 
     public BlockQueue createBlockQueue(int[][] blockQueueData) {
         final BlockQueue blockQueue = new BlockQueue();
         for (int[] aBlockQueueData : blockQueueData) {
-            final Block colourBlock = createColourBlock(aBlockQueueData[1], aBlockQueueData[0]);
+            final Block colourBlock = createColourBlock(aBlockQueueData[0], aBlockQueueData[1]);
             blockQueue.add(colourBlock);
         }
         return blockQueue;
@@ -184,8 +184,18 @@ public class DataParser {
             final ScoreNode scoringPathNode = scoringPath.get(i);
             final boolean successfulDrop = cellArrayHelper.dropBlockIntoBoard(boardWithDrops, nextBlock,
                     scoringPathNode.getNodeIndex(), scoringPathNode.getOrientation());
-            assert successfulDrop;
+//            TODO: Handle display when the board is overflowing after collapse which this function doesn't do.
+//            assert successfulDrop;
         }
         return boardWithDrops;
+    }
+
+    public void compareBeforeAndAfterBoards(Board myBoard, BlockQueue blockQueue, ScoreNode highestScoreNode){
+        final Board updatedBoard = followPath(myBoard, blockQueue, highestScoreNode);
+        final String[] updatedBoardRows = prettifyBoard(updatedBoard);
+        final String[] currentBoardRows = prettifyBoard(myBoard);
+        for (int i = 0; i < 12; i++) {
+            System.err.println(currentBoardRows[i] + "   " + updatedBoardRows[i]);
+        }
     }
 }
