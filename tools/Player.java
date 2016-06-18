@@ -10,13 +10,12 @@ class Player {
         // game loop
         int mylastscore = 0;
         int opponentLastScore = 0;
-        Board oldBoard = new Board();
         ScoreNode rootNode = null;
-        while (true) {
+        DataParser dataParser = new DataParser();
 
+        while (true) {
             long startTime = System.currentTimeMillis();
 
-            DataParser dataParser = new DataParser();
             BlockQueue blockQueue = new BlockQueue();
             for (int i = 0; i < 8; i++) {
                 int colorA = in.nextInt(); // color of the first block
@@ -30,7 +29,6 @@ class Player {
                 String row = in.next();
                 Cell[] boardRow = dataParser.createBoardRow(row);
                 myBoard.setRow(Board.ROW_LENGTH - i - 1, boardRow);
-                System.err.println(row);
             }
 
             int score2 = in.nextInt();
@@ -49,20 +47,22 @@ class Player {
                 rootNode = null;
                 System.err.println("Board has dropped skulls!");
             }
+
             ShinyNewGameAI gameAI = new ShinyNewGameAI(myBoard, blockQueue);
-            ScoreNode nextMove = gameAI.calculateNextMove(rootNode);
-            // Write an action using System.out.println()
-            // To debug: System.err.println("Debug messages...");
+            List<ScoreNode> nextMove = gameAI.calculateNextMove(rootNode);
+            final int highestNodeIndex = nextMove.get(1).getNodeIndex();
+            Orientation highestOrientation = nextMove.get(1).getOrientation();
 
-            final int nodeIndex = nextMove.getNodeIndex();
-            Orientation orientation = nextMove.getOrientation();
             System.err.println();
-            System.err.println("Current play: " + nodeIndex + "  Orientation: " + orientation);
 
-            new CellArrayHelperImpl().dropBlockIntoBoard(oldBoard, blockQueue.getNext(), nodeIndex, orientation);
-            System.out.println(nodeIndex + " " + orientation.getEquivalentInt()); // "x": the column in which to drop your blocks
-            rootNode = nextMove;
+            System.err.println("Current play: " + highestNodeIndex + "  Orientation: " + highestOrientation);
+            final ScoreNode highestScoreNode = gameAI.getHighestScoreNode(nextMove.get(0));
+
+            dataParser.compareBeforeAndAfterBoards(myBoard, blockQueue, highestScoreNode);
+
+            rootNode = nextMove.get(1);
             rootNode.setParent(null);
+            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt()); // "x": the column in which to drop your blocks
             long endTime = System.currentTimeMillis();
             System.err.print("Exec time: " + ((endTime - startTime)));
 
@@ -226,6 +226,7 @@ enum Orientation {
     }
 }
 
+
 /**
  * Cell Colours for occupied rows.
  */
@@ -234,7 +235,41 @@ enum CellColour {
     GREEN,
     PURPLE,
     RED,
-    YELLOW
+    YELLOW;
+
+    public int getEquivalentInt() {
+        switch (this) {
+            case BLUE:
+                return 1;
+            case GREEN:
+                return 2;
+            case PURPLE:
+                return 3;
+            case RED:
+                return 4;
+            case YELLOW:
+                return 5;
+            default:
+                return -1;
+        }
+    }
+
+    public static CellColour getEquivalentColour(int colourIndex) {
+        switch (colourIndex) {
+            case 1:
+                return BLUE;
+            case 2:
+                return GREEN;
+            case 3:
+                return PURPLE;
+            case 4:
+                return RED;
+            case 5:
+                return YELLOW;
+            default:
+                return null;
+        }
+    }
 }
 
 
@@ -666,20 +701,25 @@ class ShinyNewGameAI {
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
+    private ShinyNewMoveAnalyser shinyNewMoveAnalyser;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
+        shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
     }
 
-    public ScoreNode calculateNextMove(ScoreNode rootNode) {
-        final ShinyNewMoveAnalyser shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
+    public List<ScoreNode> calculateNextMove(ScoreNode rootNode) {
         final ScoreNode rootNode1 = shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, rootNode);
 
         ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
         highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);
-        return highestScoreNode;
+
+        final ArrayList<ScoreNode> scoreNodes = new ArrayList<>();
+        scoreNodes.add(rootNode1);
+        scoreNodes.add(highestScoreNode);
+        return scoreNodes;
     }
 
     public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
@@ -1574,22 +1614,22 @@ class DataParser {
      * @return block with both cells
      */
     public Block createColourBlock(int topCellIndex, int bottomCellIndex) {
-        final CellColour bottomCellColour = CellColour.values()[bottomCellIndex - 1];
-        final CellColour topCellColour = CellColour.values()[topCellIndex - 1];
+        final CellColour topCellColour = CellColour.getEquivalentColour(topCellIndex);
+        final CellColour bottomCellColour = CellColour.getEquivalentColour(bottomCellIndex);
 
-        final Cell bottomCell = new Cell(bottomCellColour, CellStatus.OCCUPIED);
         final Cell topCell = new Cell(topCellColour, CellStatus.OCCUPIED);
+        final Cell bottomCell = new Cell(bottomCellColour, CellStatus.OCCUPIED);
 
         final Cell[] cells = new Cell[2];
-        cells[0] = bottomCell;
-        cells[1] = topCell;
+        cells[0] = topCell;
+        cells[1] = bottomCell;
         return new Block(cells);
     }
 
     public BlockQueue createBlockQueue(int[][] blockQueueData) {
         final BlockQueue blockQueue = new BlockQueue();
         for (int[] aBlockQueueData : blockQueueData) {
-            final Block colourBlock = createColourBlock(aBlockQueueData[1], aBlockQueueData[0]);
+            final Block colourBlock = createColourBlock(aBlockQueueData[0], aBlockQueueData[1]);
             blockQueue.add(colourBlock);
         }
         return blockQueue;
@@ -1690,9 +1730,23 @@ class DataParser {
         return boardRows;
     }
 
-    public String[] prettifyBoardString(String[] outputBoardString) {
+    public String[] prettifyBoardStringForTests(String[] outputBoardString) {
         for (int i = 0; i < outputBoardString.length; i++) {
             final String prettyBoardRow = outputBoardString[i].replaceAll("\\.", "  .");
+            outputBoardString[i] = "|" + prettyBoardRow + "|";
+        }
+        return outputBoardString;
+    }
+
+    public String[] prettifyBoardForTests(Board board) {
+        final String[] boardString = createBoardString(board);
+        final String[] prettifiedBoardString = prettifyBoardStringForTests(boardString);
+        return prettifiedBoardString;
+    }
+
+    public String[] prettifyBoardString(String[] outputBoardString) {
+        for (int i = 0; i < outputBoardString.length; i++) {
+            final String prettyBoardRow = outputBoardString[i].replaceAll("", "  ");
             outputBoardString[i] = "|" + prettyBoardRow + "|";
         }
         return outputBoardString;
@@ -1722,9 +1776,19 @@ class DataParser {
             final ScoreNode scoringPathNode = scoringPath.get(i);
             final boolean successfulDrop = cellArrayHelper.dropBlockIntoBoard(boardWithDrops, nextBlock,
                     scoringPathNode.getNodeIndex(), scoringPathNode.getOrientation());
-            assert successfulDrop;
+//            TODO: Handle display when the board is overflowing after collapse which this function doesn't do.
+//            assert successfulDrop;
         }
         return boardWithDrops;
+    }
+
+    public void compareBeforeAndAfterBoards(Board myBoard, BlockQueue blockQueue, ScoreNode highestScoreNode){
+        final Board updatedBoard = followPath(myBoard, blockQueue, highestScoreNode);
+        final String[] updatedBoardRows = prettifyBoard(updatedBoard);
+        final String[] currentBoardRows = prettifyBoard(myBoard);
+        for (int i = 0; i < 12; i++) {
+            System.err.println(currentBoardRows[i] + "   " + updatedBoardRows[i]);
+        }
     }
 }
 

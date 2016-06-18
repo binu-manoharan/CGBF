@@ -49,24 +49,20 @@ class Player {
             }
 
             ShinyNewGameAI gameAI = new ShinyNewGameAI(myBoard, blockQueue);
-            ScoreNode nextMove = gameAI.calculateNextMove(rootNode);
-            final int nodeIndex = nextMove.getNodeIndex();
-            Orientation orientation = nextMove.getOrientation();
+            List<ScoreNode> nextMove = gameAI.calculateNextMove(rootNode);
+            final int highestNodeIndex = nextMove.get(1).getNodeIndex();
+            Orientation highestOrientation = nextMove.get(1).getOrientation();
 
             System.err.println();
 
-            System.err.println("Current play: " + nodeIndex + "  Orientation: " + orientation);
-            final ScoreNode highestScoreNode = gameAI.getHighestScoreNode(rootNode);
-            final Board updatedBoard = dataParser.followPath(myBoard, blockQueue, highestScoreNode);
-            final String[] updatedBoardRows = dataParser.prettifyBoard(updatedBoard);
-            final String[] currentBoardRows = dataParser.prettifyBoard(myBoard);
-            for (int i = 0; i < 12; i++) {
-                System.err.println(currentBoardRows[i] + "   " + updatedBoardRows[i]);
-            }
+            System.err.println("Current play: " + highestNodeIndex + "  Orientation: " + highestOrientation);
+            final ScoreNode highestScoreNode = gameAI.getHighestScoreNode(nextMove.get(0));
 
-            rootNode = nextMove;
+            dataParser.compareBeforeAndAfterBoards(myBoard, blockQueue, highestScoreNode);
+
+            rootNode = nextMove.get(1);
             rootNode.setParent(null);
-            System.out.println(nodeIndex + " " + orientation.getEquivalentInt()); // "x": the column in which to drop your blocks
+            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt()); // "x": the column in which to drop your blocks
             long endTime = System.currentTimeMillis();
             System.err.print("Exec time: " + ((endTime - startTime)));
 
