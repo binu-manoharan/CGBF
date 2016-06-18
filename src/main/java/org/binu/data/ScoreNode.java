@@ -75,7 +75,7 @@ public class ScoreNode {
     }
 
     public void addChild(ScoreNode childNode) {
-        assert children.size() < 7;
+        assert children.size() < 23;
         children.add(childNode);
         childNode.setParent(this);
     }
