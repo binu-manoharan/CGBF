@@ -26,6 +26,11 @@ public class ShinyNewGameAI {
         randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
     }
 
+    /**
+     * Find the next move to make.
+     * @param rootNode rootNode to start the tree from.
+     * @return List of score nodes with the new root node followed by the highest scoring node
+     */
     public List<ScoreNode> calculateNextMove(ScoreNode rootNode) {
         final ScoreNode rootNode1 = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
 
