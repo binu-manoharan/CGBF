@@ -62,7 +62,7 @@ class Player {
 
             rootNode = nextMove.get(1);
             rootNode.setParent(null);
-            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt() + " " + highestScoreNode.getNodeScore()); // "x": the column in which to drop your blocks
+            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt() + " " + highestScoreNode.getLevel() + ": " + highestScoreNode.getNodeScore()); // "x": the column in which to drop your blocks
             long endTime = System.currentTimeMillis();
             System.err.print("Exec time: " + ((endTime - startTime)));
 
