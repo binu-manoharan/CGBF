@@ -10,7 +10,7 @@ import org.binu.framework.TimeHelper;
  */
 public class RandomEightLevelTreeMaker {
     public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
-        final ShinyNewRandomMoveMaker shinyNewRandomMoveMaker = new ShinyNewRandomMoveMaker();
+        final RandomMoveMaker randomMoveMaker = new RandomMoveMaker();
         final ScoreNode calculatedRootNode;
         if (rootNode == null) {
             calculatedRootNode = new ScoreNode();
@@ -21,7 +21,7 @@ public class RandomEightLevelTreeMaker {
         final TimeHelper timeHelper = new TimeHelper();
         int count = 0;
         while (timeHelper.getTimeSinceStartInMills() < timeLimitInMS) {
-            shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode, 0);
+            randomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode);
             count++;
         }
         System.err.println("Number of searches: " + count);

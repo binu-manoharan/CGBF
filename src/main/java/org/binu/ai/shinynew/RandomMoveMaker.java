@@ -11,20 +11,20 @@ import org.binu.scoring.BoardScorerImpl;
 import java.util.List;
 
 /**
- * Make random moves
+ * Make random moves on the board using the blocks in the block queue.
  */
-public class ShinyNewRandomMoveMaker {
+public class RandomMoveMaker {
     private CellArrayHelper cellArrayHelper;
     private BoardScorerImpl boardScorer;
     private OrientationHelper orientationHelper;
 
-    public ShinyNewRandomMoveMaker() {
+    public RandomMoveMaker() {
         orientationHelper = new OrientationHelper();
         cellArrayHelper = new CellArrayHelperImpl();
         boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
     }
 
-    public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode, int level) {
+    public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
 
         final OrientationAndIndex randomOrientationWithDropIndex = orientationHelper.getRandomOrientationWithDropIndex();
         final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
@@ -42,11 +42,11 @@ public class ShinyNewRandomMoveMaker {
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);
-                makeRandomMove(board, blockQueue, currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode);
             } else {
                 final int currentNodeIndex = children.indexOf(currentNode);
                 currentNode = children.get(currentNodeIndex);
-                makeRandomMove(board, blockQueue, currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode);
             }
         }
     }

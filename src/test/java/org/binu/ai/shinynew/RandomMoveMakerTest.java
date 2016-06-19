@@ -14,15 +14,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Test for {@link ShinyNewRandomMoveMaker}
+ * Test for {@link RandomMoveMaker}
  */
-public class ShinyNewRandomMoveMakerTest {
+public class RandomMoveMakerTest {
 
-    private static final int ROOT_NODE_LEVEL = 0;
     private Board board;
     private DataParser dataParser;
     private BlockQueue blockQueue;
-    private ShinyNewRandomMoveMaker shinyNewRandomMoveMaker;
+    private RandomMoveMaker randomMoveMaker;
 
     @Test
     public void should_have_at_most_22_children_while_making_random_moves() throws Exception {
@@ -52,10 +51,10 @@ public class ShinyNewRandomMoveMakerTest {
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
 
-        shinyNewRandomMoveMaker = new ShinyNewRandomMoveMaker();
+        randomMoveMaker = new RandomMoveMaker();
         final ScoreNode rootNode = new ScoreNode();
         for (int i = 0; i < 1000; i++) {
-            shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode, ROOT_NODE_LEVEL);
+            randomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), rootNode);
         }
 
         assertThat("Root node has at most 22 children. ", rootNode.getChildren().size() <= 22, is(true));
