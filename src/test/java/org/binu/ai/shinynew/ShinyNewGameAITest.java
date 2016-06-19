@@ -13,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -59,8 +62,9 @@ public class ShinyNewGameAITest {
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
 
-        shinyNewGameAI.calculateNextMove(null);
-        //TODO assert
+        final List<ScoreNode> scoreNodes = shinyNewGameAI.calculateNextMove(null);
+        assertThat("Score node is not null", scoreNodes, is(notNullValue()));
+        assertThat("Score nodes two nodes - root & highest", scoreNodes.size(), is(2));
     }
 
     @Test

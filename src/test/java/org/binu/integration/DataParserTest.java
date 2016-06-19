@@ -138,7 +138,7 @@ public class DataParserTest {
     }
 
     @Test
-    public void should_move_cells_to_empty_positions() throws Exception {
+    public void should_play_the_scoring_path_on_the_board_without_clearing() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
