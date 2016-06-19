@@ -7,11 +7,11 @@ class Player {
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
 
-        // game loop
-        int mylastscore = 0;
-        int opponentLastScore = 0;
-        ScoreNode rootNode = null;
+        ScoreNode myTreeRootNode =  null;
+        ScoreNode opponentTreeRootNode =  null;
         DataParser dataParser = new DataParser();
+
+        final ScoreBasedTreeInvalidator scoreBasedTreeInvalidator = new ScoreBasedTreeInvalidator();
 
         while (true) {
             final TimeHelper timeHelper = new TimeHelper();
@@ -23,7 +23,7 @@ class Player {
                 Block colourBlock = dataParser.createColourBlock(colorA, colorB);
                 blockQueue.add(colourBlock);
             }
-            int score1 = in.nextInt();
+            int myScore = in.nextInt();
             Board myBoard = new Board();
             for (int i = 0; i < 12; i++) {
                 String row = in.next();
@@ -31,42 +31,42 @@ class Player {
                 myBoard.setRow(Board.ROW_LENGTH - i - 1, boardRow);
             }
 
-            int score2 = in.nextInt();
+            Board opponentBoard = new Board();
+            int opponentScore = in.nextInt();
 
             for (int i = 0; i < 12; i++) {
                 String row = in.next(); // One line of the map ('.' = empty, '0' = skull block, '1' to '5' = colored block)
             }
 
-            boolean invalidRootNode = false;
-            if (opponentLastScore / 420 != score2 / 420) {
-                invalidRootNode = true;
+            if (!scoreBasedTreeInvalidator.isMyTreeValid(opponentScore)) {
+                myTreeRootNode = null;
+                System.err.println("My board has dropped skulls!");
             }
-            opponentLastScore = score2;
 
-            if (invalidRootNode) {
-                rootNode = null;
-                System.err.println("Board has dropped skulls!");
+            if (!scoreBasedTreeInvalidator.isOpponentTreeValid(myScore)) {
+                opponentTreeRootNode = null;
+                System.err.println("Opponent board has dropped skulls!");
             }
+
+            scoreBasedTreeInvalidator.setOpponentLastScore(opponentScore);
+            scoreBasedTreeInvalidator.setMyLastScore(myScore);
 
             ShinyNewGameAI gameAI = new ShinyNewGameAI(myBoard, blockQueue);
-            List<ScoreNode> nextMove = gameAI.calculateNextMove(rootNode);
-            final int highestNodeIndex = nextMove.get(1).getNodeIndex();
-            Orientation highestOrientation = nextMove.get(1).getOrientation();
-            System.err.print("Exec time for parse and score tree: " + timeHelper.getTimeSinceStartInMills());
+            ScoreNode nextMove = gameAI.calculateNextMove(myTreeRootNode);
 
-            System.err.println();
+            final int highestNodeIndex = nextMove.getNodeIndex();
+            Orientation highestOrientation = nextMove.getOrientation();
 
             System.err.println("Current play: " + highestNodeIndex + "  Orientation: " + highestOrientation);
-            final ScoreNode highestScoreNode = gameAI.getHighestScoreNode(nextMove.get(0));
 
-            dataParser.compareBeforeAndAfterBoards(myBoard, blockQueue, highestScoreNode);
+//            dataParser.compareBeforeAndAfterBoards(myBoard, blockQueue, highestScoreNode);
 
-            rootNode = nextMove.get(1);
-            rootNode.setParent(null);
+            myTreeRootNode = nextMove;
+            myTreeRootNode.setParent(null);
+
             System.err.print("Exec time for completion: " + timeHelper.getTimeSinceStartInMills());
-            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt() + " " + highestScoreNode.getLevel() + ": " + highestScoreNode.getNodeScore()); // "x": the column in which to drop your blocks
-
-
+            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt() + " " +
+                    gameAI.getMessage());
         }
     }
 }
