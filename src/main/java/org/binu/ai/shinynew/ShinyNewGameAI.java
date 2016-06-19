@@ -13,20 +13,21 @@ import java.util.List;
  */
 public class ShinyNewGameAI {
 
+    public static final int TIME_LIMIT_IN_MS = 50;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
-    private ShinyNewMoveAnalyser shinyNewMoveAnalyser;
+    private RandomEightLevelTreeMaker randomEightLevelTreeMaker;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
-        shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
+        randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
     }
 
     public List<ScoreNode> calculateNextMove(ScoreNode rootNode) {
-        final ScoreNode rootNode1 = shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, rootNode);
+        final ScoreNode rootNode1 = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
 
         ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
         highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);

@@ -6,10 +6,10 @@ import org.binu.data.ScoreNode;
 import org.binu.framework.TimeHelper;
 
 /**
- * Shiny!!! move analysis.
+ * Random 8 level move maker.
  */
-public class ShinyNewMoveAnalyser {
-    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode) {
+public class RandomEightLevelTreeMaker {
+    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
         final ShinyNewRandomMoveMaker shinyNewRandomMoveMaker = new ShinyNewRandomMoveMaker();
         final ScoreNode calculatedRootNode;
         if (rootNode == null) {
@@ -20,7 +20,7 @@ public class ShinyNewMoveAnalyser {
 
         final TimeHelper timeHelper = new TimeHelper();
         int count = 0;
-        while (timeHelper.getTimeSinceStartInMills() < 50) {
+        while (timeHelper.getTimeSinceStartInMills() < timeLimitInMS) {
             shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode, 0);
             count++;
         }

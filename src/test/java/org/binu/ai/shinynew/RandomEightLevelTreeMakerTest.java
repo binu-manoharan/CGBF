@@ -6,24 +6,26 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.CellStatus;
+import org.binu.data.ScoreNode;
 import org.binu.integration.DataParser;
 import org.junit.Test;
 
-/**
- * Created by binu on 12/06/16.
- */
-public class ShinyNewMoveAnalyserTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
-    private static final int ROOT_NODE_LEVEL = 0;
+/**
+ * Test for {@link RandomEightLevelTreeMaker}
+ */
+public class RandomEightLevelTreeMakerTest {
+
     private Board board;
     private DataParser dataParser;
     private BlockQueue blockQueue;
-    private ShinyNewRandomMoveMaker shinyNewRandomMoveMaker;
-    private ShinyNewMoveAnalyser shinyNewMoveAnalyser;
+    private RandomEightLevelTreeMaker randomEightLevelTreeMaker;
 
-    //TODO fix test name later
     @Test
-    public void should_compile() throws Exception {
+    public void should_create_tree() throws Exception {
         final String[] boardString = {
                 "......",
                 "......",
@@ -50,9 +52,9 @@ public class ShinyNewMoveAnalyserTest {
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
 
-        shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
-        shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, null);
-
+        randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
+        final ScoreNode rootNode = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, null, 50);
+        assertThat("Should create a non-null root node", rootNode, is(notNullValue()));
     }
 
     private void addBlockToBlockQueue(CellColour cell1Colour, CellColour cell2Colour) {
