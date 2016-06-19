@@ -14,7 +14,7 @@ class Player {
         DataParser dataParser = new DataParser();
 
         while (true) {
-            long startTime = System.currentTimeMillis();
+            final TimeHelper timeHelper = new TimeHelper();
 
             BlockQueue blockQueue = new BlockQueue();
             for (int i = 0; i < 8; i++) {
@@ -52,6 +52,7 @@ class Player {
             List<ScoreNode> nextMove = gameAI.calculateNextMove(rootNode);
             final int highestNodeIndex = nextMove.get(1).getNodeIndex();
             Orientation highestOrientation = nextMove.get(1).getOrientation();
+            System.err.print("Exec time for parse and score tree: " + timeHelper.getTimeSinceStartInMills());
 
             System.err.println();
 
@@ -62,9 +63,9 @@ class Player {
 
             rootNode = nextMove.get(1);
             rootNode.setParent(null);
+            System.err.print("Exec time for completion: " + timeHelper.getTimeSinceStartInMills());
             System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt() + " " + highestScoreNode.getLevel() + ": " + highestScoreNode.getNodeScore()); // "x": the column in which to drop your blocks
-            long endTime = System.currentTimeMillis();
-            System.err.print("Exec time: " + ((endTime - startTime)));
+
 
         }
     }

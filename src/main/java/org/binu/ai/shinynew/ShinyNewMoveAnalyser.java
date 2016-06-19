@@ -3,6 +3,7 @@ package org.binu.ai.shinynew;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.data.ScoreNode;
+import org.binu.framework.TimeHelper;
 
 /**
  * Shiny!!! move analysis.
@@ -16,12 +17,11 @@ public class ShinyNewMoveAnalyser {
         } else {
             calculatedRootNode = rootNode;
         }
-        final long startTime = System.currentTimeMillis();
-        long currentTime = System.currentTimeMillis();
+
+        final TimeHelper timeHelper = new TimeHelper();
         int count = 0;
-        while (currentTime - startTime < 50) {
+        while (timeHelper.getTimeSinceStartInMills() < 50) {
             shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode, 0);
-            currentTime = System.currentTimeMillis();
             count++;
         }
         System.err.println("Number of searches: " + count);
