@@ -62,7 +62,7 @@ class Player {
 
             rootNode = nextMove.get(1);
             rootNode.setParent(null);
-            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt()); // "x": the column in which to drop your blocks
+            System.out.println(highestNodeIndex + " " + highestOrientation.getEquivalentInt() + " " + highestScoreNode.getNodeScore()); // "x": the column in which to drop your blocks
             long endTime = System.currentTimeMillis();
             System.err.print("Exec time: " + ((endTime - startTime)));
 
@@ -226,7 +226,6 @@ enum Orientation {
     }
 }
 
-
 /**
  * Cell Colours for occupied rows.
  */
@@ -236,23 +235,6 @@ enum CellColour {
     PURPLE,
     RED,
     YELLOW;
-
-    public int getEquivalentInt() {
-        switch (this) {
-            case BLUE:
-                return 1;
-            case GREEN:
-                return 2;
-            case PURPLE:
-                return 3;
-            case RED:
-                return 4;
-            case YELLOW:
-                return 5;
-            default:
-                return -1;
-        }
-    }
 
     public static CellColour getEquivalentColour(int colourIndex) {
         switch (colourIndex) {
@@ -286,337 +268,6 @@ abstract class GameAI implements IGameAI {
         this.blockQueue = blockQueue;
 
 
-    }
-}
-
-
-/**
- * Basic board scoring.
- */
-class BoardScoreCalculatorImpl implements BoardScoreCalculator {
-    private final Board board;
-    private final BlockQueue blockQueue;
-    private final CellArrayHelper cellArrayHelper;
-    private final ChainClearerImpl boardClearer;
-    private final BoardCollapserImpl boardCollapser;
-
-    public BoardScoreCalculatorImpl(Board board, BlockQueue blockQueue) {
-        this.board = board;
-        this.blockQueue = blockQueue;
-        cellArrayHelper = new CellArrayHelperImpl();
-        boardCollapser = new BoardCollapserImpl(cellArrayHelper);
-        boardClearer = new ChainClearerImpl(cellArrayHelper);
-    }
-
-    @Override
-    public int calculateColumnScore(int column) {
-        final int score = getScore(column);
-        return score;
-    }
-
-    private int getScore(int column) {
-        final Board tempBoardBeforeClear;
-
-        try {
-            tempBoardBeforeClear = getBoardWithDroppedQueue(column);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //never take this path
-            return -10000;
-        }
-
-        final Board tempBoardAfterClear = new Board(tempBoardBeforeClear);
-        boardClearer.clearBoard(tempBoardAfterClear);
-
-        final int score = getScore(tempBoardBeforeClear, tempBoardAfterClear);
-
-        boardCollapser.collapseBoard(tempBoardAfterClear);
-        final Board tempBoardAfterCollapse = new Board(tempBoardAfterClear);
-        boardClearer.clearBoard(tempBoardAfterCollapse);
-
-        final int comboScore = getScore(tempBoardAfterClear, tempBoardAfterCollapse) * 8;
-        final int totalScore = comboScore + score;
-        return totalScore;
-    }
-
-    private int getScore(Board tempBoardBefore, Board tempBoardAfter) {
-        int score = 0;
-        for (int i = 0; i < Board.ROW_LENGTH; i++) {
-            for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
-                final CellStatus beforeCellStatus = tempBoardBefore.getCell(i, j).getCellStatus();
-                if (tempBoardAfter.getCell(i, j).getCellStatus() != beforeCellStatus) {
-                    if (beforeCellStatus != CellStatus.BLOCKED) {
-                        score += 10;
-                    } else {
-                        score -= 5;
-                    }
-                }
-            }
-        }
-        return score;
-    }
-
-    private Board getBoardWithDroppedQueue(int column) throws ArrayIndexOutOfBoundsException{
-        final Board tempBoardBefore = new Board(board);
-        final Cell[] columnToDropInto = tempBoardBefore.getColumn(column);
-
-        final Cell[] cells = cellArrayHelper.dropBlockIntoColumn(columnToDropInto, blockQueue.getNext());
-        tempBoardBefore.setColumn(column, cells);
-        return tempBoardBefore;
-    }
-}
-
-
-/**
- * GameAI capable of scoring the board.
- */
-class BoardScoringGameAI extends GameAI {
-    public BoardScoringGameAI(Board board, BlockQueue blockQueue) {
-        super(board, blockQueue);
-    }
-
-    @Override
-    public int calculateNextMove() {
-        final BoardScoringMoveAnalyser moveAnalyser = new BoardScoringMoveAnalyser(board, blockQueue);
-        return moveAnalyser.findBestMove();
-    }
-}
-
-
-/**
- * Create a Score Node Tree
- */
-class ScoreNodeTreeFactory {
-
-    private final ChainClearerImpl boardClearer;
-    private final CellArrayHelper cellArrayHelper;
-
-    public ScoreNodeTreeFactory() {
-        cellArrayHelper = new CellArrayHelperImpl();
-        boardClearer = new ChainClearerImpl(cellArrayHelper);
-    }
-
-    public void populateRootNodeTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int depth) {
-        addToScoreNode(rootNode, board, blockQueue, depth);
-    }
-
-    private void addToScoreNode(ScoreNode scoreNode, Board board, BlockQueue blockQueue, int depth) {
-
-        final int level = scoreNode.getLevel();
-        if (level >= depth) {
-            return;
-        }
-
-        if (cellArrayHelper.isClearable(board)) {
-            return;
-        }
-
-        for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
-            try {
-                final Board tempBoard = getBoardWithDroppedColumn(board, blockQueue, col);
-                final int score = getScore(tempBoard);
-
-                final ScoreNode childNode = new ScoreNode(col, score);
-                childNode.setParent(scoreNode);
-                scoreNode.addChild(childNode);
-
-                final BlockQueue tempBlockQueue = new BlockQueue(blockQueue);
-                tempBlockQueue.getNextAndPop();
-
-                addToScoreNode(childNode, tempBoard, tempBlockQueue, depth);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                final ScoreNode childNode = new ScoreNode(col, -10000);
-                childNode.setParent(scoreNode);
-                scoreNode.addChild(childNode);
-            }
-        }
-    }
-
-    
-    private Board getBoardWithDroppedColumn(Board board, BlockQueue blockQueue, int col) {
-        final Cell[] column = board.getColumn(col);
-        final Cell[] droppedColumn = cellArrayHelper.dropBlockIntoColumn(column, blockQueue.getNext());
-        final Board tempBoard = new Board(board);
-        tempBoard.setColumn(col, droppedColumn);
-        return tempBoard;
-    }
-
-
-    private int getScore(Board board) {
-        return scoreBoard(board, 0, 1);
-    }
-
-    private int scoreBoard(Board tempBoardBeforeClear, int initialScore, int multiplier) {
-        final Board tempBoardAfterClear = getClearedBoardCopy(tempBoardBeforeClear);
-
-        if (!cellArrayHelper.isClearable(tempBoardBeforeClear)) {
-            return initialScore;
-        }
-
-        final int boardDifferentialScore = initialScore + getBoardDifferentialScore(tempBoardBeforeClear, tempBoardAfterClear) * multiplier;
-        cellArrayHelper.collapseEmptyCells(tempBoardAfterClear);
-        multiplier *= 8;
-        return scoreBoard(tempBoardAfterClear, boardDifferentialScore, multiplier) ;
-    }
-
-    private Board getClearedBoardCopy(Board tempBoardBeforeClear) {
-        final Board tempBoardAfterClear = new Board(tempBoardBeforeClear);
-        boardClearer.clearBoard(tempBoardAfterClear);
-        return tempBoardAfterClear;
-    }
-
-    private int getBoardDifferentialScore(Board tempBoardBefore, Board tempBoardAfter) {
-        int score = 0;
-        for (int i = 0; i < Board.ROW_LENGTH; i++) {
-            for (int j = 0; j < Board.COLUMN_LENGTH; j++) {
-                final CellStatus beforeCellStatus = tempBoardBefore.getCell(i, j).getCellStatus();
-                if (tempBoardAfter.getCell(i, j).getCellStatus() != beforeCellStatus) {
-                    if (beforeCellStatus != CellStatus.BLOCKED) {
-                        score += 10;
-                    } else {
-                        score -= 5;
-                    }
-                }
-            }
-        }
-        return score;
-    }
-}
-
-/**
- * Score calculator for possible moves based on current board position.
- */
-interface BoardScoreCalculator {
-
-    int calculateColumnScore(int column);
-}
-
-
-
-/**
- * Move analyser
- */
-class BoardScoringMoveAnalyser extends AbstractMoveAnalyser {
-    private Board board;
-    private BlockQueue blockQueue;
-    private ScoreNodeTreeFactory scoreNodeTreeFactory;
-    private ScoreNode rootNode;
-    private ScoreNodeTreeParser scoreNodeTreeParser;
-
-    private int level;
-
-    public BoardScoringMoveAnalyser(Board board, BlockQueue blockQueue) {
-        this.board = board;
-        this.blockQueue = blockQueue;
-        rootNode = new ScoreNode();
-        level = 4;
-        scoreNodeTreeParser = new ScoreNodeTreeParser();
-        scoreNodeTreeFactory = new ScoreNodeTreeFactory();
-    }
-
-    @Override
-    public int findBestMove() {
-        scoreNodeTreeFactory.populateRootNodeTree(board, blockQueue, rootNode, level);
-        final int[] bestScoringPath = scoreNodeTreeParser.findBestScoringPath(rootNode, level);
-        System.err.println("1: " + bestScoringPath[0]);
-        System.err.println("2: " + bestScoringPath[1]);
-        System.err.println("3: " + bestScoringPath[2]);
-        return bestScoringPath[0];
-    }
-
-    
-    private ScoreNode getScoreNode(BoardScoreCalculatorImpl boardScoreCalculator, int columnIndex, ScoreNode parent) {
-        final ScoreNode child = new ScoreNode();
-        child.setNodeIndex(columnIndex);
-        child.setNodeScore(boardScoreCalculator.calculateColumnScore(columnIndex));
-        child.setParent(parent);
-        return child;
-    }
-
-    private Integer getWinningIndex(ArrayList<Integer> highestColumnIndex) {
-        final double randomMultiplier = Math.random();
-        final double randomVal = randomMultiplier * highestColumnIndex.size();
-        return highestColumnIndex.get((int) randomVal);
-    }
-
-    
-    private ArrayList<Integer> getHighestScoringIndexes(int[][] columnScores, int highestColumnScore) {
-        final ArrayList<Integer> highestColumnIndex = new ArrayList<>();
-        for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
-            if (columnScores[col][1] == highestColumnScore) {
-                highestColumnIndex.add(columnScores[col][0]);
-            }
-        }
-        return highestColumnIndex;
-    }
-
-    private int getHighestColumnScore(BoardScoreCalculatorImpl boardScoreCalculator, int[][] columnScores) {
-        int highestColumnScore = 0;
-        for (int col = 0; col < Board.COLUMN_LENGTH; col++) {
-            final int columnScore = boardScoreCalculator.calculateColumnScore(col);
-            columnScores[col][0] = col;
-            columnScores[col][1] = columnScore;
-            if (columnScore > highestColumnScore) {
-                highestColumnScore = columnScore;
-            }
-        }
-        return highestColumnScore;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-}
-
-
-
-/**
- * Parser for tree created by {@link ScoreNodeTreeFactory}
- */
-class ScoreNodeTreeParser {
-
-    public int[] findBestScoringPath(ScoreNode rootNode, int level) {
-        final List<ScoreNode> children = rootNode.getChildren();
-        int totalScore = -20000;
-        int[] bestMoves = new int[level];
-        for (final ScoreNode childNode : children) {
-            final int childNodeScore = childNode.getNodeScore();
-            final List<ScoreNode> grandChildren = childNode.getChildren();
-            final int numberOfGrandChildren = grandChildren.size();
-            if (numberOfGrandChildren == 0) {
-                final int totalScoreTillLeaf = childNode.getNodeScore();
-                totalScore = getTotalScore(totalScore, bestMoves, childNode, null, null, totalScoreTillLeaf);
-            }
-            for (final ScoreNode greatGrandChild : grandChildren) {
-                final List<ScoreNode> greatGrandChildren = greatGrandChild.getChildren();
-                final int grandChildNodeScore = greatGrandChild.getNodeScore();
-                final int numberOfGreatGrandChildren = greatGrandChildren.size();
-                if (numberOfGreatGrandChildren == 0) {
-                    final int totalScoreTillLeaf = childNode.getNodeScore() + greatGrandChild.getNodeScore();
-                    totalScore = getTotalScore(totalScore, bestMoves, childNode, greatGrandChild, null, totalScoreTillLeaf);
-                }
-                for (final ScoreNode greatGreatGrandChild : greatGrandChildren) {
-                    final List<ScoreNode> greatGreatGrandChildChildren = greatGreatGrandChild.getChildren();
-                    final int greatGreatGrandChildNodeScore = greatGreatGrandChild.getNodeScore();
-                    final int totalScoreTillLeafNode = childNodeScore + grandChildNodeScore + greatGreatGrandChildNodeScore;
-                    totalScore = getTotalScore(totalScore, bestMoves, childNode, greatGrandChild, greatGreatGrandChild, totalScoreTillLeafNode);
-                }
-            }
-        }
-        System.err.println("Best score: " + totalScore);
-        System.err.println("1: " + bestMoves[0]);
-        System.err.println("2: " + bestMoves[1]);
-        System.err.println("3: " + bestMoves[2]);
-        return bestMoves;
-    }
-
-    private int getTotalScore(int totalScore, int[] bestMoves, ScoreNode childNode, ScoreNode greatGrandChild, ScoreNode greatGreatGrandChild, int currentNodeScore) {
-        if (currentNodeScore > totalScore) {
-            totalScore = currentNodeScore;
-            bestMoves[0] = childNode.getNodeIndex();
-            bestMoves[1] = greatGrandChild == null? 0: greatGrandChild.getNodeIndex() ;
-            bestMoves[2] = greatGreatGrandChild == null? 0: greatGreatGrandChild.getNodeIndex() ;
-        }
-        return totalScore;
     }
 }
 
@@ -986,6 +637,13 @@ interface ChainClearer {
     boolean isClearable(Board board);
 }
 
+/**
+ * Helper to control execution time of moves
+ */
+class TimeHelper {
+
+}
+
 
 /**
  * OrientationHelper uses a random value generator to determine the random orientation and index
@@ -1037,7 +695,6 @@ class OrientationHelper {
  * This formation can be either vertical or horizontal or a square of 4.
  */
 interface BoardCollapser {
-    //TODO add isCollapsable
     /**
      * Collapse the board based on the 4 together rule.
      * @param board board to parse
@@ -1082,19 +739,6 @@ class ScoreNodeHelper {
         }
         return allChildren;
     }
-}
-
-/**
- * Abstract move analyser.
- */
-abstract class AbstractMoveAnalyser implements MoveAnalyser {
-}
-
-/**
- * Calculate the better of the move.
- */
-interface MoveAnalyser {
-    int findBestMove();
 }
 
 
