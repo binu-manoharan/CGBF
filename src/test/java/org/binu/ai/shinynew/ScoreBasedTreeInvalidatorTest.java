@@ -24,11 +24,11 @@ public class ScoreBasedTreeInvalidatorTest {
     @Test
     public void should_invalidate_my_tree_if_there_are_any_skull_drops() throws Exception {
         scoreBasedTreeInvalidator = new ScoreBasedTreeInvalidator();
-        scoreBasedTreeInvalidator.setMyLastScore(SCORE1);
+        scoreBasedTreeInvalidator.setOpponentLastScore(SCORE1);
         final boolean isMyTreeValid1 = scoreBasedTreeInvalidator.isMyTreeValid(SCORE2);
         assertThat("The tree is invalid as a row of skulls have fallen", isMyTreeValid1, is(false));
 
-        scoreBasedTreeInvalidator.setMyLastScore(SCORE2);
+        scoreBasedTreeInvalidator.setOpponentLastScore(SCORE2);
         final boolean isMyTreeValid2 = scoreBasedTreeInvalidator.isMyTreeValid(SCORE3);
         assertThat("The tree is invalid as a row of skulls have fallen", isMyTreeValid2, is(true));
     }
@@ -36,11 +36,11 @@ public class ScoreBasedTreeInvalidatorTest {
 
     @Test
     public void should_invalidate_opponent_tree_if_there_are_any_skull_drops() throws Exception {
-        scoreBasedTreeInvalidator.setOpponentLastScore(SCORE1);
+        scoreBasedTreeInvalidator.setMyLastScore(SCORE1);
         final boolean isOpponentTreeValid1 = scoreBasedTreeInvalidator.isOpponentTreeValid(SCORE2);
         assertThat("The tree is invalid as a row of skulls have fallen", isOpponentTreeValid1, is(false));
 
-        scoreBasedTreeInvalidator.setOpponentLastScore(SCORE2);
+        scoreBasedTreeInvalidator.setMyLastScore(SCORE2);
         final boolean isOpponentTreeValid2 = scoreBasedTreeInvalidator.isOpponentTreeValid(SCORE3);
         assertThat("The tree is invalid as a row of skulls have fallen", isOpponentTreeValid2, is(true));
     }
