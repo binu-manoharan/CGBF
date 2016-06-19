@@ -6,7 +6,6 @@ import org.binu.data.ScoreNode;
 import org.binu.framework.ScoreNodeHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Shiny!!!
@@ -18,6 +17,7 @@ public class ShinyNewGameAI {
     private Board board;
     private BlockQueue blockQueue;
     private RandomEightLevelTreeMaker randomEightLevelTreeMaker;
+    private String message;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
@@ -29,18 +29,16 @@ public class ShinyNewGameAI {
     /**
      * Find the next move to make.
      * @param rootNode rootNode to start the tree from.
-     * @return List of score nodes with the new root node followed by the highest scoring node
+     * @return ScoreNode with information about the next move to make
      */
-    public List<ScoreNode> calculateNextMove(ScoreNode rootNode) {
+    public ScoreNode calculateNextMove(ScoreNode rootNode) {
         final ScoreNode rootNode1 = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
 
-        ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
-        highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);
+        final ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
+        final ScoreNode nextMoveForHighestScoringNode = getNextMoveForHighestScoringNode(highestScoreNode);
 
-        final ArrayList<ScoreNode> scoreNodes = new ArrayList<>();
-        scoreNodes.add(rootNode1);
-        scoreNodes.add(highestScoreNode);
-        return scoreNodes;
+        message = " " + highestScoreNode.getTreeLevel() + ": " + highestScoreNode.getNodeScore();
+        return nextMoveForHighestScoringNode;
     }
 
     public ScoreNode getNextMoveForHighestScoringNode(ScoreNode highestScoreNode) {
@@ -75,5 +73,9 @@ public class ShinyNewGameAI {
         ScoreNode scoreNode = scoreNodes.get(highestIndex);
         System.err.println("Highest index: " + highestIndex);
         return scoreNode;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
