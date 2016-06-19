@@ -12,12 +12,10 @@ public class ScoreNode {
     private ScoreNode parent;
     private Orientation orientation;
     private List<ScoreNode> children;
-    private int level;
 
     public ScoreNode() {
         this.nodeIndex = 0;
         this.nodeScore = 0;
-        this.level = 0;
         this.parent = null;
         children = new ArrayList<>();
         orientation = Orientation.VERTICAL;
@@ -30,12 +28,11 @@ public class ScoreNode {
         children = new ArrayList<>();
     }
 
-    public ScoreNode(int nodeIndex, int nodeScore, Orientation orientation, int level) {
+    public ScoreNode(int nodeIndex, int nodeScore, Orientation orientation) {
         this.nodeIndex = nodeIndex;
         this.nodeScore = nodeScore;
         children = new ArrayList<>();
         this.orientation = orientation;
-        this.level = level;
     }
 
     public Orientation getOrientation() {

@@ -19,12 +19,12 @@ public class ScoreNodeHelperTest {
     public void should_find_best_score_for_first_level() throws Exception {
         scoreNodeHelper = new ScoreNodeHelper();
         rootNode = new ScoreNode();
-        final ScoreNode firstChild = new ScoreNode(0, 50, Orientation.VERTICAL, 1);
-        final ScoreNode secondChild = new ScoreNode(1, 20, Orientation.VERTICAL, 1);
-        final ScoreNode thirdChild = new ScoreNode(2, 0, Orientation.VERTICAL, 1);
-        final ScoreNode fourthChild = new ScoreNode(3, 70, Orientation.VERTICAL, 1);
-        final ScoreNode fifthChild = new ScoreNode(4, 90, Orientation.VERTICAL, 1);
-        final ScoreNode sixthChild = new ScoreNode(5, 75, Orientation.VERTICAL, 1);
+        final ScoreNode firstChild = new ScoreNode(0, 50, Orientation.VERTICAL);
+        final ScoreNode secondChild = new ScoreNode(1, 20, Orientation.VERTICAL);
+        final ScoreNode thirdChild = new ScoreNode(2, 0, Orientation.VERTICAL);
+        final ScoreNode fourthChild = new ScoreNode(3, 70, Orientation.VERTICAL);
+        final ScoreNode fifthChild = new ScoreNode(4, 90, Orientation.VERTICAL);
+        final ScoreNode sixthChild = new ScoreNode(5, 75, Orientation.VERTICAL);
 
         rootNode.addChild(firstChild);
         rootNode.addChild(secondChild);
@@ -43,11 +43,11 @@ public class ScoreNodeHelperTest {
     public void should_find_best_score_for_second_level() throws Exception {
         scoreNodeHelper = new ScoreNodeHelper();
         rootNode = new ScoreNode();
-        final ScoreNode firstChild = new ScoreNode(0, 50, Orientation.VERTICAL, 1);
-        final ScoreNode secondChild = new ScoreNode(4, 90, Orientation.VERTICAL, 1);
-        final ScoreNode secondLevelChild1 = new ScoreNode(5, 55, Orientation.VERTICAL, 2);
-        final ScoreNode secondLevelChild2 = new ScoreNode(4, 75, Orientation.VERTICAL, 2);
-        final ScoreNode secondLevelChild3 = new ScoreNode(4, 25, Orientation.VERTICAL, 2);
+        final ScoreNode firstChild = new ScoreNode(0, 50, Orientation.VERTICAL);
+        final ScoreNode secondChild = new ScoreNode(4, 90, Orientation.VERTICAL);
+        final ScoreNode secondLevelChild1 = new ScoreNode(5, 55, Orientation.VERTICAL);
+        final ScoreNode secondLevelChild2 = new ScoreNode(4, 75, Orientation.VERTICAL);
+        final ScoreNode secondLevelChild3 = new ScoreNode(4, 25, Orientation.VERTICAL);
 
         rootNode.addChild(firstChild);
         rootNode.addChild(secondChild);

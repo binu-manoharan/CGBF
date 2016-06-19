@@ -38,7 +38,7 @@ public class ShinyNewRandomMoveMaker {
         final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, nodeIndex, orientation);
         if (droppedSuccessfully) {
             final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
-            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation, level);
+            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation);
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);

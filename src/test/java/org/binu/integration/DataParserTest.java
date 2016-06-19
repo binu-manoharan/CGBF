@@ -166,7 +166,7 @@ public class DataParserTest {
 
         //Create score nodes
         final ScoreNode scoreNode = new ScoreNode();
-        final ScoreNode eighthChild = new ScoreNode(5, 0, Orientation.HORIZONTAL_REVERSED, 0);
+        final ScoreNode eighthChild = new ScoreNode(5, 0, Orientation.HORIZONTAL_REVERSED);
         final ScoreNode seventhChild = getScoreNode(eighthChild, 2, Orientation.VERTICAL);
         final ScoreNode sixthChild = getScoreNode(seventhChild, 2, Orientation.HORIZONTAL);
         final ScoreNode fifthChild = getScoreNode(sixthChild, 3, Orientation.HORIZONTAL_REVERSED);
@@ -200,7 +200,7 @@ public class DataParserTest {
     }
 
     private ScoreNode getScoreNode(ScoreNode eighthChild, int nodeIndex, Orientation vertical) {
-        final ScoreNode seventhChild = new ScoreNode(nodeIndex, 0, vertical, 0);
+        final ScoreNode seventhChild = new ScoreNode(nodeIndex, 0, vertical);
         seventhChild.addChild(eighthChild);
         return seventhChild;
     }

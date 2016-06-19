@@ -99,7 +99,7 @@ public class ShinyNewGameAITest {
 
     @NotNull
     private ScoreNode getScoreNode(ScoreNode childNode, int currentNodeIndex, int currentNodeScore) {
-        final ScoreNode scoreNode = new ScoreNode(currentNodeIndex, currentNodeScore, Orientation.VERTICAL, 0);
+        final ScoreNode scoreNode = new ScoreNode(currentNodeIndex, currentNodeScore, Orientation.VERTICAL);
         if (childNode != null) {
             scoreNode.addChild(childNode);
         }
