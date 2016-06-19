@@ -270,48 +270,22 @@ abstract class GameAI implements IGameAI {
 }
 
 
-/**
- * Shiny!!! move analysis.
- */
-class ShinyNewMoveAnalyser {
-    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode) {
-        final ShinyNewRandomMoveMaker shinyNewRandomMoveMaker = new ShinyNewRandomMoveMaker();
-        final ScoreNode calculatedRootNode;
-        if (rootNode == null) {
-            calculatedRootNode = new ScoreNode();
-        } else {
-            calculatedRootNode = rootNode;
-        }
-
-        final TimeHelper timeHelper = new TimeHelper();
-        int count = 0;
-        while (timeHelper.getTimeSinceStartInMills() < 50) {
-            shinyNewRandomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode, 0);
-            count++;
-        }
-        System.err.println("Number of searches: " + count);
-
-        return calculatedRootNode;
-    }
-}
-
-
 
 /**
- * Make random moves
+ * Make random moves on the board using the blocks in the block queue.
  */
-class ShinyNewRandomMoveMaker {
+class RandomMoveMaker {
     private CellArrayHelper cellArrayHelper;
     private BoardScorerImpl boardScorer;
     private OrientationHelper orientationHelper;
 
-    public ShinyNewRandomMoveMaker() {
+    public RandomMoveMaker() {
         orientationHelper = new OrientationHelper();
         cellArrayHelper = new CellArrayHelperImpl();
         boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
     }
 
-    public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode, int level) {
+    public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
 
         final OrientationAndIndex randomOrientationWithDropIndex = orientationHelper.getRandomOrientationWithDropIndex();
         final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
@@ -329,11 +303,11 @@ class ShinyNewRandomMoveMaker {
             final List<ScoreNode> children = scoreNode.getChildren();
             if (!children.contains(currentNode)) {
                 scoreNode.addChild(currentNode);
-                makeRandomMove(board, blockQueue, currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode);
             } else {
                 final int currentNodeIndex = children.indexOf(currentNode);
                 currentNode = children.get(currentNodeIndex);
-                makeRandomMove(board, blockQueue, currentNode, ++level);
+                makeRandomMove(board, blockQueue, currentNode);
             }
         }
     }
@@ -346,20 +320,26 @@ class ShinyNewRandomMoveMaker {
  */
 class ShinyNewGameAI {
 
+    public static final int TIME_LIMIT_IN_MS = 50;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
-    private ShinyNewMoveAnalyser shinyNewMoveAnalyser;
+    private RandomEightLevelTreeMaker randomEightLevelTreeMaker;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
-        shinyNewMoveAnalyser = new ShinyNewMoveAnalyser();
+        randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
     }
 
+    /**
+     * Find the next move to make.
+     * @param rootNode rootNode to start the tree from.
+     * @return List of score nodes with the new root node followed by the highest scoring node
+     */
     public List<ScoreNode> calculateNextMove(ScoreNode rootNode) {
-        final ScoreNode rootNode1 = shinyNewMoveAnalyser.makeScoreTree(board, blockQueue, rootNode);
+        final ScoreNode rootNode1 = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
 
         ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
         highestScoreNode = getNextMoveForHighestScoringNode(highestScoreNode);
@@ -403,6 +383,39 @@ class ShinyNewGameAI {
         System.err.println("Highest index: " + highestIndex);
         return scoreNode;
     }
+}
+
+
+/**
+ * Random 8 level move maker.
+ */
+class RandomEightLevelTreeMaker {
+    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
+        final RandomMoveMaker randomMoveMaker = new RandomMoveMaker();
+        final ScoreNode calculatedRootNode;
+        if (rootNode == null) {
+            calculatedRootNode = new ScoreNode();
+        } else {
+            calculatedRootNode = rootNode;
+        }
+
+        final TimeHelper timeHelper = new TimeHelper();
+        int count = 0;
+        while (timeHelper.getTimeSinceStartInMills() < timeLimitInMS) {
+            randomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode);
+            count++;
+        }
+        System.err.println("Number of searches: " + count);
+
+        return calculatedRootNode;
+    }
+}
+
+/**
+ * Invalidates the tree based on score after identifying skull drops
+ */
+class ScoreBasedTreeInvalidator {
+
 }
 
 /**
