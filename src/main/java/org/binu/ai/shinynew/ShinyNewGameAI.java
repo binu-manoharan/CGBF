@@ -12,12 +12,12 @@ import java.util.ArrayList;
  */
 public class ShinyNewGameAI {
 
-    public static final int TIME_LIMIT_IN_MS = 50;
-    public static final int GREED_LIMIT = 1000;
+    private static final int TIME_LIMIT_IN_MS = 50;
+    private static final int GREED_LIMIT = 1000;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
-    private RandomEightLevelTreeMaker randomEightLevelTreeMaker;
+    private TreeMaker randomEightLevelTreeMaker;
     private String message;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
@@ -71,7 +71,7 @@ public class ShinyNewGameAI {
             }
         }
 
-        ScoreNode scoreNode = scoreNodes.get(highestIndex);
+        final ScoreNode scoreNode = scoreNodes.get(highestIndex);
         System.err.println("Highest index: " + highestIndex);
         return scoreNode;
     }

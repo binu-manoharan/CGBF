@@ -8,15 +8,13 @@ import org.binu.framework.TimeHelper;
 /**
  * Random 8 level move maker.
  */
-public class RandomEightLevelTreeMaker {
+public class RandomEightLevelTreeMaker extends AbstractTreeMaker {
+
+    @Override
     public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
         final RandomMoveMaker randomMoveMaker = new RandomMoveMaker();
         final ScoreNode calculatedRootNode;
-        if (rootNode == null) {
-            calculatedRootNode = new ScoreNode();
-        } else {
-            calculatedRootNode = rootNode;
-        }
+        calculatedRootNode = createRootNodeIfNull(rootNode);
 
         final TimeHelper timeHelper = new TimeHelper();
         int count = 0;
