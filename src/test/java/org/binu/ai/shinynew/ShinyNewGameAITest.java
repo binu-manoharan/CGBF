@@ -62,9 +62,8 @@ public class ShinyNewGameAITest {
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
         addBlockToBlockQueue(CellColour.RED, CellColour.RED);
 
-        final List<ScoreNode> scoreNodes = shinyNewGameAI.calculateNextMove(null);
-        assertThat("Score node is not null", scoreNodes, is(notNullValue()));
-        assertThat("Score nodes two nodes - root & highest", scoreNodes.size(), is(2));
+        final ScoreNode scoreNode = shinyNewGameAI.calculateNextMove(null);
+        assertThat("Score node is not null", scoreNode, is(notNullValue()));
     }
 
     @Test
