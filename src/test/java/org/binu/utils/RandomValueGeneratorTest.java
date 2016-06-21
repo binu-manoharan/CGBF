@@ -1,10 +1,9 @@
-package org.binu.ai.shinynew;
+package org.binu.utils;
 
-import org.binu.framework.RandomValueGenerator;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Random number generator
