@@ -1,6 +1,7 @@
 package org.binu.framework;
 
 import org.binu.data.Orientation;
+import org.binu.data.OrientationAndIndex;
 import org.junit.Before;
 import org.junit.Test;
 

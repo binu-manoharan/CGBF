@@ -1,6 +1,7 @@
 package org.binu.framework;
 
 import org.binu.data.Orientation;
+import org.binu.data.OrientationAndIndex;
 
 /**
  * RandomOrientationHelper uses a random value generator to determine the random orientation and index

@@ -4,6 +4,7 @@ import org.binu.board.Block;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.data.Orientation;
+import org.binu.data.OrientationAndIndex;
 import org.binu.data.ScoreNode;
 import org.binu.framework.*;
 import org.binu.scoring.BoardScorerImpl;

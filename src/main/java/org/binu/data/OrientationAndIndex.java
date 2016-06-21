@@ -1,6 +1,4 @@
-package org.binu.framework;
-
-import org.binu.data.Orientation;
+package org.binu.data;
 
 /**
  * Container class to hold Orientation and node information
