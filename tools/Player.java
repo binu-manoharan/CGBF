@@ -115,7 +115,7 @@ class ScoreNode {
         orientation = Orientation.VERTICAL;
     }
 
-    
+
     public ScoreNode(int nodeIndex, int nodeScore) {
         this.nodeIndex = nodeIndex;
         this.nodeScore = nodeScore;
@@ -171,7 +171,7 @@ class ScoreNode {
         childNode.setParent(this);
     }
 
-    
+
     public int getLevel() {
         ScoreNode node = getParent();
         int levelsToRoot = 0;
@@ -1624,7 +1624,7 @@ class BlockQueue {
      * Get the next element in the block.
      * @return the next block
      */
-    
+
     public Block getNext() {
         return blocks.size() > 0 ? blocks.get(0) : null;
     }
