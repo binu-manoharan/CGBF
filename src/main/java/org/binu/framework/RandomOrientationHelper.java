@@ -3,14 +3,14 @@ package org.binu.framework;
 import org.binu.data.Orientation;
 
 /**
- * OrientationHelper uses a random value generator to determine the random orientation and index
+ * RandomOrientationHelper uses a random value generator to determine the random orientation and index
  * for the next move.
  * 0 -> horizontal (0 <= col index < 5) [rand values 12-16]
  * 1 -> vertical reversed [rand values 6-11]
  * 2 -> horizontal reversed (1 <= col index < 6) [rand values 17-22]
  * 3 -> vertical [rand values 0-5]
  */
-public class OrientationHelper {
+public class RandomOrientationHelper {
 
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 21;

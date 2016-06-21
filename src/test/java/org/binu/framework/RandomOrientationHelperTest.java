@@ -12,21 +12,21 @@ import static org.junit.Assert.assertThat;
  * 1 -> vertical reversed [rand values 6-11]
  * 2 -> horizontal reversed (1 <= col index < 6) [rand values 17-22]
  * 3 -> vertical [rand values 0-5]
- * Test for {@link OrientationHelper}
+ * Test for {@link RandomOrientationHelper}
  */
-public class OrientationHelperTest {
+public class RandomOrientationHelperTest {
 
-    private OrientationHelper orientationHelper;
+    private RandomOrientationHelper randomOrientationHelper;
     private OrientationAndIndex orientationAndIndex;
 
     @Before
     public void setUp() throws Exception {
-        orientationHelper = new OrientationHelper();
+        randomOrientationHelper = new RandomOrientationHelper();
     }
 
     @Test
     public void should_return_vertical_orientation_for_random_index_of_0() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(0);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(0);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -36,7 +36,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_vertical_orientation_for_random_index_of_5() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(5);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(5);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -46,7 +46,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_vertical_rev_orientation_for_random_index_of_6() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(6);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(6);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -56,7 +56,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_vertical_orientation_for_random_index_of_11() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(11);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(11);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -66,7 +66,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_horizontal_orientation_for_random_index_of_12() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(12);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(12);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -76,7 +76,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_horizontal_orientation_for_random_index_of_16() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(16);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(16);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -86,7 +86,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_horizontal_rev_orientation_for_random_index_of_17() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(17);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(17);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 
@@ -96,7 +96,7 @@ public class OrientationHelperTest {
 
     @Test
     public void should_return_horizontal_rev_orientation_for_random_index_of_21() throws Exception {
-        orientationAndIndex = orientationHelper.getOrientationAndIndexForValue(21);
+        orientationAndIndex = randomOrientationHelper.getOrientationAndIndexForValue(21);
         final int nodeIndex = orientationAndIndex.getNodeIndex();
         final Orientation orientation = orientationAndIndex.getOrientation();
 

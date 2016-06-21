@@ -16,17 +16,17 @@ import java.util.List;
 public class RandomMoveMaker {
     private CellArrayHelper cellArrayHelper;
     private BoardScorerImpl boardScorer;
-    private OrientationHelper orientationHelper;
+    private RandomOrientationHelper randomOrientationHelper;
 
     public RandomMoveMaker() {
-        orientationHelper = new OrientationHelper();
+        randomOrientationHelper = new RandomOrientationHelper();
         cellArrayHelper = new CellArrayHelperImpl();
         boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
     }
 
     public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
 
-        final OrientationAndIndex randomOrientationWithDropIndex = orientationHelper.getRandomOrientationWithDropIndex();
+        final OrientationAndIndex randomOrientationWithDropIndex = randomOrientationHelper.getRandomOrientationWithDropIndex();
         final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
         final int nodeIndex = randomOrientationWithDropIndex.getNodeIndex();
         final Block block = blockQueue.getNextAndPop();
