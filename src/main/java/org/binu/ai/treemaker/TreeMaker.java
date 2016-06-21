@@ -1,4 +1,4 @@
-package org.binu.ai;
+package org.binu.ai.treemaker;
 
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;

@@ -1,4 +1,4 @@
-package org.binu.ai;
+package org.binu.ai.treemaker;
 
 import org.binu.data.ScoreNode;
 import org.jetbrains.annotations.NotNull;

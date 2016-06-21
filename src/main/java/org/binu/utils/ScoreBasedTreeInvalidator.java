@@ -1,4 +1,4 @@
-package org.binu.ai;
+package org.binu.utils;
 
 /**
  * Invalidates the tree based on myLastScore after identifying skull drops

@@ -1,4 +1,4 @@
-package org.binu.ai;
+package org.binu.ai.movemaker;
 
 import org.binu.board.Block;
 import org.binu.board.BlockQueue;

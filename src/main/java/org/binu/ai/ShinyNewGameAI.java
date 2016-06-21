@@ -1,5 +1,7 @@
 package org.binu.ai;
 
+import org.binu.ai.treemaker.RandomEightLevelTreeMaker;
+import org.binu.ai.treemaker.TreeMaker;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.data.ScoreNode;

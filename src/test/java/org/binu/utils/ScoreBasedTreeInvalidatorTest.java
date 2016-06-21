@@ -1,10 +1,10 @@
-package org.binu.ai;
+package org.binu.utils;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link ScoreBasedTreeInvalidator}
