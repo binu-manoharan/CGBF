@@ -1,4 +1,4 @@
-package org.binu.framework;
+package org.binu.utils;
 
 /**
  * Helper to control execution time of moves

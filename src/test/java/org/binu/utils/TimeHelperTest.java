@@ -1,11 +1,9 @@
-package org.binu.framework;
+package org.binu.utils;
 
 import org.junit.Test;
 
-import java.util.Date;
-
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link TimeHelper}
