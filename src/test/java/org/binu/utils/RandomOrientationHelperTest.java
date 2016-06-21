@@ -1,4 +1,4 @@
-package org.binu.framework;
+package org.binu.utils;
 
 import org.binu.data.Orientation;
 import org.binu.data.OrientationAndIndex;

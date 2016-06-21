@@ -8,6 +8,7 @@ import org.binu.data.OrientationAndIndex;
 import org.binu.data.ScoreNode;
 import org.binu.framework.*;
 import org.binu.scoring.BoardScorerImpl;
+import org.binu.utils.RandomOrientationHelper;
 
 import java.util.List;
 
