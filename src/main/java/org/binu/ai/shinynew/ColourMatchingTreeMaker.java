@@ -6,7 +6,7 @@ import org.binu.board.Board;
 import org.binu.board.Cell;
 import org.binu.data.CellColour;
 import org.binu.data.ScoreNode;
-import org.binu.framework.TimeHelper;
+import org.binu.utils.TimeHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
