@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class ShinyNewGameAI {
 
     public static final int TIME_LIMIT_IN_MS = 50;
+    public static final int GREED_LIMIT = 1000;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
@@ -60,7 +61,7 @@ public class ShinyNewGameAI {
 
             if (bestScoreNodeForLevel != null) {
                 final int nodeScore = bestScoreNodeForLevel.getNodeScore();
-                if (nodeScore > highestScore) {
+                if (nodeScore > highestScore && highestScore < GREED_LIMIT) {
                     highestScore = nodeScore;
                     highestIndex = scoreNodes.size();
                 }
