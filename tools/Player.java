@@ -71,6 +71,31 @@ class Player {
     }
 }
 
+/**
+ * Container class to hold Orientation and node information
+ * 0 -> horizontal (0 <= col index < 5)
+ * 1 -> vertical reversed
+ * 2 -> horizontal reversed (1 <= col index < 6)
+ * 3 -> vertical
+ */
+class OrientationAndIndex {
+    private final Orientation orientation;
+    private final int nodeIndex;
+
+    public OrientationAndIndex(Orientation orientation, int nodeIndex) {
+        this.orientation = orientation;
+        this.nodeIndex = nodeIndex;
+    }
+
+    public int getNodeIndex() {
+        return nodeIndex;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+}
+
 
 /**
  * Scoring Node.
@@ -254,61 +279,118 @@ enum CellColour {
 
 
 /**
- * Common AI features.
+ * Make a tree of score nodes.
  */
-abstract class GameAI implements IGameAI {
-    protected Board board;
-    protected BlockQueue blockQueue;
+interface TreeMaker {
+
+    /**
+     * Make a score tree
+     * @param board board to parse
+     * @param blockQueue blockqueue to drop into board
+     * @param rootNode current root node
+     * @param timeLimitInMS length of time to execute for
+     * @return root node
+     */
+    ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS);
+}
 
 
-    public GameAI(Board board, BlockQueue blockQueue) {
-        this.board = board;
-        this.blockQueue = blockQueue;
+/**
+ * Random 8 level move maker.
+ */
+class RandomEightLevelTreeMaker extends AbstractTreeMaker {
+
+    @Override
+    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
+        final RandomMoveMaker randomMoveMaker = new RandomMoveMaker();
+        final ScoreNode calculatedRootNode;
+        calculatedRootNode = createRootNodeIfNull(rootNode);
+
+        final TimeHelper timeHelper = new TimeHelper();
+        int count = 0;
+        while (timeHelper.getTimeSinceStartInMills() < timeLimitInMS) {
+            randomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode);
+            count++;
+        }
+        System.err.println("Number of searches: " + count);
+
+        return calculatedRootNode;
+    }
+}
 
 
+/**
+ * Common implementation of TreeMaker
+ */
+abstract class AbstractTreeMaker implements TreeMaker {
+    protected  ScoreNode createRootNodeIfNull(ScoreNode rootNode) {
+        final ScoreNode calculatedRootNode;
+        if (rootNode == null) {
+            calculatedRootNode = new ScoreNode();
+        } else {
+            calculatedRootNode = rootNode;
+        }
+        return calculatedRootNode;
     }
 }
 
 
 
 /**
- * Make random moves on the board using the blocks in the block queue.
+ * Makes move based on possible colour matches
  */
-class RandomMoveMaker {
-    private CellArrayHelper cellArrayHelper;
-    private BoardScorerImpl boardScorer;
-    private OrientationHelper orientationHelper;
+class ColourMatchingTreeMaker extends AbstractTreeMaker {
 
-    public RandomMoveMaker() {
-        orientationHelper = new OrientationHelper();
-        cellArrayHelper = new CellArrayHelperImpl();
-        boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
-    }
 
-    public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
+    private List<CellColour> chainableColours;
 
-        final OrientationAndIndex randomOrientationWithDropIndex = orientationHelper.getRandomOrientationWithDropIndex();
-        final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
-        final int nodeIndex = randomOrientationWithDropIndex.getNodeIndex();
-        final Block block = blockQueue.getNextAndPop();
+    @Override
+    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
+        final HashMap<CellColour, Integer> colourOccurrenceMap;colourOccurrenceMap = new HashMap<>();
 
-        if (block == null) {
-            return;
+        for (Block block : blockQueue.getBlocks()) {
+            final Cell[] cells = block.getCells();
+            final CellColour firstCellColour = cells[0].getCellColour();
+            final CellColour secondCellColour = cells[1].getCellColour();
+            putCellColourInMap(colourOccurrenceMap, firstCellColour);
+            putCellColourInMap(colourOccurrenceMap, secondCellColour);
         }
 
-        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, nodeIndex, orientation);
-        if (droppedSuccessfully) {
-            final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
-            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation);
-            final List<ScoreNode> children = scoreNode.getChildren();
-            if (!children.contains(currentNode)) {
-                scoreNode.addChild(currentNode);
-                makeRandomMove(board, blockQueue, currentNode);
-            } else {
-                final int currentNodeIndex = children.indexOf(currentNode);
-                currentNode = children.get(currentNodeIndex);
-                makeRandomMove(board, blockQueue, currentNode);
+        chainableColours = getChainableColours(colourOccurrenceMap);
+
+        final ScoreNode calculatedRootNode;
+        calculatedRootNode = createRootNodeIfNull(rootNode);
+
+        final TimeHelper timeHelper = new TimeHelper();
+        int count = 0;
+        while (timeHelper.getTimeSinceStartInMills() < timeLimitInMS) {
+            makeColourMatchingMoves(new Board(board), new BlockQueue(blockQueue), calculatedRootNode);
+            count++;
+        }
+        System.err.println("Number colour matching searches: " + count);
+        return calculatedRootNode;
+    }
+
+    private void makeColourMatchingMoves(Board board, BlockQueue blockQueue, ScoreNode calculatedRootNode) {
+
+    }
+
+    public ArrayList<CellColour> getChainableColours(HashMap<CellColour, Integer> colourOccurrenceMap) {
+        final ArrayList<CellColour> cellColoursWithLessThanFourOccurrence = new ArrayList<>();
+        for (Map.Entry<CellColour, Integer> cellColourIntegerEntry : colourOccurrenceMap.entrySet()) {
+            if (cellColourIntegerEntry.getValue() >= 4) {
+                cellColoursWithLessThanFourOccurrence.add(cellColourIntegerEntry.getKey());
             }
+        }
+        return cellColoursWithLessThanFourOccurrence;
+    }
+
+    public void putCellColourInMap(HashMap<CellColour, Integer> colourOccurrenceMap, CellColour cellColour) {
+        if (!colourOccurrenceMap.containsKey(cellColour)) {
+            colourOccurrenceMap.put(cellColour, 1);
+        } else {
+            final Integer integer = colourOccurrenceMap.get(cellColour);
+            colourOccurrenceMap.put(cellColour, integer + 1);
         }
     }
 }
@@ -320,11 +402,12 @@ class RandomMoveMaker {
  */
 class ShinyNewGameAI {
 
-    public static final int TIME_LIMIT_IN_MS = 50;
+    private static final int TIME_LIMIT_IN_MS = 50;
+    private static final int GREED_LIMIT = 1000;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
-    private RandomEightLevelTreeMaker randomEightLevelTreeMaker;
+    private TreeMaker randomEightLevelTreeMaker;
     private String message;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
@@ -368,7 +451,7 @@ class ShinyNewGameAI {
 
             if (bestScoreNodeForLevel != null) {
                 final int nodeScore = bestScoreNodeForLevel.getNodeScore();
-                if (nodeScore > highestScore) {
+                if (nodeScore > highestScore && highestScore < GREED_LIMIT) {
                     highestScore = nodeScore;
                     highestIndex = scoreNodes.size();
                 }
@@ -378,7 +461,7 @@ class ShinyNewGameAI {
             }
         }
 
-        ScoreNode scoreNode = scoreNodes.get(highestIndex);
+        final ScoreNode scoreNode = scoreNodes.get(highestIndex);
         System.err.println("Highest index: " + highestIndex);
         return scoreNode;
     }
@@ -389,92 +472,46 @@ class ShinyNewGameAI {
 }
 
 
+
 /**
- * Random 8 level move maker.
+ * Make random moves on the board using the blocks in the block queue.
  */
-class RandomEightLevelTreeMaker {
-    public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
-        final RandomMoveMaker randomMoveMaker = new RandomMoveMaker();
-        final ScoreNode calculatedRootNode;
-        if (rootNode == null) {
-            calculatedRootNode = new ScoreNode();
-        } else {
-            calculatedRootNode = rootNode;
+class RandomMoveMaker {
+    private CellArrayHelper cellArrayHelper;
+    private BoardScorerImpl boardScorer;
+    private RandomOrientationHelper randomOrientationHelper;
+
+    public RandomMoveMaker() {
+        randomOrientationHelper = new RandomOrientationHelper();
+        cellArrayHelper = new CellArrayHelperImpl();
+        boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
+    }
+
+    public void makeRandomMove(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
+
+        final OrientationAndIndex randomOrientationWithDropIndex = randomOrientationHelper.getRandomOrientationWithDropIndex();
+        final Orientation orientation = randomOrientationWithDropIndex.getOrientation();
+        final int nodeIndex = randomOrientationWithDropIndex.getNodeIndex();
+        final Block block = blockQueue.getNextAndPop();
+
+        if (block == null) {
+            return;
         }
 
-        final TimeHelper timeHelper = new TimeHelper();
-        int count = 0;
-        while (timeHelper.getTimeSinceStartInMills() < timeLimitInMS) {
-            randomMoveMaker.makeRandomMove(new Board(board), new BlockQueue(blockQueue), calculatedRootNode);
-            count++;
+        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, nodeIndex, orientation);
+        if (droppedSuccessfully) {
+            final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
+            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation);
+            final List<ScoreNode> children = scoreNode.getChildren();
+            if (!children.contains(currentNode)) {
+                scoreNode.addChild(currentNode);
+                makeRandomMove(board, blockQueue, currentNode);
+            } else {
+                final int currentNodeIndex = children.indexOf(currentNode);
+                currentNode = children.get(currentNodeIndex);
+                makeRandomMove(board, blockQueue, currentNode);
+            }
         }
-        System.err.println("Number of searches: " + count);
-
-        return calculatedRootNode;
-    }
-}
-
-/**
- * Invalidates the tree based on myLastScore after identifying skull drops
- */
-class ScoreBasedTreeInvalidator {
-
-    public static final int SCORE_TO_DROP_ONE_SKULL_ROW = 420;
-    private int myLastScore;
-    private int opponentLastScore;
-
-    /**
-     * My tree is valid based on previous score of the opponent. If his score has gone up enough to drop another
-     * row of skulls then my tree needs to be invalidated.
-     * @param opponentScore opponent score
-     * @return true if skulls are dropped
-     */
-    public boolean isMyTreeValid(int opponentScore) {
-        return opponentScore / SCORE_TO_DROP_ONE_SKULL_ROW == opponentLastScore / SCORE_TO_DROP_ONE_SKULL_ROW;
-    }
-
-    /**
-     * Opponent tree is valid based on my previous score. If I have dropped a row of skulls then my tree for the
-     * opponent needs to be invalidated.
-     * @param myScore opponent score
-     * @return true if skulls are dropped
-     */
-    public boolean isOpponentTreeValid(int myScore) {
-        return myScore / SCORE_TO_DROP_ONE_SKULL_ROW == myLastScore / SCORE_TO_DROP_ONE_SKULL_ROW;
-    }
-
-    public void setMyLastScore(int myLastScore) {
-        this.myLastScore = myLastScore;
-    }
-
-    public void setOpponentLastScore(int opponentLastScore) {
-        this.opponentLastScore = opponentLastScore;
-    }
-}
-
-/**
- * Game AI class.
- */
-interface IGameAI {
-
-    /**
-     * Calculate the next move to make
-     * @return index of the column to play in
-     */
-    int calculateNextMove();
-}
-
-/**
- * Helper to get random values
- */
-class RandomValueGenerator {
-
-    private static final int OFFSET_VALUE_TO_ROUND_UP = 1;
-
-    public int getRandomValue(int minValue, int maxValue) {
-        final double random = Math.random();
-        final double randomValue = random * (maxValue - minValue + OFFSET_VALUE_TO_ROUND_UP);
-        return (int) (minValue + randomValue);
     }
 }
 
@@ -608,32 +645,6 @@ interface CellArrayHelper {
 
 
 /**
- * Container class to hold Orientation and node information
- * 0 -> horizontal (0 <= col index < 5)
- * 1 -> vertical reversed
- * 2 -> horizontal reversed (1 <= col index < 6)
- * 3 -> vertical
- */
-class OrientationAndIndex {
-    private final Orientation orientation;
-    private final int nodeIndex;
-
-    public OrientationAndIndex(Orientation orientation, int nodeIndex) {
-        this.orientation = orientation;
-        this.nodeIndex = nodeIndex;
-    }
-
-    public int getNodeIndex() {
-        return nodeIndex;
-    }
-
-    public Orientation getOrientation() {
-        return orientation;
-    }
-}
-
-
-/**
  * Clears board pieces that make 4 and ones surrounding it.
  */
 interface ChainClearer {
@@ -679,68 +690,6 @@ interface ChainClearer {
      * @return true if board has at least one item to clear
      */
     boolean isClearable(Board board);
-}
-
-/**
- * Helper to control execution time of moves
- */
-class TimeHelper {
-
-    private final long startTime;
-
-    public TimeHelper() {
-        startTime = System.currentTimeMillis();
-    }
-
-    public long getTimeSinceStartInMills() {
-        final long currentTimeMillis = System.currentTimeMillis();
-        return currentTimeMillis - startTime;
-    }
-}
-
-
-/**
- * OrientationHelper uses a random value generator to determine the random orientation and index
- * for the next move.
- * 0 -> horizontal (0 <= col index < 5) [rand values 12-16]
- * 1 -> vertical reversed [rand values 6-11]
- * 2 -> horizontal reversed (1 <= col index < 6) [rand values 17-22]
- * 3 -> vertical [rand values 0-5]
- */
-class OrientationHelper {
-
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 21;
-    private static final int MIN_ACCEPTED_VALUE = 0;
-    private static final int VERTICAL_LIMIT = 6;
-    private static final int VERTICAL_REV_LIMIT = 12;
-    private static final int HORIZONTAL_LIMIT = 17;
-    private static final int HORIZONTAL_REV_LIMIT = 22;
-    private static final int HORIZONTAL_REV_OFFSET = 1;
-
-    public OrientationAndIndex getRandomOrientationWithDropIndex() {
-        final RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
-        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
-        return getOrientationAndIndexForValue(randomValue);
-    }
-
-    public OrientationAndIndex getOrientationAndIndexForValue(int value) {
-        OrientationAndIndex orientationAndIndex = null;
-        if (value < MIN_ACCEPTED_VALUE) {
-            assert false : "Random value should not be less than 0";
-        } else if (value < VERTICAL_LIMIT) {
-            orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, value);
-        } else if (value < VERTICAL_REV_LIMIT) {
-            orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL_REVERSED, value - VERTICAL_LIMIT);
-        } else if (value < HORIZONTAL_LIMIT) {
-            orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL, value - VERTICAL_REV_LIMIT);
-        } else if (value < HORIZONTAL_REV_LIMIT) {
-            orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, value - HORIZONTAL_LIMIT + HORIZONTAL_REV_OFFSET);
-        } else {
-            assert false: "Random value should not be more than 21";
-        }
-        return orientationAndIndex;
-    }
 }
 
 
@@ -1857,5 +1806,119 @@ class BoardScorerImpl implements BoardScorer {
                 assert false;
                 return 0;
         }
+    }
+}
+
+/**
+ * Helper to get random values
+ */
+class RandomValueGenerator {
+
+    private static final int OFFSET_VALUE_TO_ROUND_UP = 1;
+
+    public int getRandomValue(int minValue, int maxValue) {
+        final double random = Math.random();
+        final double randomValue = random * (maxValue - minValue + OFFSET_VALUE_TO_ROUND_UP);
+        return (int) (minValue + randomValue);
+    }
+}
+
+
+/**
+ * RandomOrientationHelper uses a random value generator to determine the random orientation and index
+ * for the next move.
+ * 0 -> horizontal (0 <= col index < 5) [rand values 12-16]
+ * 1 -> vertical reversed [rand values 6-11]
+ * 2 -> horizontal reversed (1 <= col index < 6) [rand values 17-22]
+ * 3 -> vertical [rand values 0-5]
+ */
+class RandomOrientationHelper {
+
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 21;
+    private static final int MIN_ACCEPTED_VALUE = 0;
+    private static final int VERTICAL_LIMIT = 6;
+    private static final int VERTICAL_REV_LIMIT = 12;
+    private static final int HORIZONTAL_LIMIT = 17;
+    private static final int HORIZONTAL_REV_LIMIT = 22;
+    private static final int HORIZONTAL_REV_OFFSET = 1;
+
+    public OrientationAndIndex getRandomOrientationWithDropIndex() {
+        final RandomValueGenerator randomValueGenerator = new RandomValueGenerator();
+        final int randomValue = randomValueGenerator.getRandomValue(MIN_VALUE, MAX_VALUE);
+        return getOrientationAndIndexForValue(randomValue);
+    }
+
+    public OrientationAndIndex getOrientationAndIndexForValue(int value) {
+        OrientationAndIndex orientationAndIndex = null;
+        if (value < MIN_ACCEPTED_VALUE) {
+            assert false : "Random value should not be less than 0";
+        } else if (value < VERTICAL_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, value);
+        } else if (value < VERTICAL_REV_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL_REVERSED, value - VERTICAL_LIMIT);
+        } else if (value < HORIZONTAL_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL, value - VERTICAL_REV_LIMIT);
+        } else if (value < HORIZONTAL_REV_LIMIT) {
+            orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, value - HORIZONTAL_LIMIT + HORIZONTAL_REV_OFFSET);
+        } else {
+            assert false: "Random value should not be more than 21";
+        }
+        return orientationAndIndex;
+    }
+}
+
+/**
+ * Helper to control execution time of moves
+ */
+class TimeHelper {
+
+    private final long startTime;
+
+    public TimeHelper() {
+        startTime = System.currentTimeMillis();
+    }
+
+    public long getTimeSinceStartInMills() {
+        final long currentTimeMillis = System.currentTimeMillis();
+        return currentTimeMillis - startTime;
+    }
+}
+
+/**
+ * Invalidates the tree based on myLastScore after identifying skull drops
+ */
+class ScoreBasedTreeInvalidator {
+
+    public static final int SCORE_TO_DROP_ONE_SKULL_ROW = 420;
+    private int myLastScore;
+    private int opponentLastScore;
+
+    /**
+     * My tree is valid based on previous score of the opponent. If his score has gone up enough to drop another
+     * row of skulls then my tree needs to be invalidated.
+     * @param opponentScore opponent score
+     * @return true if skulls are dropped
+     */
+    public boolean isMyTreeValid(int opponentScore) {
+        return opponentScore / SCORE_TO_DROP_ONE_SKULL_ROW == opponentLastScore / SCORE_TO_DROP_ONE_SKULL_ROW;
+    }
+
+    /**
+     * Opponent tree is valid based on my previous score. If I have dropped a row of skulls then my tree for the
+     * opponent needs to be invalidated.
+     * @param myScore opponent score
+     * @return true if skulls are dropped
+     */
+    public boolean isOpponentTreeValid(int myScore) {
+        return myScore / SCORE_TO_DROP_ONE_SKULL_ROW == myLastScore / SCORE_TO_DROP_ONE_SKULL_ROW;
+    }
+
+    public void setMyLastScore(int myLastScore) {
+        this.myLastScore = myLastScore;
+    }
+
+    public void setOpponentLastScore(int opponentLastScore) {
+        this.opponentLastScore = opponentLastScore;
     }
 }
