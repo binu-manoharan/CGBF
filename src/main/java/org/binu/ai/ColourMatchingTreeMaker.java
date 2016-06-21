@@ -1,4 +1,4 @@
-package org.binu.ai.shinynew;
+package org.binu.ai;
 
 import org.binu.board.Block;
 import org.binu.board.BlockQueue;

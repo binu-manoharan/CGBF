@@ -1,4 +1,4 @@
-package org.binu.ai.shinynew;
+package org.binu.ai;
 
 import org.binu.board.Block;
 import org.binu.board.BlockQueue;
@@ -12,8 +12,6 @@ import org.binu.integration.DataParser;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
