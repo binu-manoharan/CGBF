@@ -3,7 +3,7 @@ package org.binu.ai.shinynew;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
 import org.binu.data.ScoreNode;
-import org.binu.framework.TimeHelper;
+import org.binu.utils.TimeHelper;
 
 /**
  * Random 8 level move maker.
