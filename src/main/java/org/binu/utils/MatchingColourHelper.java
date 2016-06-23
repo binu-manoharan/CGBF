@@ -42,12 +42,15 @@ public class MatchingColourHelper {
                 return hasVerticalReversedMatchingColour(board, nodeIndex, secondCellColour, firstCellColour);
             case HORIZONTAL_REVERSED:
                 return hasHorizontalReversedMatchingColour(board, nodeIndex, firstCellColour, secondCellColour);
+            case HORIZONTAL:
+                //not very happy with the logic but this should work.
+                final int offsetedNodeIndexForReverse = nodeIndex + 1;
+                return hasHorizontalReversedMatchingColour(board, offsetedNodeIndexForReverse, secondCellColour, firstCellColour);
         }
         return false;
     }
 
-    @Nullable
-    private Boolean hasHorizontalReversedMatchingColour(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour) {
+    private boolean hasHorizontalReversedMatchingColour(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour) {
         if (nodeIndex > 0 && nodeIndex < 6) {
             final Cell[] column1 = board.getColumn(nodeIndex);
             final Cell[] column2 = board.getColumn(nodeIndex - 1);
@@ -61,23 +64,93 @@ public class MatchingColourHelper {
 
             switch (nodeIndex) {
                 case 1:
-                    if (hasHorizontalReverseMatchingColourForNodeIndex1(board, nodeIndex, firstCellColour, secondCellColour, col2FirstEmptyPosition, col1FirstEmptyPosition))
+                    if (hasHorizontalReverseMatchingColourForNodeIndex1(board, nodeIndex, firstCellColour, secondCellColour, col1FirstEmptyPosition, col2FirstEmptyPosition)) {
                         return true;
+                    }
 
                     break;
                 case 2:
                 case 3:
                 case 4:
+                    if (hasHorizontalReverseMatchingColourForNodeIndex234(board, nodeIndex, firstCellColour, secondCellColour, col1FirstEmptyPosition, col2FirstEmptyPosition)) {
+                        return true;
+                    }
                     break;
                 case 5:
+                    if (hasHorizontalReverseMatchingColourForNodeIndex5(board, nodeIndex, firstCellColour, secondCellColour, col1FirstEmptyPosition, col2FirstEmptyPosition)) {
+                        return true;
+                    }
                     break;
             }
         }
         return false;
     }
 
-    private boolean hasHorizontalReverseMatchingColourForNodeIndex1(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col2FirstEmptyPosition, int col1FirstEmptyPosition) {
-        //check below and to the right with first cell
+    private boolean hasHorizontalReverseMatchingColourForNodeIndex234(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col1FirstEmptyPosition, int col2FirstEmptyPosition) {
+        //check below and to the right with cell1
+        //cell1 is the left cell of horizontal reversed
+        //cell2 is the right cell of horizontal reversed
+        final Cell leftOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex - 2);
+        final Cell rightOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex);
+        if (rightOfCell1.getCellColour() == secondCellColour || leftOfCell1.getCellColour() == secondCellColour) {
+            return true;
+        }
+
+        final Cell leftOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex - 1);
+        final Cell rightOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex + 1);
+        if (leftOfCell2.getCellColour() == firstCellColour || rightOfCell2.getCellColour() == firstCellColour) {
+            return true;
+        }
+
+        if (col1FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col1FirstEmptyPosition - 1, nodeIndex - 1);
+            if (botOfCell1.getCellColour() == secondCellColour) {
+                return true;
+            }
+        }
+
+        if (col2FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col2FirstEmptyPosition - 1, nodeIndex);
+            if (botOfCell1.getCellColour() == firstCellColour) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasHorizontalReverseMatchingColourForNodeIndex5(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col1FirstEmptyPosition, int col2FirstEmptyPosition) {
+        //check below and to the right with cell1
+        //cell1 is the left cell of horizontal reversed
+        //cell2 is the right cell of horizontal reversed
+        final Cell leftOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex - 2);
+        final Cell rightOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex);
+        if (rightOfCell1.getCellColour() == secondCellColour || leftOfCell1.getCellColour() == secondCellColour) {
+            return true;
+        }
+
+        final Cell leftOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex - 1);
+        if (leftOfCell2.getCellColour() == firstCellColour) {
+            return true;
+        }
+
+        if (col1FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col1FirstEmptyPosition - 1, nodeIndex - 1);
+            if (botOfCell1.getCellColour() == secondCellColour) {
+                return true;
+            }
+        }
+
+        if (col2FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col2FirstEmptyPosition - 1, nodeIndex);
+            if (botOfCell1.getCellColour() == firstCellColour) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasHorizontalReverseMatchingColourForNodeIndex1(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col1FirstEmptyPosition, int col2FirstEmptyPosition) {
+        //check below and to the right with cell2
         //cell1 is the left cell of horizontal reversed
         //cell2 is the right cell of horizontal reversed
         final Cell rightOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex);
