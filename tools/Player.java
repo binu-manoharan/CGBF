@@ -115,7 +115,7 @@ class ScoreNode {
         orientation = Orientation.VERTICAL;
     }
 
-
+    
     public ScoreNode(int nodeIndex, int nodeScore) {
         this.nodeIndex = nodeIndex;
         this.nodeScore = nodeScore;
@@ -171,7 +171,7 @@ class ScoreNode {
         childNode.setParent(this);
     }
 
-
+    
     public int getLevel() {
         ScoreNode node = getParent();
         int levelsToRoot = 0;
@@ -342,7 +342,22 @@ abstract class AbstractTreeMaker implements TreeMaker {
 class ColourMatchingTreeMaker extends AbstractTreeMaker {
 
 
+    private final MatchingColourHelper matchingColourHelper;
     private List<CellColour> chainableColours;
+    private CellArrayHelper cellArrayHelper;
+    private BoardScorerImpl boardScorer;
+    private RandomOrientationHelper randomOrientationHelper;
+    private OrientationAndIndexHelper orientationAndIndexHelper;
+    private final RandomValueGenerator randomValueGenerator;
+
+    public ColourMatchingTreeMaker() {
+        randomOrientationHelper = new RandomOrientationHelper();
+        cellArrayHelper = new CellArrayHelperImpl();
+        boardScorer = new BoardScorerImpl(new ChainClearerImpl(cellArrayHelper), new BoardCollapserImpl(cellArrayHelper));
+        matchingColourHelper = new MatchingColourHelper((CellArrayHelperImpl) cellArrayHelper);
+        orientationAndIndexHelper = new OrientationAndIndexHelper();
+        randomValueGenerator = new RandomValueGenerator();
+    }
 
     @Override
     public ScoreNode makeScoreTree(Board board, BlockQueue blockQueue, ScoreNode rootNode, int timeLimitInMS) {
@@ -367,12 +382,59 @@ class ColourMatchingTreeMaker extends AbstractTreeMaker {
             makeColourMatchingMoves(new Board(board), new BlockQueue(blockQueue), calculatedRootNode);
             count++;
         }
-        System.err.println("Number colour matching searches: " + count);
+        System.err.println("Number of colour matching searches: " + count);
         return calculatedRootNode;
     }
 
-    private void makeColourMatchingMoves(Board board, BlockQueue blockQueue, ScoreNode calculatedRootNode) {
+    private void makeColourMatchingMoves(Board board, BlockQueue blockQueue, ScoreNode scoreNode) {
 
+        final Block block = blockQueue.getNextAndPop();
+
+        if (block == null) {
+            return;
+        }
+
+        final List<OrientationAndIndex> allOrientationAndIndexCombinations = orientationAndIndexHelper.getAllOrientationAndIndexCombinations();
+        final ArrayList<OrientationAndIndex> avaliableOrientations = new ArrayList<>();
+        for (OrientationAndIndex orientationAndIndexCombination : allOrientationAndIndexCombinations) {
+            final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndexCombination);
+            if (hasMatchingColour) {
+                avaliableOrientations.add(orientationAndIndexCombination);
+            }
+        }
+
+        final int availableSize = avaliableOrientations.size();
+        final int availableIndex;
+
+        final OrientationAndIndex currentMove;
+        if (availableSize > 0) {
+            availableIndex = randomValueGenerator.getRandomValue(0, availableSize - 1);
+            currentMove = avaliableOrientations.get(availableIndex);
+        } else {
+            currentMove = randomOrientationHelper.getRandomOrientationWithDropIndex();
+        }
+
+        final int nodeIndex = currentMove.getNodeIndex();
+        final Orientation orientation = currentMove.getOrientation();
+
+        if (block == null) {
+            return;
+        }
+
+        final boolean droppedSuccessfully = cellArrayHelper.dropBlockIntoBoard(board, block, nodeIndex, orientation);
+        if (droppedSuccessfully) {
+            final int score = boardScorer.scoreBoardAndRecursivelyClearAndCollapse(board, true);
+            ScoreNode currentNode = new ScoreNode(nodeIndex, score, orientation);
+            final List<ScoreNode> children = scoreNode.getChildren();
+            if (!children.contains(currentNode)) {
+                scoreNode.addChild(currentNode);
+                makeColourMatchingMoves(board, blockQueue, currentNode);
+            } else {
+                final int currentNodeIndex = children.indexOf(currentNode);
+                currentNode = children.get(currentNodeIndex);
+                makeColourMatchingMoves(board, blockQueue, currentNode);
+            }
+        }
     }
 
     public ArrayList<CellColour> getChainableColours(HashMap<CellColour, Integer> colourOccurrenceMap) {
@@ -402,19 +464,19 @@ class ColourMatchingTreeMaker extends AbstractTreeMaker {
  */
 class ShinyNewGameAI {
 
-    private static final int TIME_LIMIT_IN_MS = 50;
+    private static final int TIME_LIMIT_IN_MS = 90;
     private static final int GREED_LIMIT = 1000;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
-    private TreeMaker randomEightLevelTreeMaker;
+    private TreeMaker levelTreeMaker;
     private String message;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
-        randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
+        levelTreeMaker = new ColourMatchingTreeMaker();
     }
 
     /**
@@ -423,7 +485,7 @@ class ShinyNewGameAI {
      * @return ScoreNode with information about the next move to make
      */
     public ScoreNode calculateNextMove(ScoreNode rootNode) {
-        final ScoreNode rootNode1 = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
+        final ScoreNode rootNode1 = levelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
 
         final ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
         final ScoreNode nextMoveForHighestScoringNode = getNextMoveForHighestScoringNode(highestScoreNode);
@@ -1624,7 +1686,7 @@ class BlockQueue {
      * Get the next element in the block.
      * @return the next block
      */
-
+    
     public Block getNext() {
         return blocks.size() > 0 ? blocks.get(0) : null;
     }
@@ -1824,6 +1886,41 @@ class RandomValueGenerator {
 }
 
 
+
+/**
+ * Helper functions for orientations.
+ */
+class OrientationAndIndexHelper {
+
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 21;
+    private static final int MIN_ACCEPTED_VALUE = 0;
+    private static final int VERTICAL_LIMIT = 6;
+    private static final int VERTICAL_REV_LIMIT = 12;
+    private static final int HORIZONTAL_LIMIT = 17;
+    private static final int HORIZONTAL_REV_LIMIT = 22;
+    private static final int HORIZONTAL_REV_OFFSET = 1;
+
+    public List<OrientationAndIndex> getAllOrientationAndIndexCombinations() {
+        final ArrayList<OrientationAndIndex> orientationAndIndices = new ArrayList<>();
+        for (int counter = 0; counter < 22; counter++) {
+            OrientationAndIndex orientationAndIndex = null;
+            if (counter < VERTICAL_LIMIT) {
+                orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, counter);
+            } else if (counter < VERTICAL_REV_LIMIT) {
+                orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL_REVERSED, counter - VERTICAL_LIMIT);
+            } else if (counter < HORIZONTAL_LIMIT) {
+                orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL, counter - VERTICAL_REV_LIMIT);
+            } else if (counter < HORIZONTAL_REV_LIMIT) {
+                orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, counter - HORIZONTAL_LIMIT + HORIZONTAL_REV_OFFSET);
+            }
+            orientationAndIndices.add(orientationAndIndex);
+        }
+        return orientationAndIndices;
+    }
+}
+
+
 /**
  * RandomOrientationHelper uses a random value generator to determine the random orientation and index
  * for the next move.
@@ -1865,6 +1962,246 @@ class RandomOrientationHelper {
             assert false: "Random value should not be more than 21";
         }
         return orientationAndIndex;
+    }
+}
+
+
+/**
+ * Helper to find if drop to a column with certain orientation and index for
+ * a block has matching colours close to it.
+ */
+class MatchingColourHelper {
+
+    public static final int HEIGHT_UPPER_LIMIT_FOR_VERTICAL_ORIENTATION = 10;
+    public static final int HEIGHT_LOWER_LIMIT_FOR_BOARD = 0;
+    public static final int HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION = 11;
+    private CellArrayHelperImpl cellArrayHelper;
+
+    public MatchingColourHelper(CellArrayHelperImpl cellArrayHelper) {
+        this.cellArrayHelper = cellArrayHelper;
+    }
+
+    public boolean columnHasMatchingColour(Board board, Block block, OrientationAndIndex orientationAndIndex) {
+        final Orientation orientation = orientationAndIndex.getOrientation();
+        final int nodeIndex = orientationAndIndex.getNodeIndex();
+        final Cell[] cells = block.getCells();
+        final CellColour firstCellColour = cells[0].getCellColour();
+        final CellColour secondCellColour = cells[1].getCellColour();
+
+        //TODO think about having check left and right methods instead?
+        switch (orientation) {
+            case VERTICAL_REVERSED:
+                //cell[0] is at bottom
+                //cell[1] is at top
+                return hasVerticalReversedMatchingColour(board, nodeIndex, firstCellColour, secondCellColour);
+            case VERTICAL:
+                //bit of a not so pleasant logic but we could just reverse the cell colours on VERTICAL_REVERSED
+                return hasVerticalReversedMatchingColour(board, nodeIndex, secondCellColour, firstCellColour);
+            case HORIZONTAL_REVERSED:
+                return hasHorizontalReversedMatchingColour(board, nodeIndex, firstCellColour, secondCellColour);
+            case HORIZONTAL:
+                //not very happy with the logic but this should work.
+                final int offsetedNodeIndexForReverse = nodeIndex + 1;
+                return hasHorizontalReversedMatchingColour(board, offsetedNodeIndexForReverse, secondCellColour, firstCellColour);
+        }
+        return false;
+    }
+
+    private boolean hasHorizontalReversedMatchingColour(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour) {
+        if (nodeIndex > 0 && nodeIndex < 6) {
+            final Cell[] column1 = board.getColumn(nodeIndex);
+            final Cell[] column2 = board.getColumn(nodeIndex - 1);
+            final int col2FirstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(column1);
+            final int col1FirstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(column2);
+
+            if (col2FirstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION || col2FirstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD
+                    || col1FirstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION || col1FirstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD) {
+                return false;
+            }
+
+            switch (nodeIndex) {
+                case 1:
+                    if (hasHorizontalReverseMatchingColourForNodeIndex1(board, nodeIndex, firstCellColour, secondCellColour, col1FirstEmptyPosition, col2FirstEmptyPosition)) {
+                        return true;
+                    }
+
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    if (hasHorizontalReverseMatchingColourForNodeIndex234(board, nodeIndex, firstCellColour, secondCellColour, col1FirstEmptyPosition, col2FirstEmptyPosition)) {
+                        return true;
+                    }
+                    break;
+                case 5:
+                    if (hasHorizontalReverseMatchingColourForNodeIndex5(board, nodeIndex, firstCellColour, secondCellColour, col1FirstEmptyPosition, col2FirstEmptyPosition)) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasHorizontalReverseMatchingColourForNodeIndex234(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col1FirstEmptyPosition, int col2FirstEmptyPosition) {
+        //check below and to the right with cell1
+        //cell1 is the left cell of horizontal reversed
+        //cell2 is the right cell of horizontal reversed
+        final Cell leftOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex - 2);
+        final Cell rightOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex);
+        if (rightOfCell1.getCellColour() == secondCellColour || leftOfCell1.getCellColour() == secondCellColour) {
+            return true;
+        }
+
+        final Cell leftOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex - 1);
+        final Cell rightOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex + 1);
+        if (leftOfCell2.getCellColour() == firstCellColour || rightOfCell2.getCellColour() == firstCellColour) {
+            return true;
+        }
+
+        if (col1FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col1FirstEmptyPosition - 1, nodeIndex - 1);
+            if (botOfCell1.getCellColour() == secondCellColour) {
+                return true;
+            }
+        }
+
+        if (col2FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col2FirstEmptyPosition - 1, nodeIndex);
+            if (botOfCell1.getCellColour() == firstCellColour) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasHorizontalReverseMatchingColourForNodeIndex5(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col1FirstEmptyPosition, int col2FirstEmptyPosition) {
+        //check below and to the right with cell1
+        //cell1 is the left cell of horizontal reversed
+        //cell2 is the right cell of horizontal reversed
+        final Cell leftOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex - 2);
+        final Cell rightOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex);
+        if (rightOfCell1.getCellColour() == secondCellColour || leftOfCell1.getCellColour() == secondCellColour) {
+            return true;
+        }
+
+        final Cell leftOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex - 1);
+        if (leftOfCell2.getCellColour() == firstCellColour) {
+            return true;
+        }
+
+        if (col1FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col1FirstEmptyPosition - 1, nodeIndex - 1);
+            if (botOfCell1.getCellColour() == secondCellColour) {
+                return true;
+            }
+        }
+
+        if (col2FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col2FirstEmptyPosition - 1, nodeIndex);
+            if (botOfCell1.getCellColour() == firstCellColour) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasHorizontalReverseMatchingColourForNodeIndex1(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int col1FirstEmptyPosition, int col2FirstEmptyPosition) {
+        //check below and to the right with cell2
+        //cell1 is the left cell of horizontal reversed
+        //cell2 is the right cell of horizontal reversed
+        final Cell rightOfCell1 = board.getCell(col1FirstEmptyPosition, nodeIndex);
+        if (rightOfCell1.getCellColour() == secondCellColour) {
+            return true;
+        }
+
+        final Cell leftOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex - 1);
+        final Cell rightOfCell2 = board.getCell(col2FirstEmptyPosition, nodeIndex + 1);
+
+        if (leftOfCell2.getCellColour() == firstCellColour || rightOfCell2.getCellColour() == firstCellColour) {
+            return true;
+        }
+
+        if (col1FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col1FirstEmptyPosition - 1, nodeIndex - 1);
+            if (botOfCell1.getCellColour() == secondCellColour) {
+                return true;
+            }
+        }
+
+        if (col2FirstEmptyPosition > 0) {
+            final Cell botOfCell1 = board.getCell(col2FirstEmptyPosition - 1, nodeIndex);
+            if (botOfCell1.getCellColour() == firstCellColour) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasVerticalReversedMatchingColour(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour) {
+        if (nodeIndex >= 0 && nodeIndex < 6) {
+            final Cell[] column1 = board.getColumn(nodeIndex);
+            final int firstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(column1);
+
+            if (firstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_VERTICAL_ORIENTATION || firstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD) {
+                return false;
+            }
+
+            switch (nodeIndex) {
+                case 0:
+                    if (matchReverseVerticallyToRight(board, nodeIndex, firstCellColour, secondCellColour, firstEmptyPosition)) {
+                        return true;
+                    }
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    if (matchReverseVerticallyToRight(board, nodeIndex, firstCellColour, secondCellColour, firstEmptyPosition)) {
+                        return true;
+                    }
+
+                    if (matchReverseVerticallyToLeft(board, nodeIndex, firstCellColour, secondCellColour, firstEmptyPosition)) {
+                        return true;
+                    }
+                    break;
+                case 5:
+                    if (matchReverseVerticallyToLeft(board, nodeIndex, firstCellColour, secondCellColour, firstEmptyPosition)) {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean matchReverseVerticallyToRight(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int firstEmptyPosition) {
+        final Cell cellToRight1 = board.getCell(firstEmptyPosition, nodeIndex + 1);
+        final Cell cellToRight2 = board.getCell(firstEmptyPosition + 1, nodeIndex + 1);
+
+        if (cellToRight1.getCellColour() == firstCellColour || cellToRight2.getCellColour() == secondCellColour) {
+            return true;
+        }
+
+        if (firstEmptyPosition > 0) {
+            final Cell cellBelow = board.getCell(firstEmptyPosition - 1, nodeIndex);
+            if (cellBelow.getCellColour() == firstCellColour) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean matchReverseVerticallyToLeft(Board board, int nodeIndex, CellColour firstCellColour, CellColour secondCellColour, int firstEmptyPosition) {
+        final Cell cellToRight1 = board.getCell(firstEmptyPosition, nodeIndex - 1);
+        final Cell cellToRight2 = board.getCell(firstEmptyPosition + 1, nodeIndex - 1);
+
+        if (cellToRight1.getCellColour() == firstCellColour || cellToRight2.getCellColour() == secondCellColour) {
+            return true;
+        }
+        return false;
     }
 }
 
