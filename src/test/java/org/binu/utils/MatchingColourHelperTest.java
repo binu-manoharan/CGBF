@@ -41,7 +41,7 @@ public class MatchingColourHelperTest {
 
     /*
         Vertical tests
-    */
+     */
     @Test
     public void should_have_no_matching_cells_in_first_column_for_green_red_block_vertically() throws Exception {
         emptyBoardString[11] = "..2...";
@@ -150,9 +150,25 @@ public class MatchingColourHelperTest {
         assertThat("First column has matching cells.", hasMatchingColour, is(true));
     }
 
+    @Test
+    public void should_have_matching_cells_in_second_column_for_red_green_block_vertically_right_below_the_cell() throws Exception {
+        emptyBoardString[10] = ".2....";
+        emptyBoardString[11] = ".1....";
+        board = dataParser.createBoard(emptyBoardString);
+
+        final Cell[] cells = getCells(CellColour.RED, CellColour.GREEN);
+        block = new Block(cells);
+
+        final int columnIndex = 1;
+        final OrientationAndIndex orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL, columnIndex);
+        final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
+
+        assertThat("First column has matching cells.", hasMatchingColour, is(true));
+    }
+
     /*
         Reversed vertical tests
-    */
+     */
     @Test
     public void should_have_no_matching_cells_in_first_column_for_red_green_block_vertically() throws Exception {
         emptyBoardString[11] = "..2...";
@@ -244,6 +260,85 @@ public class MatchingColourHelperTest {
         final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
 
         assertThat("First column has matching cells.", hasMatchingColour, is(true));
+    }
+
+    @Test
+    public void should_have_matching_cells_in_second_column_for_red_green_block_reverse_vertically_right_below_the_cell() throws Exception {
+        emptyBoardString[10] = ".4....";
+        emptyBoardString[11] = ".1....";
+        board = dataParser.createBoard(emptyBoardString);
+
+        final Cell[] cells = getCells(CellColour.RED, CellColour.GREEN);
+        block = new Block(cells);
+
+        final int columnIndex = 1;
+        final OrientationAndIndex orientationAndIndex = new OrientationAndIndex(Orientation.VERTICAL_REVERSED, columnIndex);
+        final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
+
+        assertThat("First column has matching cells.", hasMatchingColour, is(true));
+    }
+
+    /*
+        Reversed Horizontal tests
+     */
+    @Test
+    public void should_have_no_matching_cells_in_third_column_for_red_green_block_reverse_horizontally() throws Exception {
+        emptyBoardString[11] = ".32...";
+        board = dataParser.createBoard(emptyBoardString);
+
+        final Cell[] cells = getCells(CellColour.RED, CellColour.GREEN);
+        block = new Block(cells);
+
+        final int columnIndex = 2;
+        final OrientationAndIndex orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, columnIndex);
+        final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
+
+        assertThat("First column has no matching cells.", hasMatchingColour, is(false));
+    }
+
+    @Test
+    public void should_have_matching_cells_in_fourth_column_for_red_green_block_reverse_horizontally() throws Exception {
+        emptyBoardString[11] = ".32...";
+        board = dataParser.createBoard(emptyBoardString);
+
+        final Cell[] cells = getCells(CellColour.RED, CellColour.GREEN);
+        block = new Block(cells);
+
+        final int columnIndex = 3;
+        final OrientationAndIndex orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, columnIndex);
+        final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
+
+        assertThat("First column has no matching cells.", hasMatchingColour, is(true));
+    }
+
+    @Test
+    public void should_have_matching_cells_in_sixth_column_for_red_green_block_reverse_horizontally() throws Exception {
+        emptyBoardString[11] = "...32.";
+        board = dataParser.createBoard(emptyBoardString);
+
+        final Cell[] cells = getCells(CellColour.RED, CellColour.GREEN);
+        block = new Block(cells);
+
+        final int columnIndex = 5;
+        final OrientationAndIndex orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, columnIndex);
+        final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
+
+        assertThat("First column has no matching cells.", hasMatchingColour, is(true));
+    }
+
+    @Test
+    public void should_have_matching_cells_in_first_column_for_red_green_block_reverse_horizontally() throws Exception {
+        emptyBoardString[11] = "211...";
+        board = dataParser.createBoard(emptyBoardString);
+
+        final Cell[] cells = getCells(CellColour.RED, CellColour.GREEN);
+        block = new Block(cells);
+
+        final int columnIndex = 1;
+        final OrientationAndIndex orientationAndIndex = new OrientationAndIndex(Orientation.HORIZONTAL_REVERSED, columnIndex);
+        final boolean hasMatchingColour = matchingColourHelper.columnHasMatchingColour(board, block, orientationAndIndex);
+
+        assertThat("First column has no matching cells.", hasMatchingColour, is(true));
     }
 
     @NotNull
