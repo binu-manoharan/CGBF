@@ -1,6 +1,6 @@
 package org.binu.ai;
 
-import org.binu.ai.treemaker.RandomEightLevelTreeMaker;
+import org.binu.ai.treemaker.ColourMatchingTreeMaker;
 import org.binu.ai.treemaker.TreeMaker;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
@@ -14,19 +14,19 @@ import java.util.ArrayList;
  */
 public class ShinyNewGameAI {
 
-    private static final int TIME_LIMIT_IN_MS = 50;
+    private static final int TIME_LIMIT_IN_MS = 90;
     private static final int GREED_LIMIT = 1000;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
-    private TreeMaker randomEightLevelTreeMaker;
+    private TreeMaker levelTreeMaker;
     private String message;
 
     public ShinyNewGameAI(Board board, BlockQueue blockQueue) {
         this.board = board;
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
-        randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
+        levelTreeMaker = new ColourMatchingTreeMaker();
     }
 
     /**
@@ -35,7 +35,7 @@ public class ShinyNewGameAI {
      * @return ScoreNode with information about the next move to make
      */
     public ScoreNode calculateNextMove(ScoreNode rootNode) {
-        final ScoreNode rootNode1 = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
+        final ScoreNode rootNode1 = levelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
 
         final ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
         final ScoreNode nextMoveForHighestScoringNode = getNextMoveForHighestScoringNode(highestScoreNode);

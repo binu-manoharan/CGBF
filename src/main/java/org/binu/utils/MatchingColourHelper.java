@@ -57,8 +57,8 @@ public class MatchingColourHelper {
             final int col2FirstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(column1);
             final int col1FirstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(column2);
 
-            if (col2FirstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION && col2FirstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD
-                    && col1FirstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION && col1FirstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD) {
+            if (col2FirstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION || col2FirstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD
+                    || col1FirstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_HORIZONTAL_ORIENTATION || col1FirstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD) {
                 return false;
             }
 
@@ -186,7 +186,7 @@ public class MatchingColourHelper {
             final Cell[] column1 = board.getColumn(nodeIndex);
             final int firstEmptyPosition = cellArrayHelper.getFirstEmptyPosition(column1);
 
-            if (firstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_VERTICAL_ORIENTATION && firstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD) {
+            if (firstEmptyPosition > HEIGHT_UPPER_LIMIT_FOR_VERTICAL_ORIENTATION || firstEmptyPosition < HEIGHT_LOWER_LIMIT_FOR_BOARD) {
                 return false;
             }
 
