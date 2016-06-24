@@ -1,0 +1,9 @@
+Currently the highest score node eats away 40 points somewhere in the path. It may not be wise.
+
+Add logic to parse opponent board.
+
+Have variable greed limit based on above.
+
+Run profiler to look for optimisations
+
+Rewrite the matching cell logic to look for block's first colour and parse possible combinations and then repeat the same for second cell. Need to be smart about it.
