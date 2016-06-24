@@ -465,7 +465,7 @@ class ColourMatchingTreeMaker extends AbstractTreeMaker {
 class ShinyNewGameAI {
 
     private static final int TIME_LIMIT_IN_MS_FOR_COLOUR_MATCHING = 70;
-    private static final int GREED_LIMIT = 1000;
+    private static final int GREED_LIMIT = 1260;
     private static final int TIME_LIMIT_IN_MS_FOR_RANDOM_MOVES = 20;
     private final TreeMaker randomEightLevelTreeMaker;
     private ScoreNodeHelper scoreNodeHelper;
