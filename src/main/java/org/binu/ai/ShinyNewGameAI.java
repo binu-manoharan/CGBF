@@ -1,6 +1,7 @@
 package org.binu.ai;
 
 import org.binu.ai.treemaker.ColourMatchingTreeMaker;
+import org.binu.ai.treemaker.RandomEightLevelTreeMaker;
 import org.binu.ai.treemaker.TreeMaker;
 import org.binu.board.BlockQueue;
 import org.binu.board.Board;
@@ -14,8 +15,10 @@ import java.util.ArrayList;
  */
 public class ShinyNewGameAI {
 
-    private static final int TIME_LIMIT_IN_MS = 90;
-    private static final int GREED_LIMIT = 1000;
+    private static final int TIME_LIMIT_IN_MS_FOR_COLOUR_MATCHING = 70;
+    private static final int GREED_LIMIT = 1260;
+    private static final int TIME_LIMIT_IN_MS_FOR_RANDOM_MOVES = 20;
+    private final TreeMaker randomEightLevelTreeMaker;
     private ScoreNodeHelper scoreNodeHelper;
     private Board board;
     private BlockQueue blockQueue;
@@ -27,6 +30,7 @@ public class ShinyNewGameAI {
         this.blockQueue = blockQueue;
         scoreNodeHelper = new ScoreNodeHelper();
         levelTreeMaker = new ColourMatchingTreeMaker();
+        randomEightLevelTreeMaker = new RandomEightLevelTreeMaker();
     }
 
     /**
@@ -35,9 +39,10 @@ public class ShinyNewGameAI {
      * @return ScoreNode with information about the next move to make
      */
     public ScoreNode calculateNextMove(ScoreNode rootNode) {
-        final ScoreNode rootNode1 = levelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS);
+        final ScoreNode rootNodeAfterRandom = randomEightLevelTreeMaker.makeScoreTree(board, blockQueue, rootNode, TIME_LIMIT_IN_MS_FOR_RANDOM_MOVES);
+        final ScoreNode rootNodeAfterColourMatching = levelTreeMaker.makeScoreTree(board, blockQueue, rootNodeAfterRandom, TIME_LIMIT_IN_MS_FOR_COLOUR_MATCHING);
 
-        final ScoreNode highestScoreNode = getHighestScoreNode(rootNode1);
+        final ScoreNode highestScoreNode = getHighestScoreNode(rootNodeAfterColourMatching);
         final ScoreNode nextMoveForHighestScoringNode = getNextMoveForHighestScoringNode(highestScoreNode);
 
         message = " " + highestScoreNode.getTreeLevel() + ": " + highestScoreNode.getNodeScore();
